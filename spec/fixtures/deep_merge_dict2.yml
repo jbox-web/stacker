@@ -1,0 +1,16 @@
+---
+string: 'b string'
+integer: 2
+is_true: false
+is_false: true
+new_key: 'foo'
+hash:
+  bar: 'baz'
+  nested:
+    hash: 'bar'
+    hash2: 'child2'
+array:
+  - 'string2'
+  - 12
+  - false
+  - true

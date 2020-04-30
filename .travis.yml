@@ -1,0 +1,5 @@
+language: crystal
+
+script:
+  - make deps
+  - make spec

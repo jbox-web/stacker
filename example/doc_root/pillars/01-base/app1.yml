@@ -1,0 +1,13 @@
+---
+my_company:
+  apps:
+    app1:
+      servers:
+        - server2
+      php:
+        version: 7.3
+      packages:
+        pkgs:
+          wanted:
+            - pdftk
+            - p7zip-full

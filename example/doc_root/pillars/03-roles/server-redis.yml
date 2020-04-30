@@ -1,0 +1,45 @@
+###############################################################################
+# Redis server role pillar
+###############################################################################
+
+###########
+# SERVICE #
+###########
+
+redis:
+  bind: 127.0.0.1
+  tcp_keepalive: 300
+  lookup:
+    overcommit_memory: false
+
+sysctl:
+  params:
+    vm.overcommit_memory: 1
+
+########
+# LOGS #
+########
+
+logrotate:
+  jobs:
+    redis-server:
+      path:
+        - /var/log/redis/redis-server*.log
+      config:
+        - daily
+        - rotate 365
+        - compress
+        - dateext
+        - missingok
+        - notifempty
+        - copytruncate
+        - olddir /var/log/OLD_LOGS/redis
+
+############
+# TELEGRAF #
+############
+
+telegraf:
+  conf:
+    inputs:
+      redis: {}

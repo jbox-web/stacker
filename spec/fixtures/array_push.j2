@@ -1,0 +1,5 @@
+{%- set ary = [] -%}
+{%- for item in ["foo", "bar"] -%}
+  {%- do array_push(ary, item) -%}
+{%- endfor -%}
+{{ ary }}

@@ -1,0 +1,19 @@
+---
+my_server:
+  # DNS / IP
+  ipv6: true
+  firewall: true
+  interfaces:
+    - eno1
+    - eno2
+    - lo
+
+  # Roles
+  roles:
+    # Common
+    - common-locale
+    - common-timezone
+    - common-users
+    # Base
+    - client-salt
+    - server-openssh

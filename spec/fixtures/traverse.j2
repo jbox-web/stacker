@@ -1,0 +1,4 @@
+{%- set hostname = pillar | traverse('id') -%}
+{%- set roles = pillar | traverse('server:roles', []) -%}
+{{ hostname }}
+{{ roles }}

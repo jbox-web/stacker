@@ -1,0 +1,4 @@
+users:
+  root:
+    password: 'password'
+    hash_password: true

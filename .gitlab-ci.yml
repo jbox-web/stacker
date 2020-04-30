@@ -1,0 +1,6 @@
+---
+spec:
+  image: crystallang/crystal
+  script:
+    - make deps
+    - make spec

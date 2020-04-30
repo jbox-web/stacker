@@ -1,0 +1,68 @@
+###############################################################################
+# Php server role pillar
+###############################################################################
+
+{% set versions = pillar | traverse('my_server:php:version', []) %}
+
+###########
+# SERVICE #
+###########
+
+php:
+  version: {{ versions }}
+  lookup:
+    fpm:
+      defaults:
+        global:
+          log_level: warning
+
+  fpm:
+    config:
+      ini:
+        settings:
+          Assertion:
+            zend.assertions: -1
+          PHP:
+            expose_php: 'Off'
+            default_charset: UTF-8
+            cgi.fix_pathinfo: 0
+          Date:
+            date.timezone: Europe/Paris
+      # conf:
+      #   settings:
+      #     global:
+      #       log_level: warning
+
+  cli:
+    ini:
+      settings:
+        Assertion:
+          zend.assertions: -1
+        PHP:
+          default_charset: UTF-8
+        Date:
+          date.timezone: Europe/Paris
+
+########
+# LOGS #
+########
+
+logrotate:
+  jobs:
+{% for version in versions %}
+    php{{ version }}-fpm:
+      path:
+        - /var/log/php{{ version }}-fpm.log
+      config:
+        - daily
+        - rotate 365
+        - compress
+        - dateext
+        - missingok
+        - notifempty
+        - olddir /var/log/OLD_LOGS/php{{ version }}-fpm
+        - create 640 root adm
+        - postrotate
+        - '  /usr/lib/php/php{{ version }}-fpm-reopenlogs'
+        - endscript
+{% endfor %}

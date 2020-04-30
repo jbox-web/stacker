@@ -1,0 +1,22 @@
+name: stacker
+version: 0.1.0
+
+authors:
+  - Nicolas Rodriguez <nicoladmin@free.fr>
+
+targets:
+  stacker:
+    main: src/stacker.cr
+
+dependencies:
+  admiral:
+    github: jwaldrip/admiral.cr
+  crinja:
+    github: n-rodriguez/crinja
+    branch: wip/tag_do
+  kemal:
+    github: kemalcr/kemal
+
+crystal: 0.34.0
+
+license: MIT

@@ -1,0 +1,18 @@
+{% set users = pillar | traverse('my_company:users', {}) %}
+
+users:
+  root:
+    password: 'password'
+    hash_password: true
+
+{% for user, user_config in users if 'developer' is in user_config['roles'] %}
+  {{ user }}:
+    fullname: {{ user_config['name'] }}
+    home: /home/{{ user }}
+    user_dir_mode: 755
+    ssh_auth_sources:
+      - salt://ssh_keys/{{ user }}.pub
+    gitconfig:
+      user.name: {{ user_config['name'] }}
+      user.email: {{ user_config['email'] }}
+{% endfor %}

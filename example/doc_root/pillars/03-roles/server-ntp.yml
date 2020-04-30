@@ -1,0 +1,29 @@
+###############################################################################
+# NTP server role pillar
+###############################################################################
+
+{% set private_ip = pillar | traverse('my_server:private_ip') %}
+
+openntpd:
+  listen: {{ private_ip }}
+  servers:
+    - 0.fr.pool.ntp.org
+    - 1.fr.pool.ntp.org
+    - 2.fr.pool.ntp.org
+    - 3.fr.pool.ntp.org
+
+############
+# TELEGRAF #
+############
+
+telegraf:
+  conf:
+    inputs:
+      openntpd:
+        use_sudo: true
+
+
+sudoers:
+  users:
+    telegraf:
+      - 'ALL=(root) NOPASSWD: /usr/sbin/ntpctl'

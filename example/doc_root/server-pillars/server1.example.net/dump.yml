@@ -1,0 +1,2 @@
+{% do log("---- PILLAR ----") %}
+{% do dump(pillar['sshd_config']) %}

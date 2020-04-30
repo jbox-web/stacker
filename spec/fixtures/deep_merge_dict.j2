@@ -1,0 +1,48 @@
+{%- set hash1 = {
+  'string': 'a string',
+  'integer': 1,
+  'is_true': true,
+  'is_false': false,
+  'old_key': 'foo',
+  'hash': {
+    'foo': 'bar',
+    'nested': {
+      'hash': 'foo',
+      'hash1': 'child1',
+      'array': [
+        'foo',
+        'bar'
+      ]
+    }
+  },
+  'array': [
+    'string1',
+    11,
+    true,
+    false
+  ]
+} -%}
+
+{%- set hash2 = {
+  'string': 'b string',
+  'integer': 2,
+  'is_true': false,
+  'is_false': true,
+  'new_key': 'foo',
+  'hash': {
+    'bar': 'baz',
+    'nested': {
+      'hash': 'bar',
+      'hash2': 'child2'
+    }
+  },
+  'array': [
+    'string2',
+    12,
+    false,
+    true
+  ]
+} -%}
+
+{%- do merge_dict(hash1, hash2) -%}
+{{ hash1 }}

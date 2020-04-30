@@ -1,0 +1,19 @@
+---
+string: 'a string'
+integer: 1
+is_true: true
+is_false: false
+old_key: 'foo'
+hash:
+  foo: 'bar'
+  nested:
+    hash: 'foo'
+    hash1: 'child1'
+    array:
+      - 'foo'
+      - 'bar'
+array:
+  - 'string1'
+  - 11
+  - true
+  - false

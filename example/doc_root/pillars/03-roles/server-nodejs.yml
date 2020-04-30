@@ -1,0 +1,19 @@
+###############################################################################
+# NodeJS server role pillar
+###############################################################################
+
+# jessie, stretch ...
+{% set oscodename = grains | traverse('oscodename') %}
+
+#######
+# APT #
+#######
+
+apt:
+  repositories:
+    nodejs:
+      distro: {{ oscodename }}
+      url: https://deb.nodesource.com/node_8.x
+      comps: [main]
+      type: [binary]
+      key_url: https://deb.nodesource.com/gpgkey/nodesource.gpg.key

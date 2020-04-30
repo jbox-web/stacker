@@ -1,0 +1,14 @@
+###############################################################################
+# Salt base pillar
+###############################################################################
+
+{% set salt_master = pillar | traverse('my_company:servers:salt:host') %}
+
+###########
+# SERVICE #
+###########
+
+salt:
+  minion_remove_config: true
+  minion:
+    master: {{ salt_master }}

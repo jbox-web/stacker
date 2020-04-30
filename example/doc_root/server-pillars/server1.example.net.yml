@@ -1,0 +1,28 @@
+---
+my_server:
+  # DNS / IP
+  hostname: server1
+  private_fqdn: server1.example.corp
+  private_ip: 10.1.0.1
+
+  # Disks
+  disks:
+    - /dev/sda
+    - /dev/sdb
+
+  # Roles
+  roles:
+    # Base
+    - server-ntp
+
+grains: {{ grains | json }}
+
+kernelversion: {{ grains | traverse('kernelversion', 'foo') | json }}
+
+ip6_interfaces:
+  eno1: {{ grains | traverse('ip6_interfaces:eno1') | json }}
+
+{% do log("Yeah!! You can print log or dump object in STDOUT") %}
+
+{% do log("---- GRAINS ----") %}
+{% do dump(grains) %}

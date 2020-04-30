@@ -1,0 +1,9 @@
+{%- set data = dict() -%}
+{%- for app in ["foo", "bar"] -%}
+  {%- do merge_dict(data, {
+    app: {
+      'enabled': true
+    }
+  }) -%}
+{%- endfor -%}
+{{ data }}

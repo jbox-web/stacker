@@ -1,0 +1,29 @@
+###############################################################################
+# Docker server role pillar
+###############################################################################
+
+# jessie, stretch ...
+{% set oscodename = grains | traverse('oscodename') %}
+
+#######
+# APT #
+#######
+
+apt:
+  repositories:
+    docker:
+      distro: {{ oscodename }}
+      url: https://download.docker.com/linux/debian
+      comps: [stable]
+      type: [binary]
+      key_url: https://download.docker.com/linux/debian/gpg
+
+
+############
+# TELEGRAF #
+############
+
+telegraf:
+  conf:
+    inputs:
+      docker: {}

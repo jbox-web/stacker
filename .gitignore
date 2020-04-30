@@ -1,0 +1,7 @@
+/docs/
+/lib/
+/.shards/
+/bin/*
+!/bin/.keep
+*.dwarf
+stacker.yml

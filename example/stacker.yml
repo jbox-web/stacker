@@ -1,0 +1,12 @@
+---
+doc_root: example/doc_root
+entrypoint: server-pillars
+
+stacks:
+  - example/doc_root/server-pillars/stack1.cfg
+  - example/doc_root/pillars/stack1.cfg
+  - example/doc_root/server-pillars/stack2.cfg
+
+server_host: 127.0.0.1
+server_port: 3000
+server_environment: development

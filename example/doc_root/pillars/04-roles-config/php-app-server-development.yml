@@ -1,0 +1,27 @@
+###############################################################################
+# Php server role pillar
+###############################################################################
+
+{% set users    = pillar | traverse('my_company:users', {}) %}
+{% set apps     = pillar | traverse('my_company:apps', {}) %}
+{% set apps_dir = pillar | traverse('my_company:apps_dir:development') %}
+
+{% set display_errors  = 'On' %}
+{% set error_reporting = 'E_ALL' %}
+
+{% from 'pillars/macros/development.jinja' import apps_php_config %}
+{% from 'pillars/macros/development.jinja' import apps_packages_config %}
+
+php:
+  fpm:
+    pools:
+      {{ apps_php_config(users, apps, apps_dir) }}
+    config:
+      ini:
+        settings:
+          PHP:
+            error_reporting: {{ error_reporting }}
+            display_errors: '{{ display_errors }}'
+
+packages:
+  {{ apps_packages_config(apps) }}

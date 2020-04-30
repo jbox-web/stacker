@@ -1,0 +1,62 @@
+###############################################################################
+# Php server role pillar
+###############################################################################
+
+# jessie, stretch ...
+{% set oscodename = grains | traverse('oscodename') %}
+
+apt:
+  repositories:
+    php:
+      distro: {{ oscodename }}
+      url: http://apt.example.corp/debian
+      comps: [main]
+      type: [binary]
+      key_url: http://apt.example.corp/repository.gpg
+
+    nginx:
+      distro: {{ oscodename }}
+      url: http://nginx.org/packages/mainline/debian
+      comps: [nginx]
+      type: [binary]
+      key_url: https://nginx.org/keys/nginx_signing.key
+
+packages:
+  pkgs:
+    wanted:
+      - mysql-client
+      - php5.6-dev
+      - php7.3-dev
+
+php:
+  # Fix for Faktory/ttrss
+  # See: https://morevine.wordpress.com/2013/10/27/tt-rss-enable-php-pcntl-in-ubuntu-linux/
+  cli:
+    ini:
+      settings:
+        PHP:
+          disable_functions: ''
+        Session:
+          session.gc_maxlifetime: 3600
+
+  fpm:
+    config:
+      ini:
+        settings:
+          Session:
+            session.gc_maxlifetime: 3600
+
+  modules:
+    - bz2
+    - cli
+    - curl
+    - gd
+    - imagick
+    - imap
+    - intl
+    - mbstring
+    - mysql
+    - readline
+    - redis
+    - xml
+    - zip

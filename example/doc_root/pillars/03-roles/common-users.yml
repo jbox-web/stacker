@@ -1,0 +1,30 @@
+###############################################################################
+# Users base pillar
+###############################################################################
+
+{% set users = pillar | traverse('my_company:users', {}) %}
+
+users:
+  ## Minimal required pillar values
+  root:
+    home: /root
+    user_dir_mode: 700
+    shell: /bin/bash
+    manage_bashrc: true
+    manage_profile: true
+    prime_group:
+      name: root
+    ssh_auth_sources:
+  {% for user, user_config in users if 'admin' is in user_config['roles'] %}
+      - salt://ssh_keys/{{ user }}.pub
+  {% endfor %}
+
+  nagios:
+    home: /var/lib/nagios
+    user_dir_mode: 700
+    shell: /bin/sh
+    system: True
+    prime_group:
+      name: nagios
+    ssh_auth_sources:
+      - salt://ssh_keys/nagios.pub
