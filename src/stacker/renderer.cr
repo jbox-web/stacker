@@ -8,9 +8,6 @@ module Stacker
     def compile(file, data)
       dirname = File.dirname(file)
 
-      Log.debug { "Compiling: #{file}" }
-      Log.debug { "Dirname: #{dirname}" }
-
       input = File.read(file)
       template = @env.from_string(input)
 

@@ -5,25 +5,34 @@ module Stacker
     end
 
     get "/:host" do |env|
-      host_name, format = extract_params(env)
+      host_name, level, format = extract_params(env)
       grains = {"id" => host_name}
-      result = process(host_name, grains)
+
+      result =
+        Utils.with_log_level(level) do
+          process(host_name, grains)
+        end
 
       respond_with(env, format, result)
     end
 
     post "/:host" do |env|
-      host_name, format = extract_params(env)
+      host_name, level, format = extract_params(env)
       grains = JSON.parse(env.params.json.to_json)
-      result = process(host_name, grains)
+
+      result =
+        Utils.with_log_level(level) do
+          process(host_name, grains)
+        end
 
       respond_with(env, format, result)
     end
 
     private def self.extract_params(env)
       host_name = env.params.url["host"]
+      level = env.params.query["l"]? || "info"
       format = env.params.query["f"]? || "json"
-      {host_name, format}
+      {host_name, level, format}
     end
 
     private def self.respond_with(env, format, result)

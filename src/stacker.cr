@@ -9,6 +9,7 @@ require "./stacker/*"
 
 module Stacker
   VERSION = "0.1.0"
+  Log     = ::Log.for(self, ::Log::Severity::Info)
 
   def self.config=(config : Config)
     @@config = config
@@ -20,7 +21,7 @@ module Stacker
 end
 
 # Configure logger
-Log.setup_from_env
+Log.builder.bind "*", :debug, Log::IOBackend.new
 
 # Start the CLI
 Stacker::CLI.run

@@ -113,5 +113,28 @@ module Stacker
 
       Crinja::Value.new(value)
     end
+
+    SEVERITY_MAP = {
+      "debug"   => ::Log::Severity::Debug,
+      "verbose" => ::Log::Severity::Verbose,
+      "info"    => ::Log::Severity::Info,
+      "warn"    => ::Log::Severity::Warning,
+      "error"   => ::Log::Severity::Error,
+      "fatal"   => ::Log::Severity::Fatal,
+    }
+
+    def self.with_log_level(level, &block)
+      new_level = SEVERITY_MAP[level]
+      old_level = Stacker::Log.level
+
+      begin
+        Stacker::Log.level = new_level
+        result = yield
+      ensure
+        Stacker::Log.level = old_level
+      end
+
+      result
+    end
   end
 end

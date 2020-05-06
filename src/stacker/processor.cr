@@ -23,7 +23,7 @@ module Stacker
 
     private def valid?
       entrypoint = "#{@root_dir}/#{@entrypoint}/#{@host_name}.yml"
-      Log.debug { "Looking for #{entrypoint}" }
+      Log.verbose { "Looking for #{entrypoint}" }
       Utils.file_exists?(entrypoint)
     end
 
@@ -48,8 +48,7 @@ module Stacker
       dirname = File.dirname(stack)
       files = Dir["#{dirname}/#{file}"].sort
 
-      Log.debug { "Loading: #{files}" }
-      Log.debug { "Dirname: #{dirname}" }
+      Log.verbose { "Loading: #{files} from #{dirname}" }
 
       data = Pillar.new
 
@@ -63,11 +62,15 @@ module Stacker
     end
 
     private def load_pillars_from_file(dirname, file, data)
+      Log.verbose { "Compiling: #{file}" }
+
       yaml = @renderer.compile(file, compilation_data.merge({"stack_path" => dirname}))
       return if yaml.empty?
 
       hash = Utils.yaml_to_hash(yaml, file)
       return if hash.nil?
+
+      Log.verbose { "Merging: #{file}" }
 
       with_debug_data(data) do
         Utils.deep_merge!(data, hash)
@@ -79,9 +82,9 @@ module Stacker
     end
 
     private def with_debug_run(&block)
-      Log.debug { "Building stack for: #{@host_name}" }
+      Log.verbose { "Building stack for: #{@host_name}" }
       yield
-      Log.debug { "End of stack build for: #{@host_name}" }
+      Log.verbose { "End of stack build for: #{@host_name}" }
     end
 
     private def with_debug_pillar(&block)
