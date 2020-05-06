@@ -5,21 +5,39 @@ module Stacker
     end
 
     get "/:host" do |env|
-      host_name = env.params.url["host"]
+      host_name, format = extract_params(env)
       grains = {"id" => host_name}
       result = process(host_name, grains)
 
-      env.response.content_type = "application/json"
-      result.to_json
+      respond_with(env, format, result)
     end
 
     post "/:host" do |env|
-      host_name = env.params.url["host"]
+      host_name, format = extract_params(env)
       grains = JSON.parse(env.params.json.to_json)
       result = process(host_name, grains)
 
-      env.response.content_type = "application/json"
-      result.to_json
+      respond_with(env, format, result)
+    end
+
+    private def self.extract_params(env)
+      host_name = env.params.url["host"]
+      format = env.params.query["f"]? || "json"
+      {host_name, format}
+    end
+
+    private def self.respond_with(env, format, result)
+      case format
+      when "json"
+        env.response.content_type = "application/json"
+        result.to_json
+      when "yaml"
+        env.response.content_type = "application/x-yaml"
+        result.to_yaml
+      else
+        env.response.content_type = "application/json"
+        result.to_json
+      end
     end
 
     private def self.process(host_name, grains)

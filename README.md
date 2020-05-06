@@ -195,6 +195,19 @@ operators:
   operator[~]
 ```
 
+## Output format
+
+Set output format by using optional query parameter :
+
+```sh
+curl http://127.0.0.1:3000/server1.example.net?f=json
+curl http://127.0.0.1:3000/server1.example.net?f=yaml
+```
+
+Default output format is `json`.
+
+Only `json` and `yaml` are supported.
+
 ## Debug
 
 Set log level by exporting environment variable :
