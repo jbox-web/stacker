@@ -1,7 +1,7 @@
 # Stacker - A lightweight file-based CMDB
 
 [![GitHub license](https://img.shields.io/github/license/jbox-web/stacker.svg)](https://github.com/jbox-web/stacker/blob/master/LICENSE)
-[![Build Status](https://travis-ci.com/jbox-web/stacker.svg?branch=master)](https://travis-ci.com/jbox-web/stacker)
+[![Build Status](https://github.com/jbox-web/stacker/workflows/Stacker%20CI/badge.svg?branch=master)](https://github.com/jbox-web/stacker/actions)
 
 Stacker is [Salt PillarStack](https://docs.saltstack.com/en/master/ref/pillar/all/salt.pillar.stack.html) in Crystal.
 
