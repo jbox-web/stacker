@@ -1,4 +1,7 @@
-# Stacker
+# Stacker - A lightweight file-based CMDB
+
+[![GitHub license](https://img.shields.io/github/license/jbox-web/stacker.svg)](https://github.com/jbox-web/stacker/blob/master/LICENSE)
+[![Build Status](https://travis-ci.com/jbox-web/stacker.svg?branch=master)](https://travis-ci.com/jbox-web/stacker)
 
 Stacker is [Salt PillarStack](https://docs.saltstack.com/en/master/ref/pillar/all/salt.pillar.stack.html) in Crystal.
 
@@ -200,3 +203,8 @@ Set log level by exporting environment variable :
 export CRYSTAL_LOG_LEVEL=debug
 bin/stacker server --config example/stacker.yml
 ```
+
+## Roadmap
+
+* implement [merging-strategies](https://docs.saltstack.com/en/master/ref/pillar/all/salt.pillar.stack.html#merging-strategies)
+* add the ability to change the current log level by using a query parameter like `curl http://127.0.0.1:3000/server1.example.net?l=debug`.
