@@ -1,0 +1,21 @@
+---
+name: Stacker CI
+
+on:
+  - push
+  - pull_request
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    container:
+      image: crystallang/crystal
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install dependencies
+      run: make deps
+    - name: Run tests
+      run: make spec
