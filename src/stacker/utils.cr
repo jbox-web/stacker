@@ -31,7 +31,7 @@ module Stacker
       s = Pillar.new
 
       hash.each do |k, v|
-        k = k.raw.to_s
+        k = k.raw
         v = v.raw
 
         next if v.is_a?(Set) || v.is_a?(Slice)
@@ -42,7 +42,7 @@ module Stacker
           v = convert_array(v)
         end
 
-        s[k] = v
+        s[k.to_s] = v
       end
 
       s
