@@ -3,7 +3,7 @@
 [![GitHub license](https://img.shields.io/github/license/jbox-web/stacker.svg)](https://github.com/jbox-web/stacker/blob/master/LICENSE)
 [![Build Status](https://github.com/jbox-web/stacker/workflows/Stacker%20CI/badge.svg?branch=master)](https://github.com/jbox-web/stacker/actions)
 
-Stacker is [Salt PillarStack](https://docs.saltstack.com/en/master/ref/pillar/all/salt.pillar.stack.html) in Crystal.
+Stacker is [Salt PillarStack](https://docs.saltstack.com/en/master/ref/pillar/all/salt.pillar.stack.html) in [Crystal](https://crystal-lang.org/).
 
 It is implemented using [crinja](https://github.com/straight-shoota/crinja) which is Jinja2 in Crystal :)
 
@@ -64,7 +64,7 @@ server_port: 3000
 server_environment: development
 ```
 
-*Note :* You can use relative or absolute file path.
+**Note :** You can use relative or absolute file path.
 
 Config               | Description
 ---------------------|------------
@@ -100,6 +100,28 @@ ext_pillar:
 ```
 
 4. Restart Salt, you're done :)
+
+## Scaling
+
+The Stacker's web design leads to great possibilities :
+
+* You can move Stacker and the pillar rendering out of Salt server :
+
+```yml
+ext_pillar:
+  - stacker: http://stacker.example.corp:3000
+```
+
+* You can run multiple instances of Stacker and call them sequentially :
+
+```yml
+ext_pillar:
+  - stacker: http://127.0.0.1:3000
+  - stacker: http://127.0.0.1:4000
+  - stacker: http://127.0.0.1:5000
+```
+
+With each instance having it's own stack configuration :)
 
 ## Template syntax
 
