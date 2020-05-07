@@ -51,8 +51,8 @@ module Stacker
     def self.convert_array(array : Array)
       acc = [] of Stacker::Pillar::Type
 
-      array.each do |value|
-        val = value.raw
+      array.each do |val|
+        val = val.raw
         next if val.is_a?(Set) || val.is_a?(Slice)
 
         acc <<
