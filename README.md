@@ -19,7 +19,7 @@ make deps
 make stacker-release
 ```
 
-## Usage
+## The 10 seconds test
 
 Start the webserver with sample data :
 
@@ -40,6 +40,66 @@ curl --no-progress-meter -X POST -H "Content-Type: application/json" -d @example
 ```
 
 You can also navigate to http://127.0.0.1:3000/server1.example.net to see the generated pillars.
+
+## Configuration
+
+By default Stacker looks for it's configuration file in the current directory.
+
+You can pass an alternative path by using `--config` flag.
+
+The configuration file is a YAML file looking like this :
+
+```yml
+---
+doc_root: example/doc_root
+entrypoint: server-pillars
+
+stacks:
+  - example/doc_root/server-pillars/stack1.cfg
+  - example/doc_root/pillars/stack1.cfg
+  - example/doc_root/server-pillars/stack2.cfg
+
+server_host: 127.0.0.1
+server_port: 3000
+server_environment: development
+```
+
+*Note :* You can use relative or absolute file path.
+
+Config               | Description
+---------------------|------------
+`doc_root`           | the webserver document root (must be specified). Since pillar are also crinja templates, it means where are the template files?
+`entrypoint`         | the webserver entrypoint (must be specified). The directory in the `doc_root` where we shoud look for `<minion_d>.yml` file
+`stacks`             | a list of [stack configuration files](https://docs.saltstack.com/en/master/ref/pillar/all/salt.pillar.stack.html#list-of-config-files) (default [])
+`server_host`        | ip address to bind to (default `127.0.0.1`)
+`server_port`        | port to bind to (default `3000`)
+`server_environment` | `development` or `production` (default `production`)
+
+## Salt integration
+
+To integrate Stacker with Salt you first need to add the [stacker pillar module](/salt/stacker.py) in Salt :
+
+1. Declare extension modules directory in Salt (`/etc/salt/master.conf` or `/etc/salt/master.d/f_defaults.conf`)
+
+```yml
+extension_modules: /data/salt/modules
+```
+
+2. Create `/data/salt/modules/pillar` directory and puts [stacker module](/salt/stacker.py) in it
+
+```sh
+mkdir -p /data/salt/modules/pillar
+wget -O /data/salt/modules/pillar/stacker.py https://raw.githubusercontent.com/jbox-web/stacker/master/salt/stacker.py
+```
+
+3. Declare the new ext_pillar module in Salt
+
+```yml
+ext_pillar:
+  - stacker: http://127.0.0.1:3000
+```
+
+4. Restart Salt, you're done :)
 
 ## Template syntax
 
