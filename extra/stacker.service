@@ -1,0 +1,12 @@
+[Unit]
+Description=Stacker
+After=network.target
+
+[Service]
+User=stacker
+Group=stacker
+WorkingDirectory=/data/stacker/current
+ExecStart=/usr/local/bin/stacker server
+
+[Install]
+WantedBy=multi-user.target

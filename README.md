@@ -123,6 +123,10 @@ ext_pillar:
 
 With each instance having it's own stack configuration :)
 
+## Deployment
+
+You can use the [provided systemd unit](/extra/stacker.service) to manage the Stacker daemon.
+
 ## Template syntax
 
 The [template syntax](https://github.com/straight-shoota/crinja/blob/master/TEMPLATE_SYNTAX.md) is almost the same than Jinja2.
