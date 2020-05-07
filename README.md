@@ -30,13 +30,13 @@ bin/stacker server --config example/stacker.yml
 Fetch pillars with Stacker :
 
 ```sh
-bin/stacker fetch server1.example.net --config example/stacker.yml --grains example/grains/server1.json | jq
+bin/stacker fetch server1.example.net --config example/stacker.yml --grains example/grains/server1.json --pillar example/ext_pillar/server1.json | jq
 ```
 
 Fetch pillars with Curl :
 
 ```sh
-curl --no-progress-meter -X POST -H "Content-Type: application/json" -d @example/grains/server1.json http://127.0.0.1:3000/server1.example.net | jq
+curl --no-progress-meter -X POST -H "Content-Type: application/json" -d @example/grains/server1.curl.json http://127.0.0.1:3000/server1.example.net | jq
 ```
 
 You can also navigate to http://127.0.0.1:3000/server1.example.net to see the generated pillars.

@@ -1,16 +1,17 @@
 module Stacker
   class Processor
-    property grains : Hash(String, String) | JSON::Any
+    property grains : Hash(String, String) | Hash(String, JSON::Any) | JSON::Any
 
     def initialize(@root_dir : String, @entrypoint : String, @stacks : Array(String), @renderer : Renderer)
-      @pillar = Pillar.new
       @host_name = ""
       @grains = {} of String => String
+      @pillar = Pillar.new
     end
 
-    def run(host_name, grains)
+    def run(host_name, grains, pillar)
       @host_name = host_name
       @grains = grains
+      @pillar = pillar
 
       return {404 => "Not found"} unless valid?
 

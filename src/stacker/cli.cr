@@ -56,6 +56,12 @@ module Stacker
         short: g,
         default: ""
 
+      define_flag pillar : String,
+        description: "Path to JSON pillar file",
+        long: pillar,
+        short: p,
+        default: ""
+
       def run
         load_config
 
@@ -63,12 +69,25 @@ module Stacker
           if flags.grains == ""
             {"id" => arguments.host_name}
           else
-            JSON.parse(File.read(flags.grains))
+            load_json_file(flags.grains)
           end
 
+        pillar =
+          if flags.pillar == ""
+            {} of String => String
+          else
+            load_json_file(flags.pillar).as_h
+          end
+
+        pillar = Utils.convert_hash(pillar)
+
         processor = Stacker::Processor.new(Stacker.config.doc_root, Stacker.config.entrypoint, Stacker.config.stacks, Renderer.new(Stacker.config.doc_root))
-        result = processor.run(arguments.host_name, grains)
+        result = processor.run(arguments.host_name, grains, pillar)
         puts result.to_json
+      end
+
+      private def load_json_file(file)
+        JSON.parse(File.read(file))
       end
     end
 

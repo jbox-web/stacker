@@ -31,8 +31,8 @@ module Stacker
       s = Pillar.new
 
       hash.each do |k, v|
-        k = k.raw
-        v = v.raw
+        k = k.raw if k.responds_to?(:raw)
+        v = v.raw if v.responds_to?(:raw)
 
         next if v.is_a?(Set) || v.is_a?(Slice)
 
@@ -52,7 +52,7 @@ module Stacker
       acc = [] of Stacker::Pillar::Type
 
       array.each do |val|
-        val = val.raw
+        val = val.raw if val.responds_to?(:raw)
         next if val.is_a?(Set) || val.is_a?(Slice)
 
         acc <<

@@ -6,11 +6,14 @@ module Stacker
 
     get "/:host" do |env|
       host_name, level, format = extract_params(env)
+
       grains = {"id" => host_name}
+      pillar = {} of String => String
+      pillar = Utils.convert_hash(pillar)
 
       result =
         Utils.with_log_level(level) do
-          process(host_name, grains)
+          process(host_name, grains, pillar)
         end
 
       respond_with(env, format, result)
@@ -18,11 +21,14 @@ module Stacker
 
     post "/:host" do |env|
       host_name, level, format = extract_params(env)
-      grains = JSON.parse(env.params.json.to_json)
+
+      grains = env.params.json["grains"].as(Hash)
+      pillar = env.params.json["pillar"].as(Hash)
+      pillar = Utils.convert_hash(pillar)
 
       result =
         Utils.with_log_level(level) do
-          process(host_name, grains)
+          process(host_name, grains, pillar)
         end
 
       respond_with(env, format, result)
@@ -49,9 +55,9 @@ module Stacker
       end
     end
 
-    private def self.process(host_name, grains)
+    private def self.process(host_name, grains, pillar)
       processor = Stacker::Processor.new(Stacker.config.doc_root, Stacker.config.entrypoint, Stacker.config.stacks, renderer)
-      processor.run(host_name, grains)
+      processor.run(host_name, grains, pillar)
     end
 
     private def self.renderer
