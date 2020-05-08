@@ -1,0 +1,20 @@
+---
+foo:
+  bar:
+  - 1
+  - 127.0.0.1
+  - true
+  is_true: true
+  is_false: false
+  is_array: []
+  is_hash: {}
+  nested:
+    foo:
+      bar:
+      - 1
+      - 127.0.0.1
+      - false
+      is_true: true
+      is_false: false
+      is_array: []
+      is_hash: {}
