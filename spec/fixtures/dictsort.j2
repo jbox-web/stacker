@@ -1,0 +1,52 @@
+{%- macro apps_php_config(users, apps, apps_dir) -%}
+  {%- set data = dict() -%}
+  {%- for user, user_config in users -%}
+    {%- if 'developer' is in user_config['roles'] -%}
+      {%- for app, app_config in apps -%}
+        {%- if app_config['php'] is defined -%}
+          {%- set app_name        = user ~ '-' ~ app -%}
+          {%- set config_file     = user ~ '.' ~ app ~ '.conf' -%}
+          {%- set php_version     = app_config['php']['version'] | string -%}
+          {%- set app_home_dir    = apps_dir ~ '/' ~ user ~ '/PROJECTS/' ~ app -%}
+          {%- set app_tmp_dir     = app_home_dir ~ '/php/tmp' -%}
+          {%- set socket_file     = app_home_dir ~ '/php/sockets/php-fpm.sock' -%}
+          {%- set error_log       = app_home_dir ~ '/log/php/error.log' -%}
+          {%- do merge_dict(data, {
+            config_file: {
+              'enabled': true,
+              'phpversion': php_version,
+              'settings': {
+                app_name: {
+                  'user': user,
+                  'group': user,
+                  'listen': socket_file,
+                  'listen.mode': '0666',
+                  'pm': 'static',
+                  'pm.max_children': 2,
+                  'pm.max_requests': 500,
+                  'pm.status_path': '/php-status',
+                  'ping.path': '/php-ping',
+                  'catch_workers_output': 'yes',
+                  'security.limit_extensions': '.php',
+                  'php_admin_value[sys_temp_dir]': app_tmp_dir,
+                  'php_admin_value[session.save_handler]': 'redis',
+                  'php_admin_value[error_log]': error_log
+                }
+              }
+            }
+          }) -%}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endif -%}
+  {%- endfor -%}
+  {{ data | json }}
+{%- endmacro -%}
+
+{% set users    = pillar | traverse('my_company:users', {}) | dictsort %}
+{% set apps     = pillar | traverse('my_company:apps', {}) | dictsort %}
+{% set apps_dir = pillar | traverse('my_company:apps_dir:development') %}
+
+php:
+  fpm:
+    pools:
+      {{ apps_php_config(users, apps, apps_dir) }}

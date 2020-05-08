@@ -1,0 +1,80 @@
+---
+php:
+  fpm:
+    pools:
+      jdoe.app1.conf:
+        enabled: true
+        phpversion: "7.3"
+        settings:
+          jdoe-app1:
+            user: jdoe
+            group: jdoe
+            listen: /data/development/jdoe/PROJECTS/app1/php/sockets/php-fpm.sock
+            listen.mode: "0666"
+            pm: static
+            pm.max_children: 2
+            pm.max_requests: 500
+            pm.status_path: /php-status
+            ping.path: /php-ping
+            catch_workers_output: "yes"
+            security.limit_extensions: .php
+            php_admin_value[sys_temp_dir]: /data/development/jdoe/PROJECTS/app1/php/tmp
+            php_admin_value[session.save_handler]: redis
+            php_admin_value[error_log]: /data/development/jdoe/PROJECTS/app1/log/php/error.log
+      jdoe.app2.conf:
+        enabled: true
+        phpversion: "7.3"
+        settings:
+          jdoe-app2:
+            user: jdoe
+            group: jdoe
+            listen: /data/development/jdoe/PROJECTS/app2/php/sockets/php-fpm.sock
+            listen.mode: "0666"
+            pm: static
+            pm.max_children: 2
+            pm.max_requests: 500
+            pm.status_path: /php-status
+            ping.path: /php-ping
+            catch_workers_output: "yes"
+            security.limit_extensions: .php
+            php_admin_value[sys_temp_dir]: /data/development/jdoe/PROJECTS/app2/php/tmp
+            php_admin_value[session.save_handler]: redis
+            php_admin_value[error_log]: /data/development/jdoe/PROJECTS/app2/log/php/error.log
+      nrodriguez.app1.conf:
+        enabled: true
+        phpversion: "7.3"
+        settings:
+          nrodriguez-app1:
+            user: nrodriguez
+            group: nrodriguez
+            listen: /data/development/nrodriguez/PROJECTS/app1/php/sockets/php-fpm.sock
+            listen.mode: "0666"
+            pm: static
+            pm.max_children: 2
+            pm.max_requests: 500
+            pm.status_path: /php-status
+            ping.path: /php-ping
+            catch_workers_output: "yes"
+            security.limit_extensions: .php
+            php_admin_value[sys_temp_dir]: /data/development/nrodriguez/PROJECTS/app1/php/tmp
+            php_admin_value[session.save_handler]: redis
+            php_admin_value[error_log]: /data/development/nrodriguez/PROJECTS/app1/log/php/error.log
+      nrodriguez.app2.conf:
+        enabled: true
+        phpversion: "7.3"
+        settings:
+          nrodriguez-app2:
+            user: nrodriguez
+            group: nrodriguez
+            listen: /data/development/nrodriguez/PROJECTS/app2/php/sockets/php-fpm.sock
+            listen.mode: "0666"
+            pm: static
+            pm.max_children: 2
+            pm.max_requests: 500
+            pm.status_path: /php-status
+            ping.path: /php-ping
+            catch_workers_output: "yes"
+            security.limit_extensions: .php
+            php_admin_value[sys_temp_dir]: /data/development/nrodriguez/PROJECTS/app2/php/tmp
+            php_admin_value[session.save_handler]: redis
+            php_admin_value[error_log]: /data/development/nrodriguez/PROJECTS/app2/log/php/error.log

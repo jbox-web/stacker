@@ -32,4 +32,17 @@ describe Stacker::Renderer do
     env = create_renderer
     env.compile("spec/fixtures/traverse.j2", {"pillar" => data}).should eq("foo\n[]")
   end
+
+  it "support dictsort filter" do
+    data = load_yaml("spec/fixtures/input/base.yml")
+    generated_data = File.read("spec/fixtures/output/dictsort_generated_data.yml").chomp
+    generated_yaml = File.read("spec/fixtures/output/dictsort_generated_yaml.yml")
+
+    env = create_renderer
+    output = env.compile("spec/fixtures/dictsort.j2", {"pillar" => data})
+    output.should eq(generated_data)
+
+    yaml = YAML.parse(output)
+    YAML.dump(yaml).should eq(generated_yaml)
+  end
 end

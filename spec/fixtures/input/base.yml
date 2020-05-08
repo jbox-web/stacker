@@ -1,0 +1,25 @@
+---
+my_company:
+  apps:
+    app2:
+      servers:
+        - server2
+      php:
+        version: 7.3
+    app1:
+      servers:
+        - server2
+      php:
+        version: 7.3
+  users:
+    nrodriguez:
+      name:  Nicolas Rodriguez
+      roles:
+        - admin
+        - developer
+    jdoe:
+      name:  John Doe
+      roles:
+        - developer
+  apps_dir:
+    development: /data/development
