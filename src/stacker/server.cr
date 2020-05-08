@@ -67,12 +67,8 @@ module Stacker
     end
 
     private def self.process(stack, host_name, grains, pillar)
-      processor = Stacker::Processor.new(Stacker.config.doc_root, Stacker.config.entrypoint, stack, renderer)
+      processor = Stacker::Processor.new(Stacker.config.doc_root, Stacker.config.entrypoint, stack, Renderer.new(Stacker.config.doc_root))
       processor.run(host_name, grains, pillar)
-    end
-
-    private def self.renderer
-      @@renderer ||= Renderer.new(Stacker.config.doc_root)
     end
   end
 end
