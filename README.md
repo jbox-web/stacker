@@ -43,9 +43,9 @@ You can also navigate to http://127.0.0.1:3000/server1.example.net to see the ge
 
 ## Configuration
 
-By default Stacker looks for it's configuration file in the current directory.
+By default Stacker looks for it's configuration file in the current directory (`stacker.yml`).
 
-You can pass an alternative path by using `--config` flag.
+You can pass an alternative file by using `--config` flag.
 
 The configuration file is a YAML file looking like this :
 
