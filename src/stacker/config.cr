@@ -10,8 +10,8 @@ module Stacker
         nilable: false,
       },
       stacks: {
-        type:    Array(String),
-        default: [""],
+        type:    Hash(String, Array(String)),
+        nilable: false,
       },
       server_host: {
         type:    String,

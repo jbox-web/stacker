@@ -2,14 +2,9 @@ module Stacker
   class CLI < Admiral::Command
     module Config
       def load_config
-        begin
-          config_file = File.read(flags.config)
-        rescue e
-          puts e.message; exit
-        else
-          config = Stacker::Config.from_yaml(config_file)
-          Stacker.config = config
-        end
+        config_file = File.read(flags.config)
+        config = Stacker::Config.from_yaml(config_file)
+        Stacker.config = config
       end
     end
 
@@ -50,6 +45,12 @@ module Stacker
         short: c,
         default: "stacker.yml"
 
+      define_flag namespace : String,
+        description: "Stack namespace to use",
+        long: namespace,
+        short: n,
+        default: "default"
+
       define_flag grains : String,
         description: "Path to JSON grains file",
         long: grains,
@@ -81,9 +82,15 @@ module Stacker
 
         pillar = Utils.convert_hash(pillar)
 
-        processor = Stacker::Processor.new(Stacker.config.doc_root, Stacker.config.entrypoint, Stacker.config.stacks, Renderer.new(Stacker.config.doc_root))
-        result = processor.run(arguments.host_name, grains, pillar)
-        puts result.to_json
+        stack = Stacker.config.stacks[flags.namespace]?
+
+        if stack.nil?
+          raise ArgumentError.new("Namespace not found : #{flags.namespace}")
+        else
+          processor = Stacker::Processor.new(Stacker.config.doc_root, Stacker.config.entrypoint, stack, Renderer.new(Stacker.config.doc_root))
+          result = processor.run(arguments.host_name, grains, pillar)
+          puts result.to_json
+        end
       end
 
       private def load_json_file(file)

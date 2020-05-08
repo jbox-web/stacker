@@ -30,7 +30,7 @@ bin/stacker server --config example/stacker.yml
 Fetch pillars with Stacker :
 
 ```sh
-bin/stacker fetch server1.example.net --config example/stacker.yml --grains example/grains/server1.json --pillar example/ext_pillar/server1.json | jq
+bin/stacker fetch server1.example.net --config example/stacker.yml --grains example/grains/server1.json --pillar example/ext_pillar/server1.json
 ```
 
 Fetch pillars with Curl :
@@ -55,9 +55,15 @@ doc_root: example/doc_root
 entrypoint: server-pillars
 
 stacks:
-  - example/doc_root/server-pillars/stack1.cfg
-  - example/doc_root/pillars/stack1.cfg
-  - example/doc_root/server-pillars/stack2.cfg
+  default:
+    - example/doc_root/server-pillars/stack1.cfg
+  dev:
+    - example/doc_root/server-pillars/stack1.cfg
+    - example/doc_root/pillars/stack1.cfg
+  prod:
+    - example/doc_root/server-pillars/stack1.cfg
+    - example/doc_root/pillars/stack1.cfg
+    - example/doc_root/server-pillars/stack2.cfg
 
 server_host: 127.0.0.1
 server_port: 3000
@@ -70,7 +76,7 @@ Config               | Description
 ---------------------|------------
 `doc_root`           | the webserver document root (must be specified). Since pillar are also crinja templates, it means where are the template files?
 `entrypoint`         | the webserver entrypoint (must be specified). The directory in the `doc_root` where we shoud look for `<minion_d>.yml` file
-`stacks`             | a list of [stack configuration files](https://docs.saltstack.com/en/master/ref/pillar/all/salt.pillar.stack.html#list-of-config-files) (default [])
+`stacks`             | a hash of namespaced [stack configuration files](https://docs.saltstack.com/en/master/ref/pillar/all/salt.pillar.stack.html#list-of-config-files) (must be specified)
 `server_host`        | ip address to bind to (default `127.0.0.1`)
 `server_port`        | port to bind to (default `3000`)
 `server_environment` | `development` or `production` (default `production`)
@@ -100,6 +106,103 @@ ext_pillar:
 ```
 
 4. Restart Salt, you're done :)
+
+## Namespaces
+
+Use namespaces by using optional query parameter :
+
+```sh
+curl http://127.0.0.1:3000/server1.example.net?n=dev
+curl http://127.0.0.1:3000/server1.example.net?n=prod
+```
+
+The default namespace when query parameter is omited is `default`.
+
+## Output format
+
+Set output format by using optional query parameter :
+
+```sh
+curl http://127.0.0.1:3000/server1.example.net?f=json
+curl http://127.0.0.1:3000/server1.example.net?f=yaml
+```
+
+The default output format when query parameter is omited is `json`.
+
+Only `json` and `yaml` are supported.
+
+## Logs
+
+Set log level by using optional query parameter :
+
+```sh
+curl http://127.0.0.1:3000/server1.example.net?l=verbose
+curl http://127.0.0.1:3000/server1.example.net?l=debug
+```
+
+Log levels other than `verbose` or `debug` are meaningless.
+
+`debug` level is very verbose as it dumps data before and after merge operations.
+
+`verbose` level will render something like this :
+
+```sh
+V, [2020-05-06T02:08:39.049901000Z #188552] VERBOSE -- stacker:stacker: Looking for example/doc_root/server-pillars/server2.example.net.yml
+V, [2020-05-06T02:08:39.050019000Z #188552] VERBOSE -- stacker:stacker: Building stack for: server2.example.net
+V, [2020-05-06T02:08:39.050405000Z #188552] VERBOSE -- stacker:stacker: Loading: ["example/doc_root/server-pillars/01-common.yml"] from example/doc_root/server-pillars
+V, [2020-05-06T02:08:39.050532000Z #188552] VERBOSE -- stacker:stacker: Compiling: example/doc_root/server-pillars/01-common.yml
+V, [2020-05-06T02:08:39.050855000Z #188552] VERBOSE -- stacker:stacker: Merging: example/doc_root/server-pillars/01-common.yml
+V, [2020-05-06T02:08:39.051022000Z #188552] VERBOSE -- stacker:stacker: Loading: ["example/doc_root/server-pillars/server2.example.net.yml"] from example/doc_root/server-pillars
+V, [2020-05-06T02:08:39.051141000Z #188552] VERBOSE -- stacker:stacker: Compiling: example/doc_root/server-pillars/server2.example.net.yml
+V, [2020-05-06T02:08:39.052889000Z #188552] VERBOSE -- stacker:stacker: Merging: example/doc_root/server-pillars/server2.example.net.yml
+V, [2020-05-06T02:08:39.053613000Z #188552] VERBOSE -- stacker:stacker: Loading: ["example/doc_root/pillars/01-base/01-base.yml", "example/doc_root/pillars/01-base/app1.yml"] from example/doc_root/pillars
+V, [2020-05-06T02:08:39.053734000Z #188552] VERBOSE -- stacker:stacker: Compiling: example/doc_root/pillars/01-base/01-base.yml
+V, [2020-05-06T02:08:39.054108000Z #188552] VERBOSE -- stacker:stacker: Merging: example/doc_root/pillars/01-base/01-base.yml
+V, [2020-05-06T02:08:39.054241000Z #188552] VERBOSE -- stacker:stacker: Compiling: example/doc_root/pillars/01-base/app1.yml
+V, [2020-05-06T02:08:39.054513000Z #188552] VERBOSE -- stacker:stacker: Merging: example/doc_root/pillars/01-base/app1.yml
+V, [2020-05-06T02:08:39.054759000Z #188552] VERBOSE -- stacker:stacker: Loading: ["example/doc_root/pillars/02-common/syslog.yml"] from example/doc_root/pillars
+V, [2020-05-06T02:08:39.054923000Z #188552] VERBOSE -- stacker:stacker: Compiling: example/doc_root/pillars/02-common/syslog.yml
+V, [2020-05-06T02:08:39.056943000Z #188552] VERBOSE -- stacker:stacker: Merging: example/doc_root/pillars/02-common/syslog.yml
+V, [2020-05-06T02:08:39.057113000Z #188552] VERBOSE -- stacker:stacker: Loading: ["example/doc_root/pillars/03-roles/common-locale.yml"] from example/doc_root/pillars
+V, [2020-05-06T02:08:39.057233000Z #188552] VERBOSE -- stacker:stacker: Compiling: example/doc_root/pillars/03-roles/common-locale.yml
+V, [2020-05-06T02:08:39.057729000Z #188552] VERBOSE -- stacker:stacker: Merging: example/doc_root/pillars/03-roles/common-locale.yml
+V, [2020-05-06T02:08:39.057891000Z #188552] VERBOSE -- stacker:stacker: Loading: ["example/doc_root/pillars/03-roles/common-timezone.yml"] from example/doc_root/pillars
+V, [2020-05-06T02:08:39.058011000Z #188552] VERBOSE -- stacker:stacker: Compiling: example/doc_root/pillars/03-roles/common-timezone.yml
+V, [2020-05-06T02:08:39.058526000Z #188552] VERBOSE -- stacker:stacker: Merging: example/doc_root/pillars/03-roles/common-timezone.yml
+V, [2020-05-06T02:08:39.058714000Z #188552] VERBOSE -- stacker:stacker: Loading: ["example/doc_root/pillars/03-roles/common-users.yml"] from example/doc_root/pillars
+V, [2020-05-06T02:08:39.058806000Z #188552] VERBOSE -- stacker:stacker: Compiling: example/doc_root/pillars/03-roles/common-users.yml
+V, [2020-05-06T02:08:39.059615000Z #188552] VERBOSE -- stacker:stacker: Merging: example/doc_root/pillars/03-roles/common-users.yml
+V, [2020-05-06T02:08:39.059784000Z #188552] VERBOSE -- stacker:stacker: Loading: ["example/doc_root/pillars/03-roles/client-salt.yml"] from example/doc_root/pillars
+V, [2020-05-06T02:08:39.059905000Z #188552] VERBOSE -- stacker:stacker: Compiling: example/doc_root/pillars/03-roles/client-salt.yml
+V, [2020-05-06T02:08:39.060465000Z #188552] VERBOSE -- stacker:stacker: Merging: example/doc_root/pillars/03-roles/client-salt.yml
+V, [2020-05-06T02:08:39.060636000Z #188552] VERBOSE -- stacker:stacker: Loading: ["example/doc_root/pillars/03-roles/server-openssh.yml"] from example/doc_root/pillars
+V, [2020-05-06T02:08:39.060755000Z #188552] VERBOSE -- stacker:stacker: Compiling: example/doc_root/pillars/03-roles/server-openssh.yml
+V, [2020-05-06T02:08:39.061561000Z #188552] VERBOSE -- stacker:stacker: Merging: example/doc_root/pillars/03-roles/server-openssh.yml
+V, [2020-05-06T02:08:39.061733000Z #188552] VERBOSE -- stacker:stacker: Loading: ["example/doc_root/pillars/03-roles/server-docker.yml"] from example/doc_root/pillars
+V, [2020-05-06T02:08:39.061846000Z #188552] VERBOSE -- stacker:stacker: Compiling: example/doc_root/pillars/03-roles/server-docker.yml
+V, [2020-05-06T02:08:39.062689000Z #188552] VERBOSE -- stacker:stacker: Merging: example/doc_root/pillars/03-roles/server-docker.yml
+V, [2020-05-06T02:08:39.062880000Z #188552] VERBOSE -- stacker:stacker: Loading: ["example/doc_root/pillars/03-roles/server-nodejs.yml"] from example/doc_root/pillars
+V, [2020-05-06T02:08:39.063001000Z #188552] VERBOSE -- stacker:stacker: Compiling: example/doc_root/pillars/03-roles/server-nodejs.yml
+V, [2020-05-06T02:08:39.063995000Z #188552] VERBOSE -- stacker:stacker: Merging: example/doc_root/pillars/03-roles/server-nodejs.yml
+V, [2020-05-06T02:08:39.064181000Z #188552] VERBOSE -- stacker:stacker: Loading: ["example/doc_root/pillars/03-roles/server-php.yml"] from example/doc_root/pillars
+V, [2020-05-06T02:08:39.064279000Z #188552] VERBOSE -- stacker:stacker: Compiling: example/doc_root/pillars/03-roles/server-php.yml
+V, [2020-05-06T02:08:39.065910000Z #188552] VERBOSE -- stacker:stacker: Merging: example/doc_root/pillars/03-roles/server-php.yml
+V, [2020-05-06T02:08:39.066102000Z #188552] VERBOSE -- stacker:stacker: Loading: ["example/doc_root/pillars/03-roles/server-redis.yml"] from example/doc_root/pillars
+V, [2020-05-06T02:08:39.066227000Z #188552] VERBOSE -- stacker:stacker: Compiling: example/doc_root/pillars/03-roles/server-redis.yml
+V, [2020-05-06T02:08:39.066966000Z #188552] VERBOSE -- stacker:stacker: Merging: example/doc_root/pillars/03-roles/server-redis.yml
+V, [2020-05-06T02:08:39.067172000Z #188552] VERBOSE -- stacker:stacker: Loading: ["example/doc_root/pillars/04-roles-config/php-app-server-common.yml"] from example/doc_root/pillars
+V, [2020-05-06T02:08:39.067292000Z #188552] VERBOSE -- stacker:stacker: Compiling: example/doc_root/pillars/04-roles-config/php-app-server-common.yml
+V, [2020-05-06T02:08:39.068349000Z #188552] VERBOSE -- stacker:stacker: Merging: example/doc_root/pillars/04-roles-config/php-app-server-common.yml
+V, [2020-05-06T02:08:39.068544000Z #188552] VERBOSE -- stacker:stacker: Loading: ["example/doc_root/pillars/04-roles-config/php-app-server-development.yml"] from example/doc_root/pillars
+V, [2020-05-06T02:08:39.068691000Z #188552] VERBOSE -- stacker:stacker: Compiling: example/doc_root/pillars/04-roles-config/php-app-server-development.yml
+V, [2020-05-06T02:08:39.075023000Z #188552] VERBOSE -- stacker:stacker: Merging: example/doc_root/pillars/04-roles-config/php-app-server-development.yml
+V, [2020-05-06T02:08:39.075755000Z #188552] VERBOSE -- stacker:stacker: Loading: ["example/doc_root/server-pillars/server2.example.net/dump.yml", "example/doc_root/server-pillars/server2.example.net/users.yml"] from example/doc_root/server-pillars
+V, [2020-05-06T02:08:39.075856000Z #188552] VERBOSE -- stacker:stacker: Compiling: example/doc_root/server-pillars/server2.example.net/dump.yml
+V, [2020-05-06T02:08:39.076636000Z #188552] VERBOSE -- stacker:stacker: Compiling: example/doc_root/server-pillars/server2.example.net/users.yml
+V, [2020-05-06T02:08:39.077523000Z #188552] VERBOSE -- stacker:stacker: Merging: example/doc_root/server-pillars/server2.example.net/users.yml
+V, [2020-05-06T02:08:39.077650000Z #188552] VERBOSE -- stacker:stacker: End of stack build for: server2.example.net
+2020-05-06 02:08:39 UTC 200 GET /server2.example.net?l=verbose 29.54ms
+```
 
 ## Scaling
 
@@ -279,92 +382,6 @@ operators:
   operator[not]
   operator[or]
   operator[~]
-```
-
-## Output format
-
-Set output format by using optional query parameter :
-
-```sh
-curl http://127.0.0.1:3000/server1.example.net?f=json
-curl http://127.0.0.1:3000/server1.example.net?f=yaml
-```
-
-Default output format is `json`.
-
-Only `json` and `yaml` are supported.
-
-## Logs
-
-Set log level by using optional query parameter :
-
-```sh
-curl http://127.0.0.1:3000/server1.example.net?l=verbose
-curl http://127.0.0.1:3000/server1.example.net?l=debug
-```
-
-Log levels other than `verbose` or `debug` are meaningless.
-
-`debug` level is very verbose as it dumps data before and after merge operations.
-
-`verbose` level will render something like this :
-
-```sh
-V, [2020-05-06T02:08:39.049901000Z #188552] VERBOSE -- stacker:stacker: Looking for example/doc_root/server-pillars/server2.example.net.yml
-V, [2020-05-06T02:08:39.050019000Z #188552] VERBOSE -- stacker:stacker: Building stack for: server2.example.net
-V, [2020-05-06T02:08:39.050405000Z #188552] VERBOSE -- stacker:stacker: Loading: ["example/doc_root/server-pillars/01-common.yml"] from example/doc_root/server-pillars
-V, [2020-05-06T02:08:39.050532000Z #188552] VERBOSE -- stacker:stacker: Compiling: example/doc_root/server-pillars/01-common.yml
-V, [2020-05-06T02:08:39.050855000Z #188552] VERBOSE -- stacker:stacker: Merging: example/doc_root/server-pillars/01-common.yml
-V, [2020-05-06T02:08:39.051022000Z #188552] VERBOSE -- stacker:stacker: Loading: ["example/doc_root/server-pillars/server2.example.net.yml"] from example/doc_root/server-pillars
-V, [2020-05-06T02:08:39.051141000Z #188552] VERBOSE -- stacker:stacker: Compiling: example/doc_root/server-pillars/server2.example.net.yml
-V, [2020-05-06T02:08:39.052889000Z #188552] VERBOSE -- stacker:stacker: Merging: example/doc_root/server-pillars/server2.example.net.yml
-V, [2020-05-06T02:08:39.053613000Z #188552] VERBOSE -- stacker:stacker: Loading: ["example/doc_root/pillars/01-base/01-base.yml", "example/doc_root/pillars/01-base/app1.yml"] from example/doc_root/pillars
-V, [2020-05-06T02:08:39.053734000Z #188552] VERBOSE -- stacker:stacker: Compiling: example/doc_root/pillars/01-base/01-base.yml
-V, [2020-05-06T02:08:39.054108000Z #188552] VERBOSE -- stacker:stacker: Merging: example/doc_root/pillars/01-base/01-base.yml
-V, [2020-05-06T02:08:39.054241000Z #188552] VERBOSE -- stacker:stacker: Compiling: example/doc_root/pillars/01-base/app1.yml
-V, [2020-05-06T02:08:39.054513000Z #188552] VERBOSE -- stacker:stacker: Merging: example/doc_root/pillars/01-base/app1.yml
-V, [2020-05-06T02:08:39.054759000Z #188552] VERBOSE -- stacker:stacker: Loading: ["example/doc_root/pillars/02-common/syslog.yml"] from example/doc_root/pillars
-V, [2020-05-06T02:08:39.054923000Z #188552] VERBOSE -- stacker:stacker: Compiling: example/doc_root/pillars/02-common/syslog.yml
-V, [2020-05-06T02:08:39.056943000Z #188552] VERBOSE -- stacker:stacker: Merging: example/doc_root/pillars/02-common/syslog.yml
-V, [2020-05-06T02:08:39.057113000Z #188552] VERBOSE -- stacker:stacker: Loading: ["example/doc_root/pillars/03-roles/common-locale.yml"] from example/doc_root/pillars
-V, [2020-05-06T02:08:39.057233000Z #188552] VERBOSE -- stacker:stacker: Compiling: example/doc_root/pillars/03-roles/common-locale.yml
-V, [2020-05-06T02:08:39.057729000Z #188552] VERBOSE -- stacker:stacker: Merging: example/doc_root/pillars/03-roles/common-locale.yml
-V, [2020-05-06T02:08:39.057891000Z #188552] VERBOSE -- stacker:stacker: Loading: ["example/doc_root/pillars/03-roles/common-timezone.yml"] from example/doc_root/pillars
-V, [2020-05-06T02:08:39.058011000Z #188552] VERBOSE -- stacker:stacker: Compiling: example/doc_root/pillars/03-roles/common-timezone.yml
-V, [2020-05-06T02:08:39.058526000Z #188552] VERBOSE -- stacker:stacker: Merging: example/doc_root/pillars/03-roles/common-timezone.yml
-V, [2020-05-06T02:08:39.058714000Z #188552] VERBOSE -- stacker:stacker: Loading: ["example/doc_root/pillars/03-roles/common-users.yml"] from example/doc_root/pillars
-V, [2020-05-06T02:08:39.058806000Z #188552] VERBOSE -- stacker:stacker: Compiling: example/doc_root/pillars/03-roles/common-users.yml
-V, [2020-05-06T02:08:39.059615000Z #188552] VERBOSE -- stacker:stacker: Merging: example/doc_root/pillars/03-roles/common-users.yml
-V, [2020-05-06T02:08:39.059784000Z #188552] VERBOSE -- stacker:stacker: Loading: ["example/doc_root/pillars/03-roles/client-salt.yml"] from example/doc_root/pillars
-V, [2020-05-06T02:08:39.059905000Z #188552] VERBOSE -- stacker:stacker: Compiling: example/doc_root/pillars/03-roles/client-salt.yml
-V, [2020-05-06T02:08:39.060465000Z #188552] VERBOSE -- stacker:stacker: Merging: example/doc_root/pillars/03-roles/client-salt.yml
-V, [2020-05-06T02:08:39.060636000Z #188552] VERBOSE -- stacker:stacker: Loading: ["example/doc_root/pillars/03-roles/server-openssh.yml"] from example/doc_root/pillars
-V, [2020-05-06T02:08:39.060755000Z #188552] VERBOSE -- stacker:stacker: Compiling: example/doc_root/pillars/03-roles/server-openssh.yml
-V, [2020-05-06T02:08:39.061561000Z #188552] VERBOSE -- stacker:stacker: Merging: example/doc_root/pillars/03-roles/server-openssh.yml
-V, [2020-05-06T02:08:39.061733000Z #188552] VERBOSE -- stacker:stacker: Loading: ["example/doc_root/pillars/03-roles/server-docker.yml"] from example/doc_root/pillars
-V, [2020-05-06T02:08:39.061846000Z #188552] VERBOSE -- stacker:stacker: Compiling: example/doc_root/pillars/03-roles/server-docker.yml
-V, [2020-05-06T02:08:39.062689000Z #188552] VERBOSE -- stacker:stacker: Merging: example/doc_root/pillars/03-roles/server-docker.yml
-V, [2020-05-06T02:08:39.062880000Z #188552] VERBOSE -- stacker:stacker: Loading: ["example/doc_root/pillars/03-roles/server-nodejs.yml"] from example/doc_root/pillars
-V, [2020-05-06T02:08:39.063001000Z #188552] VERBOSE -- stacker:stacker: Compiling: example/doc_root/pillars/03-roles/server-nodejs.yml
-V, [2020-05-06T02:08:39.063995000Z #188552] VERBOSE -- stacker:stacker: Merging: example/doc_root/pillars/03-roles/server-nodejs.yml
-V, [2020-05-06T02:08:39.064181000Z #188552] VERBOSE -- stacker:stacker: Loading: ["example/doc_root/pillars/03-roles/server-php.yml"] from example/doc_root/pillars
-V, [2020-05-06T02:08:39.064279000Z #188552] VERBOSE -- stacker:stacker: Compiling: example/doc_root/pillars/03-roles/server-php.yml
-V, [2020-05-06T02:08:39.065910000Z #188552] VERBOSE -- stacker:stacker: Merging: example/doc_root/pillars/03-roles/server-php.yml
-V, [2020-05-06T02:08:39.066102000Z #188552] VERBOSE -- stacker:stacker: Loading: ["example/doc_root/pillars/03-roles/server-redis.yml"] from example/doc_root/pillars
-V, [2020-05-06T02:08:39.066227000Z #188552] VERBOSE -- stacker:stacker: Compiling: example/doc_root/pillars/03-roles/server-redis.yml
-V, [2020-05-06T02:08:39.066966000Z #188552] VERBOSE -- stacker:stacker: Merging: example/doc_root/pillars/03-roles/server-redis.yml
-V, [2020-05-06T02:08:39.067172000Z #188552] VERBOSE -- stacker:stacker: Loading: ["example/doc_root/pillars/04-roles-config/php-app-server-common.yml"] from example/doc_root/pillars
-V, [2020-05-06T02:08:39.067292000Z #188552] VERBOSE -- stacker:stacker: Compiling: example/doc_root/pillars/04-roles-config/php-app-server-common.yml
-V, [2020-05-06T02:08:39.068349000Z #188552] VERBOSE -- stacker:stacker: Merging: example/doc_root/pillars/04-roles-config/php-app-server-common.yml
-V, [2020-05-06T02:08:39.068544000Z #188552] VERBOSE -- stacker:stacker: Loading: ["example/doc_root/pillars/04-roles-config/php-app-server-development.yml"] from example/doc_root/pillars
-V, [2020-05-06T02:08:39.068691000Z #188552] VERBOSE -- stacker:stacker: Compiling: example/doc_root/pillars/04-roles-config/php-app-server-development.yml
-V, [2020-05-06T02:08:39.075023000Z #188552] VERBOSE -- stacker:stacker: Merging: example/doc_root/pillars/04-roles-config/php-app-server-development.yml
-V, [2020-05-06T02:08:39.075755000Z #188552] VERBOSE -- stacker:stacker: Loading: ["example/doc_root/server-pillars/server2.example.net/dump.yml", "example/doc_root/server-pillars/server2.example.net/users.yml"] from example/doc_root/server-pillars
-V, [2020-05-06T02:08:39.075856000Z #188552] VERBOSE -- stacker:stacker: Compiling: example/doc_root/server-pillars/server2.example.net/dump.yml
-V, [2020-05-06T02:08:39.076636000Z #188552] VERBOSE -- stacker:stacker: Compiling: example/doc_root/server-pillars/server2.example.net/users.yml
-V, [2020-05-06T02:08:39.077523000Z #188552] VERBOSE -- stacker:stacker: Merging: example/doc_root/server-pillars/server2.example.net/users.yml
-V, [2020-05-06T02:08:39.077650000Z #188552] VERBOSE -- stacker:stacker: End of stack build for: server2.example.net
-2020-05-06 02:08:39 UTC 200 GET /server2.example.net?l=verbose 29.54ms
 ```
 
 ## Roadmap

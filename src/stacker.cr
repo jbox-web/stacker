@@ -24,4 +24,9 @@ end
 Log.builder.bind "*", :debug, Log::IOBackend.new
 
 # Start the CLI
-Stacker::CLI.run
+begin
+  Stacker::CLI.run
+rescue e : Exception
+  puts e.message
+  exit 1
+end
