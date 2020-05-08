@@ -6,14 +6,30 @@ import salt.utils.http
 
 log = logging.getLogger(__name__)
 
-def ext_pillar(minion_id, pillar, stacker_host):
-  host = '%s/%s' % (stacker_host, minion_id)
-  data = { 'grains': __grains__, 'pillar': pillar }
-  data = json.dumps(data)
+def ext_pillar(minion_id, pillar, *args, **kwargs):
+  host      = kwargs.get('host', None) or args[0]
+  namespace = kwargs.get('namespace', 'default')
+  log_level = kwargs.get('log_level', None)
+
+  if host == None:
+    log.warning("Cannot contact Stacker with host null")
+    return {}
+
+  host = '%s/%s' % (host, minion_id)
+  params = {}
+
+  if log_level != None:
+    params['l'] = log_level
+
+  if namespace != 'default':
+    params['n'] = namespace
+
+  data = json.dumps({ 'grains': __grains__, 'pillar': pillar })
 
   result = salt.utils.http.query(
     host,
     method = 'POST',
+    params = params,
     data = data,
     header_dict = { 'Content-Type': 'application/json' }
   )
@@ -23,5 +39,6 @@ def ext_pillar(minion_id, pillar, stacker_host):
 
   if result == {'404': 'Not found'}:
     log.warning("Error while contacting Stacker for %s : %s" % (minion_id, result))
+    return {}
   else:
     return result

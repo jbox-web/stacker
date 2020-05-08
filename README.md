@@ -105,6 +105,16 @@ ext_pillar:
   - stacker: http://127.0.0.1:3000
 ```
 
+You can also pass parameters to Stacker module :
+
+```yml
+ext_pillar:
+  - stacker:
+      host: http://127.0.0.1:3000
+      namespace: 'production'
+      log_level: 'debug'
+```
+
 4. Restart Salt, you're done :)
 
 ## Namespaces
