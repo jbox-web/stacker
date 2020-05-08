@@ -5,32 +5,17 @@ module Stacker
     end
 
     get "/:host" do |env|
-      host_name, level, format = extract_params(env)
-
-      grains = {"id" => host_name}
-      pillar = {} of String => String
-      pillar = Utils.convert_hash(pillar)
-
-      result =
-        Utils.with_log_level(level) do
-          process(host_name, grains, pillar)
-        end
-
-      respond_with(env, format, result)
+      process(env)
     end
 
     post "/:host" do |env|
+      process(env)
+    end
+
+    private def self.process(env)
       host_name, level, format = extract_params(env)
-
-      grains = env.params.json["grains"].as(Hash)
-      pillar = env.params.json["pillar"].as(Hash)
-      pillar = Utils.convert_hash(pillar)
-
-      result =
-        Utils.with_log_level(level) do
-          process(host_name, grains, pillar)
-        end
-
+      grains, pillar = env.request.method == "GET" ? extract_grains_and_pillar(host_name) : extract_grains_and_pillar(env)
+      result = process(host_name, grains, pillar, level)
       respond_with(env, format, result)
     end
 
@@ -39,6 +24,20 @@ module Stacker
       level = env.params.query["l"]? || "info"
       format = env.params.query["f"]? || "json"
       {host_name, level, format}
+    end
+
+    private def self.extract_grains_and_pillar(host_name : String)
+      grains = {"id" => host_name}
+      pillar = {} of String => String
+      pillar = Utils.convert_hash(pillar)
+      {grains, pillar}
+    end
+
+    private def self.extract_grains_and_pillar(env)
+      grains = env.params.json["grains"].as(Hash)
+      pillar = env.params.json["pillar"].as(Hash)
+      pillar = Utils.convert_hash(pillar)
+      {grains, pillar}
     end
 
     private def self.respond_with(env, format, result)
@@ -52,6 +51,12 @@ module Stacker
       else
         env.response.content_type = "application/json"
         result.to_json
+      end
+    end
+
+    private def self.process(host_name, grains, pillar, level)
+      Utils.with_log_level(level) do
+        process(host_name, grains, pillar)
       end
     end
 
