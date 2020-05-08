@@ -7,6 +7,7 @@ module Stacker
     end
 
     delegate each, to: @container
+    delegate delete, to: @container
     delegate to_json, to: @container
     delegate to_yaml, to: @container
 

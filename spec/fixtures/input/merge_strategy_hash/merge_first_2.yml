@@ -1,0 +1,9 @@
+---
+users:
+  __: merge-first
+  tom:
+    uid: 1000
+    roles:
+      - developer
+  mat:
+    uid: 1001

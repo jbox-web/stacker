@@ -71,20 +71,71 @@ module Stacker
     end
 
     def self.deep_merge!(hash, other_hash)
+      strategy = other_hash.delete("__") || "merge-last"
+
+      return cleanup(other_hash) if strategy == "overwrite"
+
       other_hash.each do |current_key, other_value|
+        if strategy == "remove"
+          hash.delete(current_key)
+          next
+        end
+
         this_value = hash[current_key]?
 
         hash[current_key] =
           if this_value.is_a?(Stacker::Pillar) && other_value.is_a?(Stacker::Pillar)
-            deep_merge!(this_value, other_value)
+            if strategy == "merge-first"
+              deep_merge!(other_value, this_value)
+            else
+              deep_merge!(this_value, other_value)
+            end
           elsif this_value.is_a?(Array) && other_value.is_a?(Array)
-            this_value.concat(other_value)
+            concat_list!(this_value, other_value)
           else
             other_value
           end
       end
 
       hash
+    end
+
+    def self.concat_list!(list, other_list)
+      strategy = "merge-last"
+      hash = other_list[0]?
+
+      if hash.is_a?(Stacker::Pillar) && (strat = hash["__"]?)
+        strategy = strat
+        other_list.delete_at(0)
+      end
+
+      if strategy == "overwrite"
+        other_list
+      elsif strategy == "remove"
+        list.select { |i| !other_list.includes?(i) }
+      elsif strategy == "merge-first"
+        other_list.concat(list)
+      else
+        list.concat(other_list)
+      end
+    end
+
+    def self.cleanup(object)
+      return object unless object.is_a?(Stacker::Pillar) || object.is_a?(Array)
+
+      if object.is_a?(Stacker::Pillar)
+        object.delete("__")
+        object.each do |k, v|
+          object[k] = cleanup(v)
+        end
+      elsif object.is_a?(Array)
+        hash = object[0]?
+        if hash.is_a?(Stacker::Pillar) && (strat = hash["__"]?)
+          object.delete_at(0)
+        end
+      end
+
+      object
     end
 
     def self.deep_merge_crinja!(hash, other_hash)

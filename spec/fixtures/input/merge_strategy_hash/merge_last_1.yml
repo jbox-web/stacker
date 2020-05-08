@@ -1,0 +1,8 @@
+---
+users:
+  tom:
+    uid: 500
+    roles:
+      - sysadmin
+  root:
+    uid: 0

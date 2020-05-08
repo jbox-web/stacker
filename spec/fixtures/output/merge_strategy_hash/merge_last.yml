@@ -1,0 +1,11 @@
+---
+users:
+  tom:
+    uid: 1000
+    roles:
+    - sysadmin
+    - developer
+  root:
+    uid: 0
+  mat:
+    uid: 1001

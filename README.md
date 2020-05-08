@@ -240,6 +240,12 @@ With each instance having it's own stack configuration :)
 
 You can use the [provided systemd unit](/extra/stacker.service) to manage the Stacker daemon.
 
+## Merging strategies
+
+Stacker implements [merging strategies](https://docs.saltstack.com/en/master/ref/pillar/all/salt.pillar.stack.html#merging-strategies) like PillarStack so you can use them in Stacker too :)
+
+It works the same way and it's [tested](/spec/stacker/utils_spec.cr).
+
 ## Template syntax
 
 The [template syntax](https://github.com/straight-shoota/crinja/blob/master/TEMPLATE_SYNTAX.md) is almost the same than Jinja2.
@@ -396,6 +402,5 @@ operators:
 
 ## Roadmap
 
-* implement [merging-strategies](https://docs.saltstack.com/en/master/ref/pillar/all/salt.pillar.stack.html#merging-strategies)
 * implement [Select Stacker config through grains|pillar|opts matching](https://github.com/saltstack/salt/blob/a670b4ae72ec11f5485c216c54059e14223019b8/salt/pillar/stack.py#L77)
 * add documentation about "Stacker - Sample Project"
