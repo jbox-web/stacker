@@ -1,6 +1,16 @@
 ---
 my_company:
   apps:
+    app2:
+      servers:
+        - server2
+      php:
+        version: 7.3
+      packages:
+        pkgs:
+          wanted:
+            - pdftk
+            - p7zip-full
     app1:
       servers:
         - server2

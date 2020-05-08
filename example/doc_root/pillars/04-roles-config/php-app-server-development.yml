@@ -2,8 +2,8 @@
 # Php server role pillar
 ###############################################################################
 
-{% set users    = pillar | traverse('my_company:users', {}) %}
-{% set apps     = pillar | traverse('my_company:apps', {}) %}
+{% set users    = pillar | traverse('my_company:users', {}) | dictsort %}
+{% set apps     = pillar | traverse('my_company:apps', {}) | dictsort %}
 {% set apps_dir = pillar | traverse('my_company:apps_dir:development') %}
 
 {% set display_errors  = 'On' %}

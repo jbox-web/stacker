@@ -6,17 +6,17 @@ my_company:
   timezone: Europe/Paris
 
   users:
-    jdoe:
-      name: John Doe
-      email: john@doe.com
-      roles:
-        - developer
-
     nrodriguez:
       name: Nicolas Rodriguez
       email: nicoladmin@free.fr
       roles:
         - admin
+        - developer
+
+    jdoe:
+      name: John Doe
+      email: john@doe.com
+      roles:
         - developer
 
   servers:
