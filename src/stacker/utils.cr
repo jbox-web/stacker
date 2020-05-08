@@ -10,6 +10,7 @@ module Stacker
 
     def self.yaml_to_hash(yaml, file)
       yaml = parse_yaml(yaml, file)
+
       return nil if yaml.nil?
       return nil if yaml.raw.nil?
 
@@ -53,6 +54,7 @@ module Stacker
 
       array.each do |val|
         val = val.raw if val.responds_to?(:raw)
+
         next if val.is_a?(Set) || val.is_a?(Slice)
 
         acc <<
@@ -88,6 +90,7 @@ module Stacker
     def self.deep_merge_crinja!(hash, other_hash)
       hash = hash.raw
       other_hash = other_hash.raw
+
       return unless hash.is_a?(Hash) && other_hash.is_a?(Hash)
 
       other_hash.each do |current_key, other_value|
