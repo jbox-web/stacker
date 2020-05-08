@@ -397,3 +397,5 @@ operators:
 ## Roadmap
 
 * implement [merging-strategies](https://docs.saltstack.com/en/master/ref/pillar/all/salt.pillar.stack.html#merging-strategies)
+* implement [Select Stacker config through grains|pillar|opts matching](https://github.com/saltstack/salt/blob/a670b4ae72ec11f5485c216c54059e14223019b8/salt/pillar/stack.py#L77)
+* add documentation about "Stacker - Sample Project"
