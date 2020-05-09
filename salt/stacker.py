@@ -34,11 +34,16 @@ def ext_pillar(minion_id, pillar, *args, **kwargs):
     header_dict = { 'Content-Type': 'application/json' }
   )
 
-  result = result['body']
-  result = json.loads(result)
+  if 'body' in result:
+    result = result['body']
+    result = json.loads(result)
 
-  if result == {'404': 'Not found'}:
-    log.warning("Error while contacting Stacker for %s : %s" % (minion_id, result))
-    return {}
+    if result == {'404': 'Not found'}:
+      log.warning("Error while contacting Stacker for %s : %s" % (minion_id, result))
+      return {}
+    else:
+      return result
+
   else:
-    return result
+    log.error("Error while contacting Stacker for %s : %s" % (minion_id, result))
+    return {}
