@@ -79,8 +79,11 @@ module Stacker
     setup_log
   end
 
-  def self.start_server
-    Kemal.run(args: nil) do |kemal_config|
+  def self.start_server(args = ARGV.dup)
+    # Prepare args for Kemal
+    args = filter_args(args)
+
+    Kemal.run(args: args) do |kemal_config|
       # Set environment
       kemal_config.env = config.server_environment
 
@@ -92,6 +95,25 @@ module Stacker
 
   def self.stop_server
     Kemal.stop
+  end
+
+  private def self.filter_args(args)
+    # Skip `server` subcommand
+    args.shift
+    return nil if args.empty?
+
+    # Remove our own flags
+    delete_flag_from_args(args, ["-c", "--config"])
+  end
+
+  private def self.delete_flag_from_args(args, flags)
+    flags.each do |flag|
+      while (index = args.index(flag))
+        args.delete_at(index + 1)
+        args.delete_at(index)
+      end
+    end
+    args
   end
 end
 
