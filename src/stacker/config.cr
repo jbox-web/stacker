@@ -1,31 +1,14 @@
 module Stacker
   class Config
-    YAML.mapping(
-      doc_root: {
-        type:    String,
-        nilable: false,
-      },
-      entrypoint: {
-        type:    String,
-        nilable: false,
-      },
-      stacks: {
-        type:    Hash(String, Array(String)),
-        nilable: false,
-      },
-      server_host: {
-        type:    String,
-        default: "127.0.0.1",
-      },
-      server_port: {
-        type:    Int32,
-        default: 3000,
-      },
-      server_environment: {
-        type:    String,
-        default: "production",
-      },
-    )
+    include YAML::Serializable
+
+    property doc_root : String
+    property entrypoint : String
+    property stacks : Hash(String, Array(String))
+
+    property server_host : String = "127.0.0.1"
+    property server_port : Int32 = 3000
+    property server_environment : String = "production"
 
     def to_hash
       Hash(String, String | Array(String)).from_yaml(YAML.dump(self))

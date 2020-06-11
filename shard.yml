@@ -16,7 +16,8 @@ dependencies:
     branch: wip/tag_do
   kemal:
     github: kemalcr/kemal
+    branch: master
 
-crystal: 0.34.0
+crystal: 0.35.0
 
 license: MIT

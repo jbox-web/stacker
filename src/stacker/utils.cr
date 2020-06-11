@@ -169,12 +169,12 @@ module Stacker
     end
 
     SEVERITY_MAP = {
-      "debug"   => ::Log::Severity::Debug,
-      "verbose" => ::Log::Severity::Verbose,
-      "info"    => ::Log::Severity::Info,
-      "warn"    => ::Log::Severity::Warning,
-      "error"   => ::Log::Severity::Error,
-      "fatal"   => ::Log::Severity::Fatal,
+      "trace" => ::Log::Severity::Trace,
+      "debug" => ::Log::Severity::Debug,
+      "info"  => ::Log::Severity::Info,
+      "warn"  => ::Log::Severity::Warn,
+      "error" => ::Log::Severity::Error,
+      "fatal" => ::Log::Severity::Fatal,
     }
 
     def self.with_log_level(level, &block)

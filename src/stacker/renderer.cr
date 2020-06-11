@@ -19,8 +19,8 @@ module Stacker
         output = ""
       end
 
-      Log.debug { "Result:" }
-      Log.debug { output }
+      Log.trace { "Result:" }
+      Log.trace { output }
 
       output
     end

@@ -24,7 +24,7 @@ module Stacker
 
     private def valid?
       entrypoint = "#{@root_dir}/#{@entrypoint}/#{@host_name}.yml"
-      Log.verbose { "Looking for #{entrypoint}" }
+      Log.debug { "Looking for #{entrypoint}" }
       Utils.file_exists?(entrypoint)
     end
 
@@ -42,14 +42,14 @@ module Stacker
         end
       end
 
-      Log.debug { "Pillar final:\n#{YAML.dump(@pillar)}" }
+      Log.trace { "Pillar final:\n#{YAML.dump(@pillar)}" }
     end
 
     private def load_pillars_from_stack(stack, file)
       dirname = File.dirname(stack)
       files = Dir["#{dirname}/#{file}"].sort
 
-      Log.verbose { "Loading: #{files} from #{dirname}" }
+      Log.debug { "Loading: #{files} from #{dirname}" }
 
       data = Pillar.new
 
@@ -57,13 +57,13 @@ module Stacker
         load_pillars_from_file(dirname, file, data)
       end
 
-      Log.debug { "Data final:\n#{YAML.dump(data)}" }
+      Log.trace { "Data final:\n#{YAML.dump(data)}" }
 
       data
     end
 
     private def load_pillars_from_file(dirname, file, data)
-      Log.verbose { "Compiling: #{file}" }
+      Log.debug { "Compiling: #{file}" }
 
       yaml = @renderer.compile(file, compilation_data.merge({"stack_path" => dirname}))
       return if yaml.empty?
@@ -71,7 +71,7 @@ module Stacker
       hash = Utils.yaml_to_hash(yaml, file)
       return if hash.nil?
 
-      Log.verbose { "Merging: #{file}" }
+      Log.debug { "Merging: #{file}" }
 
       with_debug_data(data) do
         Utils.deep_merge!(data, hash)
@@ -83,21 +83,21 @@ module Stacker
     end
 
     private def with_debug_run(&block)
-      Log.verbose { "Building stack for: #{@host_name}" }
+      Log.debug { "Building stack for: #{@host_name}" }
       yield
-      Log.verbose { "End of stack build for: #{@host_name}" }
+      Log.debug { "End of stack build for: #{@host_name}" }
     end
 
     private def with_debug_pillar(&block)
-      Log.debug { "Pillar before:\n#{YAML.dump(@pillar)}" }
+      Log.trace { "Pillar before:\n#{YAML.dump(@pillar)}" }
       yield
-      Log.debug { "Pillar after:\n#{YAML.dump(@pillar)}" }
+      Log.trace { "Pillar after:\n#{YAML.dump(@pillar)}" }
     end
 
     private def with_debug_data(data, &block)
-      Log.debug { "Data before:\n#{YAML.dump(data)}" }
+      Log.trace { "Data before:\n#{YAML.dump(data)}" }
       yield
-      Log.debug { "Data after:\n#{YAML.dump(data)}" }
+      Log.trace { "Data after:\n#{YAML.dump(data)}" }
     end
   end
 end
