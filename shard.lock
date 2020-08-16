@@ -5,8 +5,8 @@ shards:
     version: 1.11.2
 
   crinja:
-    git: https://github.com/n-rodriguez/crinja.git
-    version: 0.6.1+git.commit.22f678e4b980740dd020f4319e634dcf2fd5a755
+    git: https://github.com/straight-shoota/crinja.git
+    version: 0.6.1+git.commit.e1fa1754828ffb2ac2cf3942512d8ca8c419c73a
 
   exception_page:
     git: https://github.com/crystal-loot/exception_page.git
@@ -14,7 +14,7 @@ shards:
 
   kemal:
     git: https://github.com/kemalcr/kemal.git
-    version: 0.26.1+git.commit.dfe7dca08f4c9a9456d6132af5f6b59fcd6865e4
+    version: 0.26.1+git.commit.a819d4792bbc63d993d6dd2b15f9af5efb0c2d8c
 
   kilt:
     git: https://github.com/jeromegn/kilt.git

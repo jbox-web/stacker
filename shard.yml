@@ -12,8 +12,8 @@ dependencies:
   admiral:
     github: jwaldrip/admiral.cr
   crinja:
-    github: n-rodriguez/crinja
-    branch: wip/tag_do
+    github: straight-shoota/crinja
+    branch: master
   kemal:
     github: kemalcr/kemal
     branch: master
