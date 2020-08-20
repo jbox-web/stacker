@@ -4,4 +4,3 @@
 /bin/*
 !/bin/.keep
 *.dwarf
-stacker.yml

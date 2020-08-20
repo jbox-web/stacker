@@ -1,4 +1,6 @@
 ---
+stacker: foo
+
 my_server:
   # DNS / IP
   hostname: server1
