@@ -2,7 +2,7 @@ module Stacker
   class Processor
     property grains : Hash(String, String) | Hash(String, JSON::Any) | JSON::Any
 
-    def initialize(@root_dir : String, @entrypoint : String, @stacks : Array(String), @renderer : Renderer)
+    def initialize(@renderer : Renderer, @stacks : Array(String))
       @host_name = ""
       @grains = {} of String => String
       @pillar = Pillar.new
@@ -23,9 +23,7 @@ module Stacker
     end
 
     private def valid?
-      entrypoint = "#{@root_dir}/#{@entrypoint}/#{@host_name}.yml"
-      Log.debug { "Looking for #{entrypoint}" }
-      Utils.file_exists?(entrypoint)
+      @renderer.file_exist?(@host_name)
     end
 
     private def build_stack

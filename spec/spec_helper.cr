@@ -8,5 +8,5 @@ def load_yaml(file)
 end
 
 def create_renderer
-  Stacker::Renderer.new("spec/fixtures")
+  Stacker::Renderer.new("spec/fixtures", "spec/fixtures")
 end

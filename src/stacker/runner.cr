@@ -21,8 +21,8 @@ module Stacker
     end
 
     def self.process(host_name, grains, pillar, stack)
-      renderer = Renderer.new(Stacker.config.doc_root)
-      processor = Stacker::Processor.new(Stacker.config.doc_root, Stacker.config.entrypoint, stack, renderer)
+      renderer = Renderer.new(Stacker.config.doc_root, Stacker.config.entrypoint)
+      processor = Stacker::Processor.new(renderer, stack)
       processor.run(host_name, grains, pillar)
     end
   end

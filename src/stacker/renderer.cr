@@ -1,8 +1,14 @@
 module Stacker
   class Renderer
-    def initialize(@root_dir : String)
+    def initialize(@root_dir : String, @entrypoint : String)
       @env = Crinja.new
       setup_env
+    end
+
+    def file_exist?(file)
+      entrypoint = "#{@root_dir}/#{@entrypoint}/#{file}.yml"
+      Log.debug { "Looking for #{entrypoint}" }
+      Utils.file_exists?(entrypoint)
     end
 
     def compile(file, data)
