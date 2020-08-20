@@ -77,7 +77,7 @@ module Stacker
     def self.deep_merge!(hash, other_hash)
       strategy = other_hash.delete("__") || "merge-last"
 
-      return cleanup(other_hash) if strategy == "overwrite"
+      return cleanup_hash!(other_hash) if strategy == "overwrite"
 
       other_hash.each do |current_key, other_value|
         if strategy == "remove"
@@ -124,13 +124,13 @@ module Stacker
       end
     end
 
-    def self.cleanup(object)
+    def self.cleanup_hash!(object)
       return object unless object.is_a?(Stacker::Pillar) || object.is_a?(Array)
 
       if object.is_a?(Stacker::Pillar)
         object.delete("__")
         object.each do |k, v|
-          object[k] = cleanup(v)
+          object[k] = cleanup_hash!(v)
         end
       elsif object.is_a?(Array)
         hash = object[0]?
