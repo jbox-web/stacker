@@ -36,8 +36,8 @@ module Stacker
     end
 
     private def self.extract_grains_and_pillar(env)
-      grains = env.params.json["grains"].as(Hash)
-      pillar = env.params.json["pillar"].as(Hash)
+      grains = env.params.json["grains"]? ? env.params.json["grains"].as(Hash) : {} of String => String
+      pillar = env.params.json["pillar"]? ? env.params.json["pillar"].as(Hash) : {} of String => String
       pillar = Utils.convert_hash(pillar)
       {grains, pillar}
     end
