@@ -4,6 +4,10 @@ module Stacker
       File.exists?(file_path)
     end
 
+    def self.load_json_file(file)
+      JSON.parse(File.read(file))
+    end
+
     def self.string_to_array(string)
       string.split("\n").reject(&.empty?)
     end

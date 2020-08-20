@@ -15,8 +15,8 @@ module Stacker
     private def self.process(env)
       host_name, namespace, level, format = extract_params(env)
       grains, pillar = env.request.method == "GET" ? extract_grains_and_pillar(host_name) : extract_grains_and_pillar(env)
-      stack = Stacker.config.stacks[namespace]?
-      result = stack.nil? ? render_404 : process(stack, host_name, grains, pillar, level)
+
+      result = Stacker::Runner.from_web(host_name, namespace, grains, pillar, level)
       respond_with(env, format, result)
     end
 
@@ -54,21 +54,6 @@ module Stacker
         env.response.content_type = "application/json"
         result.to_json
       end
-    end
-
-    private def self.render_404
-      {"404" => "Not found"}
-    end
-
-    private def self.process(stack, host_name, grains, pillar, level)
-      Utils.with_log_level(level) do
-        process(stack, host_name, grains, pillar)
-      end
-    end
-
-    private def self.process(stack, host_name, grains, pillar)
-      processor = Stacker::Processor.new(Stacker.config.doc_root, Stacker.config.entrypoint, stack, Renderer.new(Stacker.config.doc_root))
-      processor.run(host_name, grains, pillar)
     end
   end
 end

@@ -65,36 +65,8 @@ module Stacker
 
       def run
         load_config
-
-        grains =
-          if flags.grains == ""
-            {"id" => arguments.host_name}
-          else
-            load_json_file(flags.grains)
-          end
-
-        pillar =
-          if flags.pillar == ""
-            {} of String => String
-          else
-            load_json_file(flags.pillar).as_h
-          end
-
-        pillar = Utils.convert_hash(pillar)
-
-        stack = Stacker.config.stacks[flags.namespace]?
-
-        if stack.nil?
-          raise ArgumentError.new("Namespace not found : #{flags.namespace}")
-        else
-          processor = Stacker::Processor.new(Stacker.config.doc_root, Stacker.config.entrypoint, stack, Renderer.new(Stacker.config.doc_root))
-          result = processor.run(arguments.host_name, grains, pillar)
-          puts result.to_json
-        end
-      end
-
-      private def load_json_file(file)
-        JSON.parse(File.read(file))
+        result = Stacker::Runner.from_cli(arguments.host_name, flags.namespace, flags.grains, flags.pillar)
+        puts result.to_json
       end
     end
 
