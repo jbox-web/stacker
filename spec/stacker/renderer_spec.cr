@@ -1,5 +1,9 @@
 require "../spec_helper.cr"
 
+private def s(value : Log::Severity)
+  value
+end
+
 describe Stacker::Renderer do
   it "support array_push function" do
     env = create_renderer
@@ -16,9 +20,16 @@ describe Stacker::Renderer do
     env.compile("spec/fixtures/deep_merge_dict.j2", Hash(String, String).new).should eq("{'string' => 'b string', 'integer' => 2, 'is_true' => false, 'is_false' => true, 'old_key' => 'foo', 'hash' => {'foo' => 'bar', 'nested' => {'hash' => 'bar', 'hash1' => 'child1', 'array' => ['foo', 'bar'], 'hash2' => 'child2'}, 'bar' => 'baz'}, 'array' => ['string1', 11, true, false, 'string2', 12, false, true], 'new_key' => 'foo'}")
   end
 
+  # See: https://github.com/crystal-lang/crystal/blob/master/spec/std/log/log_spec.cr#L147
   it "support log function" do
+    backend = Log::MemoryBackend.new
+    Stacker::Log.backend = backend
     env = create_renderer
     env.compile("spec/fixtures/log.j2", Hash(String, String).new).should eq("")
+    entry = backend.entries.first
+    entry.source.should eq("stacker")
+    entry.severity.should eq(s(:info))
+    entry.message.should eq("foo")
   end
 
   it "support traverse filter" do
