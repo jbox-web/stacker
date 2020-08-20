@@ -178,7 +178,7 @@ module Stacker
     }
 
     def self.with_log_level(level, &block)
-      new_level = SEVERITY_MAP[level]
+      new_level = SEVERITY_MAP[level]? || SEVERITY_MAP["info"]
       old_level = Stacker::Log.level
 
       begin
