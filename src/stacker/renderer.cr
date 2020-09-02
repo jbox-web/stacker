@@ -35,6 +35,7 @@ module Stacker
       @env.config.lstrip_blocks = true
 
       @env.filters["json"] = filter_json
+      @env.filters["unique"] = filter_unique
       @env.filters["traverse"] = filter_traverse
 
       @env.functions["log"] = func_log
@@ -64,6 +65,16 @@ module Stacker
           end
 
         (result.nil? || result.to_s == "") ? default : result
+      end
+    end
+
+    private def filter_unique
+      Crinja.filter(:unique) do
+        raw = target.raw
+        return Crinja::Value.new("") unless raw.is_a?(Array)
+
+        value = raw.uniq
+        Crinja::Value.new(value)
       end
     end
 
