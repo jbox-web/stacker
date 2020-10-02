@@ -23,8 +23,8 @@ module Stacker
 
       define_flag config : String,
         description: "Path to config file",
-        long: config,
-        short: c,
+        long: "config",
+        short: "c",
         default: "stacker.yml"
 
       def run
