@@ -27,12 +27,6 @@ Start the webserver with sample data :
 bin/stacker server --config example/stacker.yml
 ```
 
-Fetch pillars with Stacker :
-
-```sh
-bin/stacker fetch server1.example.net --config example/stacker.yml --grains example/grains/server1.json --pillar example/ext_pillar/server1.json
-```
-
 Fetch pillars with Curl :
 
 ```sh
@@ -40,6 +34,16 @@ curl --no-progress-meter -X POST -H "Content-Type: application/json" -d @example
 ```
 
 You can also navigate to http://127.0.0.1:3000/server1.example.net to see the generated pillars.
+
+OR
+
+Fetch pillars with Stacker CLI :
+
+```sh
+bin/stacker fetch server1.example.net --config example/stacker.yml --grains example/grains/server1.json --pillar example/ext_pillar/server1.json | jq
+```
+
+**Note:** You don't need the webserver to be running when using `bin/stacker fetch`.
 
 ## Configuration
 
@@ -53,6 +57,7 @@ The configuration file is a YAML file looking like this :
 ---
 doc_root: example/doc_root
 entrypoint: server-pillars
+logfile: ./log/stacker.log
 
 stacks:
   default:
@@ -76,6 +81,7 @@ Config               | Description
 ---------------------|------------
 `doc_root`           | the webserver document root (must be specified). Since pillar are also crinja templates, it means where are the template files?
 `entrypoint`         | the webserver entrypoint (must be specified). The directory in the `doc_root` where we shoud look for `<minion_d>.yml` file
+`logfile`            | the path to the log file
 `stacks`             | a hash of namespaced [stack configuration files](https://docs.saltstack.com/en/master/ref/pillar/all/salt.pillar.stack.html#list-of-config-files) (must be specified)
 `server_host`        | ip address to bind to (default `127.0.0.1`)
 `server_port`        | port to bind to (default `3000`)
@@ -126,7 +132,9 @@ curl http://127.0.0.1:3000/server1.example.net?n=dev
 curl http://127.0.0.1:3000/server1.example.net?n=prod
 ```
 
-The default namespace when query parameter is omited is `default`.
+Or with `--namespace` flag when using Stacker CLI.
+
+The default namespace when query parameter or CLI flag is omited is `default`.
 
 ## Output format
 
@@ -137,7 +145,9 @@ curl http://127.0.0.1:3000/server1.example.net?f=json
 curl http://127.0.0.1:3000/server1.example.net?f=yaml
 ```
 
-The default output format when query parameter is omited is `json`.
+Or with `--output-format` flag when using Stacker CLI.
+
+The default output format when query parameter or CLI flag is omited is `json`.
 
 Only `json` and `yaml` are supported.
 
@@ -150,6 +160,10 @@ curl http://127.0.0.1:3000/server1.example.net?l=debug
 curl http://127.0.0.1:3000/server1.example.net?l=trace
 ```
 
+Or with `--log-level` flag when using Stacker CLI.
+
+The default log level when query parameter or CLI flag is omited is `info`.
+
 Log levels other than `debug` or `trace` are meaningless.
 
 `trace` level is very verbose as it dumps data before and after merge operations.
@@ -157,61 +171,88 @@ Log levels other than `debug` or `trace` are meaningless.
 `debug` level will render something like this :
 
 ```sh
-V, [2020-05-06T02:08:39.049901000Z #188552] DEBUG -- stacker:stacker: Looking for example/doc_root/server-pillars/server2.example.net.yml
-V, [2020-05-06T02:08:39.050019000Z #188552] DEBUG -- stacker:stacker: Building stack for: server2.example.net
-V, [2020-05-06T02:08:39.050405000Z #188552] DEBUG -- stacker:stacker: Loading: ["example/doc_root/server-pillars/01-common.yml"] from example/doc_root/server-pillars
-V, [2020-05-06T02:08:39.050532000Z #188552] DEBUG -- stacker:stacker: Compiling: example/doc_root/server-pillars/01-common.yml
-V, [2020-05-06T02:08:39.050855000Z #188552] DEBUG -- stacker:stacker: Merging: example/doc_root/server-pillars/01-common.yml
-V, [2020-05-06T02:08:39.051022000Z #188552] DEBUG -- stacker:stacker: Loading: ["example/doc_root/server-pillars/server2.example.net.yml"] from example/doc_root/server-pillars
-V, [2020-05-06T02:08:39.051141000Z #188552] DEBUG -- stacker:stacker: Compiling: example/doc_root/server-pillars/server2.example.net.yml
-V, [2020-05-06T02:08:39.052889000Z #188552] DEBUG -- stacker:stacker: Merging: example/doc_root/server-pillars/server2.example.net.yml
-V, [2020-05-06T02:08:39.053613000Z #188552] DEBUG -- stacker:stacker: Loading: ["example/doc_root/pillars/01-base/01-base.yml", "example/doc_root/pillars/01-base/app1.yml"] from example/doc_root/pillars
-V, [2020-05-06T02:08:39.053734000Z #188552] DEBUG -- stacker:stacker: Compiling: example/doc_root/pillars/01-base/01-base.yml
-V, [2020-05-06T02:08:39.054108000Z #188552] DEBUG -- stacker:stacker: Merging: example/doc_root/pillars/01-base/01-base.yml
-V, [2020-05-06T02:08:39.054241000Z #188552] DEBUG -- stacker:stacker: Compiling: example/doc_root/pillars/01-base/app1.yml
-V, [2020-05-06T02:08:39.054513000Z #188552] DEBUG -- stacker:stacker: Merging: example/doc_root/pillars/01-base/app1.yml
-V, [2020-05-06T02:08:39.054759000Z #188552] DEBUG -- stacker:stacker: Loading: ["example/doc_root/pillars/02-common/syslog.yml"] from example/doc_root/pillars
-V, [2020-05-06T02:08:39.054923000Z #188552] DEBUG -- stacker:stacker: Compiling: example/doc_root/pillars/02-common/syslog.yml
-V, [2020-05-06T02:08:39.056943000Z #188552] DEBUG -- stacker:stacker: Merging: example/doc_root/pillars/02-common/syslog.yml
-V, [2020-05-06T02:08:39.057113000Z #188552] DEBUG -- stacker:stacker: Loading: ["example/doc_root/pillars/03-roles/common-locale.yml"] from example/doc_root/pillars
-V, [2020-05-06T02:08:39.057233000Z #188552] DEBUG -- stacker:stacker: Compiling: example/doc_root/pillars/03-roles/common-locale.yml
-V, [2020-05-06T02:08:39.057729000Z #188552] DEBUG -- stacker:stacker: Merging: example/doc_root/pillars/03-roles/common-locale.yml
-V, [2020-05-06T02:08:39.057891000Z #188552] DEBUG -- stacker:stacker: Loading: ["example/doc_root/pillars/03-roles/common-timezone.yml"] from example/doc_root/pillars
-V, [2020-05-06T02:08:39.058011000Z #188552] DEBUG -- stacker:stacker: Compiling: example/doc_root/pillars/03-roles/common-timezone.yml
-V, [2020-05-06T02:08:39.058526000Z #188552] DEBUG -- stacker:stacker: Merging: example/doc_root/pillars/03-roles/common-timezone.yml
-V, [2020-05-06T02:08:39.058714000Z #188552] DEBUG -- stacker:stacker: Loading: ["example/doc_root/pillars/03-roles/common-users.yml"] from example/doc_root/pillars
-V, [2020-05-06T02:08:39.058806000Z #188552] DEBUG -- stacker:stacker: Compiling: example/doc_root/pillars/03-roles/common-users.yml
-V, [2020-05-06T02:08:39.059615000Z #188552] DEBUG -- stacker:stacker: Merging: example/doc_root/pillars/03-roles/common-users.yml
-V, [2020-05-06T02:08:39.059784000Z #188552] DEBUG -- stacker:stacker: Loading: ["example/doc_root/pillars/03-roles/client-salt.yml"] from example/doc_root/pillars
-V, [2020-05-06T02:08:39.059905000Z #188552] DEBUG -- stacker:stacker: Compiling: example/doc_root/pillars/03-roles/client-salt.yml
-V, [2020-05-06T02:08:39.060465000Z #188552] DEBUG -- stacker:stacker: Merging: example/doc_root/pillars/03-roles/client-salt.yml
-V, [2020-05-06T02:08:39.060636000Z #188552] DEBUG -- stacker:stacker: Loading: ["example/doc_root/pillars/03-roles/server-openssh.yml"] from example/doc_root/pillars
-V, [2020-05-06T02:08:39.060755000Z #188552] DEBUG -- stacker:stacker: Compiling: example/doc_root/pillars/03-roles/server-openssh.yml
-V, [2020-05-06T02:08:39.061561000Z #188552] DEBUG -- stacker:stacker: Merging: example/doc_root/pillars/03-roles/server-openssh.yml
-V, [2020-05-06T02:08:39.061733000Z #188552] DEBUG -- stacker:stacker: Loading: ["example/doc_root/pillars/03-roles/server-docker.yml"] from example/doc_root/pillars
-V, [2020-05-06T02:08:39.061846000Z #188552] DEBUG -- stacker:stacker: Compiling: example/doc_root/pillars/03-roles/server-docker.yml
-V, [2020-05-06T02:08:39.062689000Z #188552] DEBUG -- stacker:stacker: Merging: example/doc_root/pillars/03-roles/server-docker.yml
-V, [2020-05-06T02:08:39.062880000Z #188552] DEBUG -- stacker:stacker: Loading: ["example/doc_root/pillars/03-roles/server-nodejs.yml"] from example/doc_root/pillars
-V, [2020-05-06T02:08:39.063001000Z #188552] DEBUG -- stacker:stacker: Compiling: example/doc_root/pillars/03-roles/server-nodejs.yml
-V, [2020-05-06T02:08:39.063995000Z #188552] DEBUG -- stacker:stacker: Merging: example/doc_root/pillars/03-roles/server-nodejs.yml
-V, [2020-05-06T02:08:39.064181000Z #188552] DEBUG -- stacker:stacker: Loading: ["example/doc_root/pillars/03-roles/server-php.yml"] from example/doc_root/pillars
-V, [2020-05-06T02:08:39.064279000Z #188552] DEBUG -- stacker:stacker: Compiling: example/doc_root/pillars/03-roles/server-php.yml
-V, [2020-05-06T02:08:39.065910000Z #188552] DEBUG -- stacker:stacker: Merging: example/doc_root/pillars/03-roles/server-php.yml
-V, [2020-05-06T02:08:39.066102000Z #188552] DEBUG -- stacker:stacker: Loading: ["example/doc_root/pillars/03-roles/server-redis.yml"] from example/doc_root/pillars
-V, [2020-05-06T02:08:39.066227000Z #188552] DEBUG -- stacker:stacker: Compiling: example/doc_root/pillars/03-roles/server-redis.yml
-V, [2020-05-06T02:08:39.066966000Z #188552] DEBUG -- stacker:stacker: Merging: example/doc_root/pillars/03-roles/server-redis.yml
-V, [2020-05-06T02:08:39.067172000Z #188552] DEBUG -- stacker:stacker: Loading: ["example/doc_root/pillars/04-roles-config/php-app-server-common.yml"] from example/doc_root/pillars
-V, [2020-05-06T02:08:39.067292000Z #188552] DEBUG -- stacker:stacker: Compiling: example/doc_root/pillars/04-roles-config/php-app-server-common.yml
-V, [2020-05-06T02:08:39.068349000Z #188552] DEBUG -- stacker:stacker: Merging: example/doc_root/pillars/04-roles-config/php-app-server-common.yml
-V, [2020-05-06T02:08:39.068544000Z #188552] DEBUG -- stacker:stacker: Loading: ["example/doc_root/pillars/04-roles-config/php-app-server-development.yml"] from example/doc_root/pillars
-V, [2020-05-06T02:08:39.068691000Z #188552] DEBUG -- stacker:stacker: Compiling: example/doc_root/pillars/04-roles-config/php-app-server-development.yml
-V, [2020-05-06T02:08:39.075023000Z #188552] DEBUG -- stacker:stacker: Merging: example/doc_root/pillars/04-roles-config/php-app-server-development.yml
-V, [2020-05-06T02:08:39.075755000Z #188552] DEBUG -- stacker:stacker: Loading: ["example/doc_root/server-pillars/server2.example.net/dump.yml", "example/doc_root/server-pillars/server2.example.net/users.yml"] from example/doc_root/server-pillars
-V, [2020-05-06T02:08:39.075856000Z #188552] DEBUG -- stacker:stacker: Compiling: example/doc_root/server-pillars/server2.example.net/dump.yml
-V, [2020-05-06T02:08:39.076636000Z #188552] DEBUG -- stacker:stacker: Compiling: example/doc_root/server-pillars/server2.example.net/users.yml
-V, [2020-05-06T02:08:39.077523000Z #188552] DEBUG -- stacker:stacker: Merging: example/doc_root/server-pillars/server2.example.net/users.yml
-V, [2020-05-06T02:08:39.077650000Z #188552] DEBUG -- stacker:stacker: End of stack build for: server2.example.net
-2020-05-06 02:08:39 UTC 200 GET /server2.example.net?l=debug 29.54ms
+2020-10-02T16:17:09.409381Z   INFO - renderer: Looking for example/doc_root/server-pillars/server2.example.net.yml
+2020-10-02T16:17:09.409472Z   INFO - processor: Building stack for: server2.example.net (namespace: prod)
+2020-10-02T16:17:09.409927Z  DEBUG - renderer: Compiled: example/doc_root/server-pillars/stack1.cfg
+2020-10-02T16:17:09.409983Z  DEBUG - processor: Loading: example/doc_root/server-pillars/01-base.yml
+2020-10-02T16:17:09.410000Z  DEBUG - processor: Compiling: example/doc_root/server-pillars/01-base.yml
+2020-10-02T16:17:09.410301Z  DEBUG - renderer: Compiled: example/doc_root/server-pillars/01-base.yml
+2020-10-02T16:17:09.410425Z  DEBUG - processor: Merging: example/doc_root/server-pillars/01-base.yml
+2020-10-02T16:17:09.410477Z  DEBUG - processor: Loading: example/doc_root/server-pillars/server2.example.net.yml
+2020-10-02T16:17:09.410493Z  DEBUG - processor: Compiling: example/doc_root/server-pillars/server2.example.net.yml
+2020-10-02T16:17:09.410835Z  DEBUG - renderer: Compiled: example/doc_root/server-pillars/server2.example.net.yml
+2020-10-02T16:17:09.410991Z  DEBUG - processor: Merging: example/doc_root/server-pillars/server2.example.net.yml
+2020-10-02T16:17:09.412864Z  DEBUG - renderer: Compiled: example/doc_root/pillars/stack1.cfg
+2020-10-02T16:17:09.413042Z  DEBUG - processor: Loading: example/doc_root/pillars/01-base/01-base.yml
+2020-10-02T16:17:09.413062Z  DEBUG - processor: Compiling: example/doc_root/pillars/01-base/01-base.yml
+2020-10-02T16:17:09.413406Z  DEBUG - renderer: Compiled: example/doc_root/pillars/01-base/01-base.yml
+2020-10-02T16:17:09.413565Z  DEBUG - processor: Merging: example/doc_root/pillars/01-base/01-base.yml
+2020-10-02T16:17:09.413588Z  DEBUG - processor: Loading: example/doc_root/pillars/01-base/app1.yml
+2020-10-02T16:17:09.413598Z  DEBUG - processor: Compiling: example/doc_root/pillars/01-base/app1.yml
+2020-10-02T16:17:09.413901Z  DEBUG - renderer: Compiled: example/doc_root/pillars/01-base/app1.yml
+2020-10-02T16:17:09.414023Z  DEBUG - processor: Merging: example/doc_root/pillars/01-base/app1.yml
+2020-10-02T16:17:09.414083Z  DEBUG - processor: Loading: example/doc_root/pillars/02-roles/common/locale.yml
+2020-10-02T16:17:09.414104Z  DEBUG - processor: Compiling: example/doc_root/pillars/02-roles/common/locale.yml
+2020-10-02T16:17:09.414417Z  DEBUG - renderer: Compiled: example/doc_root/pillars/02-roles/common/locale.yml
+2020-10-02T16:17:09.414481Z  DEBUG - processor: Merging: example/doc_root/pillars/02-roles/common/locale.yml
+2020-10-02T16:17:09.414534Z  DEBUG - processor: Loading: example/doc_root/pillars/02-roles/common/timezone.yml
+2020-10-02T16:17:09.414551Z  DEBUG - processor: Compiling: example/doc_root/pillars/02-roles/common/timezone.yml
+2020-10-02T16:17:09.414956Z  DEBUG - renderer: Compiled: example/doc_root/pillars/02-roles/common/timezone.yml
+2020-10-02T16:17:09.415008Z  DEBUG - processor: Merging: example/doc_root/pillars/02-roles/common/timezone.yml
+2020-10-02T16:17:09.415057Z  DEBUG - processor: Loading: example/doc_root/pillars/02-roles/common/users.yml
+2020-10-02T16:17:09.415073Z  DEBUG - processor: Compiling: example/doc_root/pillars/02-roles/common/users.yml
+2020-10-02T16:17:09.415638Z  DEBUG - renderer: Compiled: example/doc_root/pillars/02-roles/common/users.yml
+2020-10-02T16:17:09.415810Z  DEBUG - processor: Merging: example/doc_root/pillars/02-roles/common/users.yml
+2020-10-02T16:17:09.415865Z  DEBUG - processor: Loading: example/doc_root/pillars/02-roles/client/salt.yml
+2020-10-02T16:17:09.415879Z  DEBUG - processor: Compiling: example/doc_root/pillars/02-roles/client/salt.yml
+2020-10-02T16:17:09.416274Z  DEBUG - renderer: Compiled: example/doc_root/pillars/02-roles/client/salt.yml
+2020-10-02T16:17:09.416327Z  DEBUG - processor: Merging: example/doc_root/pillars/02-roles/client/salt.yml
+2020-10-02T16:17:09.416370Z  DEBUG - processor: Loading: example/doc_root/pillars/02-roles/server/openssh.yml
+2020-10-02T16:17:09.416385Z  DEBUG - processor: Compiling: example/doc_root/pillars/02-roles/server/openssh.yml
+2020-10-02T16:17:09.416887Z  DEBUG - renderer: Compiled: example/doc_root/pillars/02-roles/server/openssh.yml
+2020-10-02T16:17:09.417027Z  DEBUG - processor: Merging: example/doc_root/pillars/02-roles/server/openssh.yml
+2020-10-02T16:17:09.417070Z  DEBUG - processor: Loading: example/doc_root/pillars/02-roles/server/docker.yml
+2020-10-02T16:17:09.417093Z  DEBUG - processor: Compiling: example/doc_root/pillars/02-roles/server/docker.yml
+2020-10-02T16:17:09.417483Z  DEBUG - renderer: Compiled: example/doc_root/pillars/02-roles/server/docker.yml
+2020-10-02T16:17:09.417576Z  DEBUG - processor: Merging: example/doc_root/pillars/02-roles/server/docker.yml
+2020-10-02T16:17:09.417623Z  DEBUG - processor: Loading: example/doc_root/pillars/02-roles/server/nodejs.yml
+2020-10-02T16:17:09.417635Z  DEBUG - processor: Compiling: example/doc_root/pillars/02-roles/server/nodejs.yml
+2020-10-02T16:17:09.418042Z  DEBUG - renderer: Compiled: example/doc_root/pillars/02-roles/server/nodejs.yml
+2020-10-02T16:17:09.418111Z  DEBUG - processor: Merging: example/doc_root/pillars/02-roles/server/nodejs.yml
+2020-10-02T16:17:09.418155Z  DEBUG - processor: Loading: example/doc_root/pillars/02-roles/server/php.yml
+2020-10-02T16:17:09.418169Z  DEBUG - processor: Compiling: example/doc_root/pillars/02-roles/server/php.yml
+2020-10-02T16:17:09.418747Z  DEBUG - renderer: Compiled: example/doc_root/pillars/02-roles/server/php.yml
+2020-10-02T16:17:09.418956Z  DEBUG - processor: Merging: example/doc_root/pillars/02-roles/server/php.yml
+2020-10-02T16:17:09.418997Z  DEBUG - processor: Loading: example/doc_root/pillars/02-roles/server/redis.yml
+2020-10-02T16:17:09.419012Z  DEBUG - processor: Compiling: example/doc_root/pillars/02-roles/server/redis.yml
+2020-10-02T16:17:09.420192Z  DEBUG - renderer: Compiled: example/doc_root/pillars/02-roles/server/redis.yml
+2020-10-02T16:17:09.420316Z  DEBUG - processor: Merging: example/doc_root/pillars/02-roles/server/redis.yml
+2020-10-02T16:17:09.420375Z  DEBUG - processor: Loading: example/doc_root/pillars/02-roles/custom/php-app-server-common.yml
+2020-10-02T16:17:09.420389Z  DEBUG - processor: Compiling: example/doc_root/pillars/02-roles/custom/php-app-server-common.yml
+2020-10-02T16:17:09.420844Z  DEBUG - renderer: Compiled: example/doc_root/pillars/02-roles/custom/php-app-server-common.yml
+2020-10-02T16:17:09.421019Z  DEBUG - processor: Merging: example/doc_root/pillars/02-roles/custom/php-app-server-common.yml
+2020-10-02T16:17:09.421081Z  DEBUG - processor: Loading: example/doc_root/pillars/02-roles/custom/php-app-server-development.yml
+2020-10-02T16:17:09.421094Z  DEBUG - processor: Compiling: example/doc_root/pillars/02-roles/custom/php-app-server-development.yml
+2020-10-02T16:17:09.424775Z  DEBUG - renderer: Compiled: example/doc_root/pillars/02-roles/custom/php-app-server-development.yml
+2020-10-02T16:17:09.425086Z  DEBUG - processor: Merging: example/doc_root/pillars/02-roles/custom/php-app-server-development.yml
+2020-10-02T16:17:09.425539Z  DEBUG - renderer: Compiled: example/doc_root/server-pillars/stack2.cfg
+2020-10-02T16:17:09.425614Z  DEBUG - processor: Loading: example/doc_root/server-pillars/server2.example.net/clean.yml
+2020-10-02T16:17:09.425628Z  DEBUG - processor: Compiling: example/doc_root/server-pillars/server2.example.net/clean.yml
+2020-10-02T16:17:09.426010Z  DEBUG - renderer: Compiled: example/doc_root/server-pillars/server2.example.net/clean.yml
+2020-10-02T16:17:09.426058Z  DEBUG - processor: Merging: example/doc_root/server-pillars/server2.example.net/clean.yml
+2020-10-02T16:17:09.426076Z  DEBUG - processor: Loading: example/doc_root/server-pillars/server2.example.net/stacker.yml
+2020-10-02T16:17:09.426084Z  DEBUG - processor: Compiling: example/doc_root/server-pillars/server2.example.net/stacker.yml
+2020-10-02T16:17:09.426434Z  DEBUG - renderer: Compiled: example/doc_root/server-pillars/server2.example.net/stacker.yml
+2020-10-02T16:17:09.426464Z  DEBUG - processor: Merging: example/doc_root/server-pillars/server2.example.net/stacker.yml
+2020-10-02T16:17:09.426479Z  DEBUG - processor: Loading: example/doc_root/server-pillars/server2.example.net/users.yml
+2020-10-02T16:17:09.426487Z  DEBUG - processor: Compiling: example/doc_root/server-pillars/server2.example.net/users.yml
+2020-10-02T16:17:09.427201Z  DEBUG - renderer: Compiled: example/doc_root/server-pillars/server2.example.net/users.yml
+2020-10-02T16:17:09.427258Z  DEBUG - processor: Merging: example/doc_root/server-pillars/server2.example.net/users.yml
+2020-10-02T16:17:09.427277Z  DEBUG - processor: Loading: example/doc_root/server-pillars/server2.example.net/zdump.yml
+2020-10-02T16:17:09.427286Z  DEBUG - processor: Compiling: example/doc_root/server-pillars/server2.example.net/zdump.yml
+2020-10-02T16:17:09.429138Z  DEBUG - renderer: Compiled: example/doc_root/server-pillars/server2.example.net/zdump.yml
+2020-10-02T16:17:09.430728Z  DEBUG - processor: Merging: example/doc_root/server-pillars/server2.example.net/zdump.yml
+2020-10-02T16:17:09.430779Z   INFO - processor: End of stack build for: server2.example.net (namespace: prod)
 ```
 
 ## Scaling
@@ -250,12 +291,25 @@ It works the same way and it's [tested](/spec/stacker/utils_spec.cr).
 
 The [template syntax](https://github.com/straight-shoota/crinja/blob/master/TEMPLATE_SYNTAX.md) is almost the same than Jinja2.
 
+[Like PillarStack](https://docs.saltstack.com/en/master/ref/pillar/all/salt.pillar.stack.html#overall-process) you have access to these variables :
+
+* `stack`
+* `pillar`
+* `minion_id`
+* `grains` (instead of `__grains__`)
+
 Stacker adds a bunch of filters and functions :
+
+Filters :
 
 * json filter (dump json without character escaping) (like the [Salt one](https://docs.saltstack.com/en/latest/topics/jinja/index.html#tojson))
 * traverse filter (like the [Salt one](https://docs.saltstack.com/en/latest/topics/jinja/index.html#traverse))
+* unique filter (like the [Salt one](https://docs.saltstack.com/en/latest/topics/jinja/index.html#unique))
+
+Functions :
+
 * log function (like the [Salt one](https://docs.saltstack.com/en/latest/topics/jinja/index.html#logs))
-* dump function
+* dump function (it dumps objects to YAML in log file)
 * array_push function
 * merge_dict function
 
