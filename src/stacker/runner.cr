@@ -1,29 +1,30 @@
 module Stacker
   class Runner
-    def self.from_cli(host_name, namespace, grains, pillar, level)
+    Log = ::Log.for("runner", ::Log::Severity::Info)
+
+    def self.process(host_name, namespace, grains, pillar, level)
       stack = Stacker.config.stacks[namespace]?
-      raise ArgumentError.new("Namespace not found : #{namespace}") if stack.nil?
 
-      process(host_name, grains, pillar, stack, namespace, level)
-    end
+      if stack.nil?
+        Log.info { "Namespace not found : #{namespace}" }
+        return {"404" => "Stacker: namespace not found"}
+      end
 
-    def self.from_web(host_name, namespace, grains, pillar, level)
-      stack = Stacker.config.stacks[namespace]?
-      return {"404" => "Namespace not found : #{namespace}"} if stack.nil?
-
-      process(host_name, grains, pillar, stack, namespace, level)
-    end
-
-    def self.process(host_name, grains, pillar, stack, namespace, level)
       Utils.with_log_level(level) do
-        process(host_name, grains, pillar, stack, namespace)
+        run(host_name, namespace, grains, pillar, stack)
       end
     end
 
-    def self.process(host_name, grains, pillar, stack, namespace)
+    def self.run(host_name, namespace, grains, pillar, stack)
       renderer = Renderer.new(Stacker.config.doc_root, Stacker.config.entrypoint)
-      processor = Stacker::Processor.new(renderer, stack)
-      processor.run(host_name, grains, pillar, namespace)
+
+      if renderer.file_exist?(host_name)
+        processor = Stacker::Processor.new(renderer, stack)
+        processor.run(host_name, grains, pillar, namespace)
+      else
+        Log.info { "Host not found : #{host_name}" }
+        {404 => "Stacker: host not found"}
+      end
     end
   end
 end

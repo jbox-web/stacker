@@ -16,7 +16,7 @@ module Stacker
       host_name, namespace, level, format = extract_params(env)
       grains, pillar = env.request.method == "GET" ? extract_grains_and_pillar(host_name) : extract_grains_and_pillar(host_name, env)
 
-      result = Stacker::Runner.from_web(host_name, namespace, grains, pillar, level)
+      result = Stacker::Runner.process(host_name, namespace, grains, pillar, level)
       respond_with(env, format, result)
     end
 

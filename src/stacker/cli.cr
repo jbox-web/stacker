@@ -91,7 +91,7 @@ module Stacker
         grains = flags.grains == "" ? {"id" => arguments.host_name} : Utils.load_json_file(flags.grains)
         pillar = flags.pillar == "" ? {} of String => String : Utils.load_json_file(flags.pillar)
 
-        result = Stacker::Runner.from_cli(arguments.host_name, flags.namespace, grains, pillar, flags.log_level)
+        result = Stacker::Runner.process(arguments.host_name, flags.namespace, grains, pillar, flags.log_level)
         puts respond_with(flags.output_format, result)
       end
 

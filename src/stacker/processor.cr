@@ -19,17 +19,11 @@ module Stacker
       @pillar = pillar
       @namespace = namespace
 
-      return {404 => "Not found"} unless valid?
-
       with_debug_run do
         build_stack
       end
 
       @stack
-    end
-
-    private def valid?
-      @renderer.file_exist?(@host_name)
     end
 
     private def build_stack

@@ -9,7 +9,6 @@ module Stacker
 
     def file_exist?(file)
       entrypoint = "#{@root_dir}/#{@entrypoint}/#{file}.yml"
-      Log.info { "Looking for #{entrypoint}" }
       Utils.file_exists?(entrypoint)
     end
 
@@ -22,7 +21,6 @@ module Stacker
       rescue e : Exception
         Log.error { "Error while compiling template #{file}" }
         Log.error { e.message }
-        Log.error { "\n#{input}" }
         output = ""
       else
         Log.debug { "Compiled: #{file}" }
