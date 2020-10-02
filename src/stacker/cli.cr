@@ -72,7 +72,7 @@ module Stacker
         short: "p",
         default: ""
 
-      define_flag loglevel : String,
+      define_flag log_level : String,
         description: "Log level",
         long: "log-level",
         short: "l",
@@ -88,7 +88,7 @@ module Stacker
         load_config
         setup_log
 
-        result = Stacker::Runner.from_cli(arguments.host_name, flags.namespace, flags.grains, flags.pillar, flags.loglevel)
+        result = Stacker::Runner.from_cli(arguments.host_name, flags.namespace, flags.grains, flags.pillar, flags.log_level)
         puts respond_with(flags.output_format, result)
       end
 
