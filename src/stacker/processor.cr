@@ -6,6 +6,7 @@ module Stacker
       @host_name = ""
       @grains = {} of String => String
       @pillar = Pillar.new
+      @stack = Pillar.new
     end
 
     def run(host_name, grains, pillar)
@@ -19,7 +20,7 @@ module Stacker
         build_stack
       end
 
-      @pillar
+      @stack
     end
 
     private def valid?
@@ -32,32 +33,30 @@ module Stacker
         result = Utils.string_to_array(result)
 
         result.each do |file|
-          data = load_pillars_from_stack(stack, file)
-
-          with_debug_pillar do
-            Utils.deep_merge!(@pillar, data)
-          end
+          load_pillars_from_stack(stack, file)
         end
       end
 
-      Log.trace { "Pillar final:\n#{YAML.dump(@pillar)}" }
+      Log.trace { "Stack final:\n#{YAML.dump(@stack)}" }
     end
 
     private def load_pillars_from_stack(stack, file)
       dirname = File.dirname(stack)
       files = Dir["#{dirname}/#{file}"].sort
 
-      Log.debug { "Loading: #{files} from #{dirname}" }
-
-      data = Pillar.new
-
       files.each do |file|
+        Log.debug { "Loading: #{file} from #{dirname}" }
+
+        data = Pillar.new
+
         load_pillars_from_file(dirname, file, data)
+
+        Log.trace { "Loaded:\n#{YAML.dump(data)}" }
+
+        with_debug_stack do
+          Utils.deep_merge!(@stack, data)
+        end
       end
-
-      Log.trace { "Data final:\n#{YAML.dump(data)}" }
-
-      data
     end
 
     private def load_pillars_from_file(dirname, file, data)
@@ -77,7 +76,7 @@ module Stacker
     end
 
     private def compilation_data
-      {"grains" => @grains, "pillar" => @pillar}
+      {"grains" => @grains, "pillar" => @pillar, "stack" => @stack}
     end
 
     private def with_debug_run(&block)
@@ -86,10 +85,10 @@ module Stacker
       Log.debug { "End of stack build for: #{@host_name}" }
     end
 
-    private def with_debug_pillar(&block)
-      Log.trace { "Pillar before:\n#{YAML.dump(@pillar)}" }
+    private def with_debug_stack(&block)
+      Log.trace { "Stack before:\n#{YAML.dump(@stack)}" }
       yield
-      Log.trace { "Pillar after:\n#{YAML.dump(@pillar)}" }
+      Log.trace { "Stack after:\n#{YAML.dump(@stack)}" }
     end
 
     private def with_debug_data(data, &block)
