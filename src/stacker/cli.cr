@@ -78,12 +78,29 @@ module Stacker
         short: "l",
         default: "info"
 
+      define_flag output_format : String,
+        description: "Output format",
+        long: "output-format",
+        short: "o",
+        default: "json"
+
       def run
         load_config
         setup_log
 
         result = Stacker::Runner.from_cli(arguments.host_name, flags.namespace, flags.grains, flags.pillar, flags.loglevel)
-        puts result.to_json
+        puts respond_with(flags.output_format, result)
+      end
+
+      private def respond_with(format, result)
+        case format
+        when "json"
+          result.to_json
+        when "yaml"
+          result.to_yaml
+        else
+          result.to_json
+        end
       end
     end
 
