@@ -50,26 +50,26 @@ module Stacker
 
       define_flag config : String,
         description: "Path to config file",
-        long: config,
-        short: c,
+        long: "config",
+        short: "c",
         default: "stacker.yml"
 
       define_flag namespace : String,
         description: "Stack namespace to use",
-        long: namespace,
-        short: n,
+        long: "namespace",
+        short: "n",
         default: "default"
 
       define_flag grains : String,
         description: "Path to JSON grains file",
-        long: grains,
-        short: g,
+        long: "grains",
+        short: "g",
         default: ""
 
       define_flag pillar : String,
         description: "Path to JSON pillar file",
-        long: pillar,
-        short: p,
+        long: "pillar",
+        short: "p",
         default: ""
 
       def run
