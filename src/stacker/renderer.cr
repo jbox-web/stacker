@@ -1,5 +1,7 @@
 module Stacker
   class Renderer
+    Log = ::Log.for("renderer", ::Log::Severity::Info)
+
     def initialize(@root_dir : String, @entrypoint : String)
       @env = Crinja.new
       setup_env
@@ -7,24 +9,25 @@ module Stacker
 
     def file_exist?(file)
       entrypoint = "#{@root_dir}/#{@entrypoint}/#{file}.yml"
-      Log.debug { "Looking for #{entrypoint}" }
+      Log.info { "Looking for #{entrypoint}" }
       Utils.file_exists?(entrypoint)
     end
 
     def compile(file, data)
       input = File.read(file)
-      template = @env.from_string(input)
 
       begin
+        template = @env.from_string(input)
         output = template.render(data)
       rescue e : Exception
         Log.error { "Error while compiling template #{file}" }
         Log.error { e.message }
+        Log.error { "\n#{input}" }
         output = ""
+      else
+        Log.debug { "Compiled: #{file}" }
+        Log.trace { "\n#{output}" }
       end
-
-      Log.trace { "Result:" }
-      Log.trace { output }
 
       output
     end

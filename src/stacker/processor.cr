@@ -1,5 +1,7 @@
 module Stacker
   class Processor
+    Log = ::Log.for("processor", ::Log::Severity::Info)
+
     property grains : Hash(String, String) | Hash(String, JSON::Any) | JSON::Any
 
     def initialize(@renderer : Renderer, @stacks : Array(String))
@@ -65,7 +67,16 @@ module Stacker
       yaml = @renderer.compile(file, compilation_data.merge({"stack_path" => dirname}))
       return if yaml.empty?
 
-      hash = Utils.yaml_to_hash(yaml, file)
+      hash =
+        begin
+          Utils.yaml_to_hash(yaml)
+        rescue e : YAML::ParseException
+          Log.error { "Error while parsing yaml #{file}" }
+          Log.error { e.message }
+          Log.error { yaml }
+          nil
+        end
+
       return if hash.nil?
 
       Log.trace { "Loaded:\n#{YAML.dump(hash)}" }

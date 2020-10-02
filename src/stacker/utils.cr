@@ -12,24 +12,13 @@ module Stacker
       string.split("\n").reject(&.empty?)
     end
 
-    def self.yaml_to_hash(yaml, file)
-      yaml = parse_yaml(yaml, file)
+    def self.yaml_to_hash(yaml)
+      yaml = YAML.parse(yaml)
 
       return nil if yaml.nil?
       return nil if yaml.raw.nil?
 
       convert_hash(yaml.as_h)
-    end
-
-    def self.parse_yaml(string, file)
-      begin
-        YAML.parse(string)
-      rescue e : YAML::ParseException
-        Log.error { "Error while parsing yaml #{file}" }
-        Log.error { e.message }
-        Log.error { string }
-        nil
-      end
     end
 
     def self.convert_hash(hash : Hash)
@@ -183,13 +172,15 @@ module Stacker
 
     def self.with_log_level(level, &block)
       new_level = SEVERITY_MAP[level]? || SEVERITY_MAP["info"]
-      old_level = Stacker::Log.level
+      old_level = Stacker::Processor::Log.level
 
       begin
-        Stacker::Log.level = new_level
+        Stacker::Processor::Log.level = new_level
+        Stacker::Renderer::Log.level = new_level
         result = yield
       ensure
-        Stacker::Log.level = old_level
+        Stacker::Processor::Log.level = old_level
+        Stacker::Renderer::Log.level = old_level
       end
 
       result

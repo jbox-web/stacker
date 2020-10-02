@@ -24,7 +24,7 @@ describe Stacker::Utils do
 
       file = "spec/fixtures/input/test.yml"
       yaml = File.read(file)
-      hash = Stacker::Utils.yaml_to_hash(yaml, file)
+      hash = Stacker::Utils.yaml_to_hash(yaml)
       generated_yaml = File.read("spec/fixtures/output/test.yml")
 
       hash.inspect.should eq(inspect)

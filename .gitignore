@@ -1,6 +1,11 @@
+# Ignore generated data
 /docs/
 /lib/
-/.shards/
+
+# Ignore all bin files
 /bin/*
 !/bin/.keep
-*.dwarf
+
+# Ignore all log files
+/log/*
+!/log/.keep

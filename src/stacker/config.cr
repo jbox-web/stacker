@@ -4,6 +4,7 @@ module Stacker
 
     property doc_root : String
     property entrypoint : String
+    property logfile : String
     property stacks : Hash(String, Array(String))
 
     property server_host : String = "127.0.0.1"

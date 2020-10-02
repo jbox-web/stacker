@@ -6,6 +6,14 @@ module Stacker
         config = Stacker::Config.from_yaml(config_file)
         Stacker.config = config
       end
+
+      def setup_log
+        ::Log.setup do |c|
+          backend = ::Log::IOBackend.new(File.open(Stacker.config.logfile, "a"))
+
+          c.bind "*", :debug, backend
+        end
+      end
     end
 
     class Server < Admiral::Command
@@ -21,6 +29,7 @@ module Stacker
 
       def run
         load_config
+        setup_log
 
         Kemal.run(args: nil) do |config|
           server = config.server.not_nil!
@@ -65,6 +74,8 @@ module Stacker
 
       def run
         load_config
+        setup_log
+
         result = Stacker::Runner.from_cli(arguments.host_name, flags.namespace, flags.grains, flags.pillar)
         puts result.to_json
       end

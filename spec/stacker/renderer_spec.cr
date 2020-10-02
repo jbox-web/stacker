@@ -23,11 +23,11 @@ describe Stacker::Renderer do
   # See: https://github.com/crystal-lang/crystal/blob/master/spec/std/log/log_spec.cr#L147
   it "support log function" do
     backend = Log::MemoryBackend.new
-    Stacker::Log.backend = backend
+    Stacker::Renderer::Log.backend = backend
     env = create_renderer
     env.compile("spec/fixtures/log.j2", Hash(String, String).new).should eq("")
     entry = backend.entries.first
-    entry.source.should eq("stacker")
+    entry.source.should eq("renderer")
     entry.severity.should eq(s(:info))
     entry.message.should eq("foo")
   end
