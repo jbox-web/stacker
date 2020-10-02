@@ -4,10 +4,6 @@ module Stacker
       stack = Stacker.config.stacks[namespace]?
       raise ArgumentError.new("Namespace not found : #{namespace}") if stack.nil?
 
-      grains = grains == "" ? {"id" => host_name} : Utils.load_json_file(grains)
-      pillar = pillar == "" ? {} of String => String : Utils.load_json_file(pillar).as_h
-      pillar = Utils.convert_hash(pillar)
-
       process(host_name, grains, pillar, stack, namespace, level)
     end
 

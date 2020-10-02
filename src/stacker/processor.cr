@@ -3,12 +3,13 @@ module Stacker
     Log = ::Log.for("processor", ::Log::Severity::Info)
 
     property grains : Hash(String, String) | Hash(String, JSON::Any) | JSON::Any
+    property pillar : Hash(String, String) | Hash(String, JSON::Any) | JSON::Any
 
     def initialize(@renderer : Renderer, @stacks : Array(String))
+      @stack = Pillar.new
       @host_name = ""
       @grains = {} of String => String
-      @pillar = Pillar.new
-      @stack = Pillar.new
+      @pillar = {} of String => String
       @namespace = ""
     end
 
