@@ -7,12 +7,14 @@ module Stacker
       @grains = {} of String => String
       @pillar = Pillar.new
       @stack = Pillar.new
+      @namespace = ""
     end
 
-    def run(host_name, grains, pillar)
+    def run(host_name, grains, pillar, namespace)
       @host_name = host_name
       @grains = grains
       @pillar = pillar
+      @namespace = namespace
 
       return {404 => "Not found"} unless valid?
 
@@ -45,13 +47,11 @@ module Stacker
       files = Dir["#{dirname}/#{file}"].sort
 
       files.each do |file|
-        Log.debug { "Loading: #{file} from #{dirname}" }
+        Log.debug { "Loading: #{file}" }
 
         data = Pillar.new
 
         load_pillars_from_file(dirname, file, data)
-
-        Log.trace { "Loaded:\n#{YAML.dump(data)}" }
 
         with_debug_stack do
           Utils.deep_merge!(@stack, data)
@@ -68,11 +68,11 @@ module Stacker
       hash = Utils.yaml_to_hash(yaml, file)
       return if hash.nil?
 
+      Log.trace { "Loaded:\n#{YAML.dump(hash)}" }
+
       Log.debug { "Merging: #{file}" }
 
-      with_debug_data(data) do
-        Utils.deep_merge!(data, hash)
-      end
+      Utils.deep_merge!(data, hash)
     end
 
     private def compilation_data
@@ -80,21 +80,15 @@ module Stacker
     end
 
     private def with_debug_run(&block)
-      Log.debug { "Building stack for: #{@host_name}" }
+      Log.info { "Building stack for: #{@host_name} (namespace: #{@namespace})" }
       yield
-      Log.debug { "End of stack build for: #{@host_name}" }
+      Log.info { "End of stack build for: #{@host_name} (namespace: #{@namespace})" }
     end
 
     private def with_debug_stack(&block)
       Log.trace { "Stack before:\n#{YAML.dump(@stack)}" }
       yield
       Log.trace { "Stack after:\n#{YAML.dump(@stack)}" }
-    end
-
-    private def with_debug_data(data, &block)
-      Log.trace { "Data before:\n#{YAML.dump(data)}" }
-      yield
-      Log.trace { "Data after:\n#{YAML.dump(data)}" }
     end
   end
 end

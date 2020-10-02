@@ -8,7 +8,7 @@ module Stacker
       pillar = pillar == "" ? {} of String => String : Utils.load_json_file(pillar).as_h
       pillar = Utils.convert_hash(pillar)
 
-      process(host_name, grains, pillar, stack)
+      process(host_name, grains, pillar, stack, namespace)
     end
 
     def self.from_web(host_name, namespace, grains, pillar, level)
@@ -16,14 +16,14 @@ module Stacker
       return {"404" => "Namespace not found : #{namespace}"} if stack.nil?
 
       Utils.with_log_level(level) do
-        process(host_name, grains, pillar, stack)
+        process(host_name, grains, pillar, stack, namespace)
       end
     end
 
-    def self.process(host_name, grains, pillar, stack)
+    def self.process(host_name, grains, pillar, stack, namespace)
       renderer = Renderer.new(Stacker.config.doc_root, Stacker.config.entrypoint)
       processor = Stacker::Processor.new(renderer, stack)
-      processor.run(host_name, grains, pillar)
+      processor.run(host_name, grains, pillar, namespace)
     end
   end
 end
