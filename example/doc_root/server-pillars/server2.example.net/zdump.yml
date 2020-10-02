@@ -1,6 +1,8 @@
 grains: {{ grains | json }}
 pillar: {{ pillar | json }}
 stack: {{ stack | json }}
+stack_path:
+  zdump: {{ stack_path | json }}
 
 {# do log("Yeah!! You can print log or dump object in STDOUT") #}
 
