@@ -87,7 +87,7 @@ module Stacker
     end
 
     private def compilation_data
-      {"grains" => @grains, "pillar" => @pillar, "stack" => @stack}
+      {"minion_id" => @host_name, "grains" => @grains, "pillar" => @pillar, "stack" => @stack}
     end
 
     private def with_debug_run(&block)
