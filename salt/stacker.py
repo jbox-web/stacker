@@ -8,7 +8,7 @@ log = logging.getLogger(__name__)
 
 def ext_pillar(minion_id, pillar, *args, **kwargs):
   host      = kwargs.get('host', None) or args[0]
-  namespace = kwargs.get('namespace', 'default')
+  namespace = kwargs.get('namespace', None)
   log_level = kwargs.get('log_level', None)
 
   if host == None:
@@ -21,7 +21,7 @@ def ext_pillar(minion_id, pillar, *args, **kwargs):
   if log_level != None:
     params['l'] = log_level
 
-  if namespace != 'default':
+  if namespace != None:
     params['n'] = namespace
 
   data = json.dumps({ 'grains': __grains__, 'pillar': pillar })
