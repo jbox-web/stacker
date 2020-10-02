@@ -38,7 +38,7 @@ def ext_pillar(minion_id, pillar, *args, **kwargs):
     result = result['body']
     result = json.loads(result)
 
-    if result == {'404': 'Not found'}:
+    if result == {'404': 'Stacker: namespace not found'} or result == {'404': 'Stacker: host not found'}:
       log.warning("Error while contacting Stacker for %s : %s" % (minion_id, result))
       return {}
     else:
