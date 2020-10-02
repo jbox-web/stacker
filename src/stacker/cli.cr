@@ -72,11 +72,17 @@ module Stacker
         short: "p",
         default: ""
 
+      define_flag loglevel : String,
+        description: "Log level",
+        long: "log-level",
+        short: "l",
+        default: "info"
+
       def run
         load_config
         setup_log
 
-        result = Stacker::Runner.from_cli(arguments.host_name, flags.namespace, flags.grains, flags.pillar)
+        result = Stacker::Runner.from_cli(arguments.host_name, flags.namespace, flags.grains, flags.pillar, flags.loglevel)
         puts result.to_json
       end
     end
