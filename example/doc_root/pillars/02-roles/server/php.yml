@@ -2,7 +2,7 @@
 # Php server role pillar
 ###############################################################################
 
-{% set versions = pillar | traverse('my_server:php:version', []) %}
+{% set versions = stack | traverse('my_server:apps:php:version', []) %}
 
 ###########
 # SERVICE #

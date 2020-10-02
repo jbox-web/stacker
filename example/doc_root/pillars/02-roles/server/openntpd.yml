@@ -2,7 +2,7 @@
 # NTP server role pillar
 ###############################################################################
 
-{% set private_ip = pillar | traverse('my_server:private_ip') %}
+{% set private_ip = stack | traverse('my_server:network:private:ip') %}
 
 openntpd:
   listen: {{ private_ip }}

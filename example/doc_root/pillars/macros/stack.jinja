@@ -1,0 +1,12 @@
+{%- macro load_roles_from_dir(dir) -%}
+  {%- set data = [] -%}
+  {%- set all_roles = ['common', 'client', 'server', 'custom'] -%}
+  {%- for name in all_roles -%}
+    {%- set roles = stack | traverse('my_server:roles:' ~ name, []) -%}
+    {%- for role in roles -%}
+      {%- set path = dir ~ '/' ~ name ~ '/' ~ role ~ '.yml' -%}
+      {%- do array_push(data, path) -%}
+    {%- endfor -%}
+  {%- endfor -%}
+  {{ data | join("\n") }}
+{%- endmacro -%}

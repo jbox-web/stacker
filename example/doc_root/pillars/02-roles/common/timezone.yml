@@ -2,7 +2,7 @@
 # Timezone base pillar
 ###############################################################################
 
-{% set timezone = pillar | traverse('my_company:timezone') %}
+{% set timezone = stack | traverse('my_company:timezone') %}
 
 timezone:
   name: {{ timezone }}

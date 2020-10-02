@@ -1,39 +1,34 @@
 ---
 my_server:
-  # DNS / IP
+  # Network
   hostname: server2
-  private_fqdn: server2.example.corp
-  private_ip: 10.1.0.2
-
-  # Disks
-  disks:
-    - /dev/sda
-    - /dev/sdb
+  network:
+    public:
+      fqdn: server2.example.net
+    private:
+      ip: 10.1.0.2
+      fqdn: server2.example.corp
 
   # Roles
   roles:
-    - server-docker
-    - server-nodejs
-    - server-php
-    - server-redis
-  roles_config:
-    - php-app-server-common
-    - php-app-server-development
+    server:
+      - docker
+      - nodejs
+      - php
+      - redis
+    custom:
+      - php-app-server-common
+      - php-app-server-development
+
+  # Monitoring
+  monitoring:
+    disks:
+      - /dev/sda
+      - /dev/sdb
 
   # Apps
-  php:
-    version:
-      - '5.6'
-      - '7.3'
-
-grains: {{ grains | json }}
-
-kernelversion: {{ grains | traverse('kernelversion', 'foo') | json }}
-
-ip6_interfaces:
-  eno1: {{ grains | traverse('ip6_interfaces:eno1') | json }}
-
-{% do log("Yeah!! You can print log or dump object in STDOUT") %}
-
-{% do log("---- GRAINS ----") %}
-{% do dump(grains) %}
+  apps:
+    php:
+      version:
+        - '5.6'
+        - '7.3'

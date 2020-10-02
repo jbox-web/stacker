@@ -2,7 +2,7 @@
 # SSH base pillar
 ###############################################################################
 
-{% set ipv6 = pillar | traverse('my_server:ipv6', true) %}
+{% set ipv6 = stack | traverse('my_server:network:ipv6', true) %}
 
 ###########
 # SERVICE #

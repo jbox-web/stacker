@@ -2,7 +2,7 @@
 # Users base pillar
 ###############################################################################
 
-{% set users = pillar | traverse('my_company:users', {}) %}
+{% set users = stack | traverse('my_company:users', {}) %}
 
 users:
   ## Minimal required pillar values

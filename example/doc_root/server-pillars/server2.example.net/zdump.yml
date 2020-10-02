@@ -1,0 +1,14 @@
+grains: {{ grains | json }}
+pillar: {{ pillar | json }}
+stack: {{ stack | json }}
+
+{# do log("Yeah!! You can print log or dump object in STDOUT") #}
+
+{# do log("---- PILLAR ----") #}
+{# do dump(pillar) #}
+
+{# do log("---- GRAINS ----") #}
+{# do dump(grains) #}
+
+{# do log("---- STACK ----") #}
+{# do dump(stack) #}

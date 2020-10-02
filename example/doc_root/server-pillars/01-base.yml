@@ -1,0 +1,27 @@
+---
+my_server:
+  # Network
+  network:
+    ipv6: true
+    firewall: true
+
+  # Roles
+  roles:
+    common:
+      - locale
+      - timezone
+      - users
+
+    client:
+      - salt
+
+    server:
+      - openssh
+
+    custom: []
+
+  # Apps
+  apps: {}
+
+  # Monitoring
+  monitoring: {}

@@ -1,30 +1,23 @@
 ---
-stacker: foo
-
 my_server:
-  # DNS / IP
+  # Network
   hostname: server1
-  private_fqdn: server1.example.corp
-  private_ip: 10.1.0.1
-
-  # Disks
-  disks:
-    - /dev/sda
-    - /dev/sdb
+  network:
+    public:
+      fqdn: server1.example.net
+    private:
+      ip: 10.1.0.1
+      fqdn: server1.example.corp
 
   # Roles
   roles:
-    # Base
-    - server-ntp
+    server:
+      - openntpd
 
-grains: {{ grains | json }}
+  # Monitoring
+  monitoring:
+    disks:
+      - /dev/sda
+      - /dev/sdb
 
-kernelversion: {{ grains | traverse('kernelversion', 'foo') | json }}
-
-ip6_interfaces:
-  eno1: {{ grains | traverse('ip6_interfaces:eno1') | json }}
-
-{% do log("Yeah!! You can print log or dump object in STDOUT") %}
-
-{% do log("---- GRAINS ----") %}
-{% do dump(grains) %}
+stacker: foo
