@@ -57,7 +57,7 @@ The configuration file is a YAML file looking like this :
 ---
 doc_root: example/doc_root
 entrypoint: server-pillars
-logfile: ./log/stacker.log
+log_file: ./log/stacker.log
 
 stacks:
   default:
@@ -81,7 +81,7 @@ Config               | Description
 ---------------------|------------
 `doc_root`           | the webserver document root (must be specified). Since pillar are also crinja templates, it means where are the template files?
 `entrypoint`         | the webserver entrypoint (must be specified). The directory in the `doc_root` where we shoud look for `<minion_d>.yml` file
-`logfile`            | the path to the log file
+`log_file`           | the path to the log file
 `stacks`             | a hash of namespaced [stack configuration files](https://docs.saltstack.com/en/master/ref/pillar/all/salt.pillar.stack.html#list-of-config-files) (must be specified)
 `server_host`        | ip address to bind to (default `127.0.0.1`)
 `server_port`        | port to bind to (default `3000`)

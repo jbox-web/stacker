@@ -9,7 +9,7 @@ module Stacker
 
       def setup_log
         ::Log.setup do |c|
-          backend = ::Log::IOBackend.new(File.open(Stacker.config.logfile, "a"))
+          backend = ::Log::IOBackend.new(File.open(Stacker.config.log_file, "a"))
 
           c.bind "*", :debug, backend
         end

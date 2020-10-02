@@ -1,7 +1,7 @@
 ---
 doc_root: example/doc_root
 entrypoint: server-pillars
-logfile: ./log/stacker.log
+log_file: ./log/stacker.log
 
 stacks:
   default:
