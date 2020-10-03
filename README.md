@@ -171,88 +171,91 @@ Log levels other than `debug` or `trace` are meaningless.
 `debug` level will render something like this :
 
 ```sh
-2020-10-02T16:17:09.409381Z   INFO - renderer: Looking for example/doc_root/server-pillars/server2.example.net.yml
-2020-10-02T16:17:09.409472Z   INFO - processor: Building stack for: server2.example.net (namespace: prod)
-2020-10-02T16:17:09.409927Z  DEBUG - renderer: Compiled: example/doc_root/server-pillars/stack1.cfg
-2020-10-02T16:17:09.409983Z  DEBUG - processor: Loading: example/doc_root/server-pillars/01-base.yml
-2020-10-02T16:17:09.410000Z  DEBUG - processor: Compiling: example/doc_root/server-pillars/01-base.yml
-2020-10-02T16:17:09.410301Z  DEBUG - renderer: Compiled: example/doc_root/server-pillars/01-base.yml
-2020-10-02T16:17:09.410425Z  DEBUG - processor: Merging: example/doc_root/server-pillars/01-base.yml
-2020-10-02T16:17:09.410477Z  DEBUG - processor: Loading: example/doc_root/server-pillars/server2.example.net.yml
-2020-10-02T16:17:09.410493Z  DEBUG - processor: Compiling: example/doc_root/server-pillars/server2.example.net.yml
-2020-10-02T16:17:09.410835Z  DEBUG - renderer: Compiled: example/doc_root/server-pillars/server2.example.net.yml
-2020-10-02T16:17:09.410991Z  DEBUG - processor: Merging: example/doc_root/server-pillars/server2.example.net.yml
-2020-10-02T16:17:09.412864Z  DEBUG - renderer: Compiled: example/doc_root/pillars/stack1.cfg
-2020-10-02T16:17:09.413042Z  DEBUG - processor: Loading: example/doc_root/pillars/01-base/01-base.yml
-2020-10-02T16:17:09.413062Z  DEBUG - processor: Compiling: example/doc_root/pillars/01-base/01-base.yml
-2020-10-02T16:17:09.413406Z  DEBUG - renderer: Compiled: example/doc_root/pillars/01-base/01-base.yml
-2020-10-02T16:17:09.413565Z  DEBUG - processor: Merging: example/doc_root/pillars/01-base/01-base.yml
-2020-10-02T16:17:09.413588Z  DEBUG - processor: Loading: example/doc_root/pillars/01-base/app1.yml
-2020-10-02T16:17:09.413598Z  DEBUG - processor: Compiling: example/doc_root/pillars/01-base/app1.yml
-2020-10-02T16:17:09.413901Z  DEBUG - renderer: Compiled: example/doc_root/pillars/01-base/app1.yml
-2020-10-02T16:17:09.414023Z  DEBUG - processor: Merging: example/doc_root/pillars/01-base/app1.yml
-2020-10-02T16:17:09.414083Z  DEBUG - processor: Loading: example/doc_root/pillars/02-roles/common/locale.yml
-2020-10-02T16:17:09.414104Z  DEBUG - processor: Compiling: example/doc_root/pillars/02-roles/common/locale.yml
-2020-10-02T16:17:09.414417Z  DEBUG - renderer: Compiled: example/doc_root/pillars/02-roles/common/locale.yml
-2020-10-02T16:17:09.414481Z  DEBUG - processor: Merging: example/doc_root/pillars/02-roles/common/locale.yml
-2020-10-02T16:17:09.414534Z  DEBUG - processor: Loading: example/doc_root/pillars/02-roles/common/timezone.yml
-2020-10-02T16:17:09.414551Z  DEBUG - processor: Compiling: example/doc_root/pillars/02-roles/common/timezone.yml
-2020-10-02T16:17:09.414956Z  DEBUG - renderer: Compiled: example/doc_root/pillars/02-roles/common/timezone.yml
-2020-10-02T16:17:09.415008Z  DEBUG - processor: Merging: example/doc_root/pillars/02-roles/common/timezone.yml
-2020-10-02T16:17:09.415057Z  DEBUG - processor: Loading: example/doc_root/pillars/02-roles/common/users.yml
-2020-10-02T16:17:09.415073Z  DEBUG - processor: Compiling: example/doc_root/pillars/02-roles/common/users.yml
-2020-10-02T16:17:09.415638Z  DEBUG - renderer: Compiled: example/doc_root/pillars/02-roles/common/users.yml
-2020-10-02T16:17:09.415810Z  DEBUG - processor: Merging: example/doc_root/pillars/02-roles/common/users.yml
-2020-10-02T16:17:09.415865Z  DEBUG - processor: Loading: example/doc_root/pillars/02-roles/client/salt.yml
-2020-10-02T16:17:09.415879Z  DEBUG - processor: Compiling: example/doc_root/pillars/02-roles/client/salt.yml
-2020-10-02T16:17:09.416274Z  DEBUG - renderer: Compiled: example/doc_root/pillars/02-roles/client/salt.yml
-2020-10-02T16:17:09.416327Z  DEBUG - processor: Merging: example/doc_root/pillars/02-roles/client/salt.yml
-2020-10-02T16:17:09.416370Z  DEBUG - processor: Loading: example/doc_root/pillars/02-roles/server/openssh.yml
-2020-10-02T16:17:09.416385Z  DEBUG - processor: Compiling: example/doc_root/pillars/02-roles/server/openssh.yml
-2020-10-02T16:17:09.416887Z  DEBUG - renderer: Compiled: example/doc_root/pillars/02-roles/server/openssh.yml
-2020-10-02T16:17:09.417027Z  DEBUG - processor: Merging: example/doc_root/pillars/02-roles/server/openssh.yml
-2020-10-02T16:17:09.417070Z  DEBUG - processor: Loading: example/doc_root/pillars/02-roles/server/docker.yml
-2020-10-02T16:17:09.417093Z  DEBUG - processor: Compiling: example/doc_root/pillars/02-roles/server/docker.yml
-2020-10-02T16:17:09.417483Z  DEBUG - renderer: Compiled: example/doc_root/pillars/02-roles/server/docker.yml
-2020-10-02T16:17:09.417576Z  DEBUG - processor: Merging: example/doc_root/pillars/02-roles/server/docker.yml
-2020-10-02T16:17:09.417623Z  DEBUG - processor: Loading: example/doc_root/pillars/02-roles/server/nodejs.yml
-2020-10-02T16:17:09.417635Z  DEBUG - processor: Compiling: example/doc_root/pillars/02-roles/server/nodejs.yml
-2020-10-02T16:17:09.418042Z  DEBUG - renderer: Compiled: example/doc_root/pillars/02-roles/server/nodejs.yml
-2020-10-02T16:17:09.418111Z  DEBUG - processor: Merging: example/doc_root/pillars/02-roles/server/nodejs.yml
-2020-10-02T16:17:09.418155Z  DEBUG - processor: Loading: example/doc_root/pillars/02-roles/server/php.yml
-2020-10-02T16:17:09.418169Z  DEBUG - processor: Compiling: example/doc_root/pillars/02-roles/server/php.yml
-2020-10-02T16:17:09.418747Z  DEBUG - renderer: Compiled: example/doc_root/pillars/02-roles/server/php.yml
-2020-10-02T16:17:09.418956Z  DEBUG - processor: Merging: example/doc_root/pillars/02-roles/server/php.yml
-2020-10-02T16:17:09.418997Z  DEBUG - processor: Loading: example/doc_root/pillars/02-roles/server/redis.yml
-2020-10-02T16:17:09.419012Z  DEBUG - processor: Compiling: example/doc_root/pillars/02-roles/server/redis.yml
-2020-10-02T16:17:09.420192Z  DEBUG - renderer: Compiled: example/doc_root/pillars/02-roles/server/redis.yml
-2020-10-02T16:17:09.420316Z  DEBUG - processor: Merging: example/doc_root/pillars/02-roles/server/redis.yml
-2020-10-02T16:17:09.420375Z  DEBUG - processor: Loading: example/doc_root/pillars/02-roles/custom/php-app-server-common.yml
-2020-10-02T16:17:09.420389Z  DEBUG - processor: Compiling: example/doc_root/pillars/02-roles/custom/php-app-server-common.yml
-2020-10-02T16:17:09.420844Z  DEBUG - renderer: Compiled: example/doc_root/pillars/02-roles/custom/php-app-server-common.yml
-2020-10-02T16:17:09.421019Z  DEBUG - processor: Merging: example/doc_root/pillars/02-roles/custom/php-app-server-common.yml
-2020-10-02T16:17:09.421081Z  DEBUG - processor: Loading: example/doc_root/pillars/02-roles/custom/php-app-server-development.yml
-2020-10-02T16:17:09.421094Z  DEBUG - processor: Compiling: example/doc_root/pillars/02-roles/custom/php-app-server-development.yml
-2020-10-02T16:17:09.424775Z  DEBUG - renderer: Compiled: example/doc_root/pillars/02-roles/custom/php-app-server-development.yml
-2020-10-02T16:17:09.425086Z  DEBUG - processor: Merging: example/doc_root/pillars/02-roles/custom/php-app-server-development.yml
-2020-10-02T16:17:09.425539Z  DEBUG - renderer: Compiled: example/doc_root/server-pillars/stack2.cfg
-2020-10-02T16:17:09.425614Z  DEBUG - processor: Loading: example/doc_root/server-pillars/server2.example.net/clean.yml
-2020-10-02T16:17:09.425628Z  DEBUG - processor: Compiling: example/doc_root/server-pillars/server2.example.net/clean.yml
-2020-10-02T16:17:09.426010Z  DEBUG - renderer: Compiled: example/doc_root/server-pillars/server2.example.net/clean.yml
-2020-10-02T16:17:09.426058Z  DEBUG - processor: Merging: example/doc_root/server-pillars/server2.example.net/clean.yml
-2020-10-02T16:17:09.426076Z  DEBUG - processor: Loading: example/doc_root/server-pillars/server2.example.net/stacker.yml
-2020-10-02T16:17:09.426084Z  DEBUG - processor: Compiling: example/doc_root/server-pillars/server2.example.net/stacker.yml
-2020-10-02T16:17:09.426434Z  DEBUG - renderer: Compiled: example/doc_root/server-pillars/server2.example.net/stacker.yml
-2020-10-02T16:17:09.426464Z  DEBUG - processor: Merging: example/doc_root/server-pillars/server2.example.net/stacker.yml
-2020-10-02T16:17:09.426479Z  DEBUG - processor: Loading: example/doc_root/server-pillars/server2.example.net/users.yml
-2020-10-02T16:17:09.426487Z  DEBUG - processor: Compiling: example/doc_root/server-pillars/server2.example.net/users.yml
-2020-10-02T16:17:09.427201Z  DEBUG - renderer: Compiled: example/doc_root/server-pillars/server2.example.net/users.yml
-2020-10-02T16:17:09.427258Z  DEBUG - processor: Merging: example/doc_root/server-pillars/server2.example.net/users.yml
-2020-10-02T16:17:09.427277Z  DEBUG - processor: Loading: example/doc_root/server-pillars/server2.example.net/zdump.yml
-2020-10-02T16:17:09.427286Z  DEBUG - processor: Compiling: example/doc_root/server-pillars/server2.example.net/zdump.yml
-2020-10-02T16:17:09.429138Z  DEBUG - renderer: Compiled: example/doc_root/server-pillars/server2.example.net/zdump.yml
-2020-10-02T16:17:09.430728Z  DEBUG - processor: Merging: example/doc_root/server-pillars/server2.example.net/zdump.yml
-2020-10-02T16:17:09.430779Z   INFO - processor: End of stack build for: server2.example.net (namespace: prod)
+2020-10-02T23:18:27.149678Z   INFO - processor: Building stack for: server2.example.net (namespace: prod)
+2020-10-02T23:18:27.149897Z  DEBUG - renderer: Compiled: example/doc_root/server-pillars/stack1.cfg
+2020-10-02T23:18:27.149927Z  DEBUG - processor: Loading: example/doc_root/server-pillars/01-base.yml
+2020-10-02T23:18:27.149936Z  DEBUG - processor: Compiling: example/doc_root/server-pillars/01-base.yml
+2020-10-02T23:18:27.150030Z  DEBUG - renderer: Compiled: example/doc_root/server-pillars/01-base.yml
+2020-10-02T23:18:27.150078Z  DEBUG - processor: Merging: example/doc_root/server-pillars/01-base.yml
+2020-10-02T23:18:27.150099Z  DEBUG - processor: Loading: example/doc_root/server-pillars/server2.example.net.yml
+2020-10-02T23:18:27.150109Z  DEBUG - processor: Compiling: example/doc_root/server-pillars/server2.example.net.yml
+2020-10-02T23:18:27.150190Z  DEBUG - renderer: Compiled: example/doc_root/server-pillars/server2.example.net.yml
+2020-10-02T23:18:27.150263Z  DEBUG - processor: Merging: example/doc_root/server-pillars/server2.example.net.yml
+2020-10-02T23:18:27.150705Z  DEBUG - renderer: Compiled: example/doc_root/pillars/stack1.cfg
+2020-10-02T23:18:27.150775Z  DEBUG - processor: Loading: example/doc_root/pillars/01-base/01-base.yml
+2020-10-02T23:18:27.150784Z  DEBUG - processor: Compiling: example/doc_root/pillars/01-base/01-base.yml
+2020-10-02T23:18:27.150873Z  DEBUG - renderer: Compiled: example/doc_root/pillars/01-base/01-base.yml
+2020-10-02T23:18:27.150932Z  DEBUG - processor: Merging: example/doc_root/pillars/01-base/01-base.yml
+2020-10-02T23:18:27.150942Z  DEBUG - processor: Loading: example/doc_root/pillars/01-base/app1.yml
+2020-10-02T23:18:27.150949Z  DEBUG - processor: Compiling: example/doc_root/pillars/01-base/app1.yml
+2020-10-02T23:18:27.151042Z  DEBUG - renderer: Compiled: example/doc_root/pillars/01-base/app1.yml
+2020-10-02T23:18:27.151091Z  DEBUG - processor: Merging: example/doc_root/pillars/01-base/app1.yml
+2020-10-02T23:18:27.151108Z  DEBUG - processor: Loading: example/doc_root/pillars/01-base/zdump.yml
+2020-10-02T23:18:27.151115Z  DEBUG - processor: Compiling: example/doc_root/pillars/01-base/zdump.yml
+2020-10-02T23:18:27.151208Z  DEBUG - renderer: Compiled: example/doc_root/pillars/01-base/zdump.yml
+2020-10-02T23:18:27.151238Z  DEBUG - processor: Merging: example/doc_root/pillars/01-base/zdump.yml
+2020-10-02T23:18:27.151267Z  DEBUG - processor: Loading: example/doc_root/pillars/02-roles/common/locale.yml
+2020-10-02T23:18:27.151286Z  DEBUG - processor: Compiling: example/doc_root/pillars/02-roles/common/locale.yml
+2020-10-02T23:18:27.151392Z  DEBUG - renderer: Compiled: example/doc_root/pillars/02-roles/common/locale.yml
+2020-10-02T23:18:27.151426Z  DEBUG - processor: Merging: example/doc_root/pillars/02-roles/common/locale.yml
+2020-10-02T23:18:27.151452Z  DEBUG - processor: Loading: example/doc_root/pillars/02-roles/common/timezone.yml
+2020-10-02T23:18:27.151462Z  DEBUG - processor: Compiling: example/doc_root/pillars/02-roles/common/timezone.yml
+2020-10-02T23:18:27.151572Z  DEBUG - renderer: Compiled: example/doc_root/pillars/02-roles/common/timezone.yml
+2020-10-02T23:18:27.151597Z  DEBUG - processor: Merging: example/doc_root/pillars/02-roles/common/timezone.yml
+2020-10-02T23:18:27.151619Z  DEBUG - processor: Loading: example/doc_root/pillars/02-roles/common/users.yml
+2020-10-02T23:18:27.151627Z  DEBUG - processor: Compiling: example/doc_root/pillars/02-roles/common/users.yml
+2020-10-02T23:18:27.151795Z  DEBUG - renderer: Compiled: example/doc_root/pillars/02-roles/common/users.yml
+2020-10-02T23:18:27.151858Z  DEBUG - processor: Merging: example/doc_root/pillars/02-roles/common/users.yml
+2020-10-02T23:18:27.151879Z  DEBUG - processor: Loading: example/doc_root/pillars/02-roles/client/salt.yml
+2020-10-02T23:18:27.151887Z  DEBUG - processor: Compiling: example/doc_root/pillars/02-roles/client/salt.yml
+2020-10-02T23:18:27.152009Z  DEBUG - renderer: Compiled: example/doc_root/pillars/02-roles/client/salt.yml
+2020-10-02T23:18:27.152039Z  DEBUG - processor: Merging: example/doc_root/pillars/02-roles/client/salt.yml
+2020-10-02T23:18:27.152060Z  DEBUG - processor: Loading: example/doc_root/pillars/02-roles/server/openssh.yml
+2020-10-02T23:18:27.152069Z  DEBUG - processor: Compiling: example/doc_root/pillars/02-roles/server/openssh.yml
+2020-10-02T23:18:27.152231Z  DEBUG - renderer: Compiled: example/doc_root/pillars/02-roles/server/openssh.yml
+2020-10-02T23:18:27.152331Z  DEBUG - processor: Merging: example/doc_root/pillars/02-roles/server/openssh.yml
+2020-10-02T23:18:27.152351Z  DEBUG - processor: Loading: example/doc_root/pillars/02-roles/server/docker.yml
+2020-10-02T23:18:27.152360Z  DEBUG - processor: Compiling: example/doc_root/pillars/02-roles/server/docker.yml
+2020-10-02T23:18:27.152478Z  DEBUG - renderer: Compiled: example/doc_root/pillars/02-roles/server/docker.yml
+2020-10-02T23:18:27.152528Z  DEBUG - processor: Merging: example/doc_root/pillars/02-roles/server/docker.yml
+2020-10-02T23:18:27.152547Z  DEBUG - processor: Loading: example/doc_root/pillars/02-roles/server/nodejs.yml
+2020-10-02T23:18:27.152554Z  DEBUG - processor: Compiling: example/doc_root/pillars/02-roles/server/nodejs.yml
+2020-10-02T23:18:27.152688Z  DEBUG - renderer: Compiled: example/doc_root/pillars/02-roles/server/nodejs.yml
+2020-10-02T23:18:27.152729Z  DEBUG - processor: Merging: example/doc_root/pillars/02-roles/server/nodejs.yml
+2020-10-02T23:18:27.152748Z  DEBUG - processor: Loading: example/doc_root/pillars/02-roles/server/php.yml
+2020-10-02T23:18:27.152756Z  DEBUG - processor: Compiling: example/doc_root/pillars/02-roles/server/php.yml
+2020-10-02T23:18:27.152931Z  DEBUG - renderer: Compiled: example/doc_root/pillars/02-roles/server/php.yml
+2020-10-02T23:18:27.153030Z  DEBUG - processor: Merging: example/doc_root/pillars/02-roles/server/php.yml
+2020-10-02T23:18:27.153050Z  DEBUG - processor: Loading: example/doc_root/pillars/02-roles/server/redis.yml
+2020-10-02T23:18:27.153059Z  DEBUG - processor: Compiling: example/doc_root/pillars/02-roles/server/redis.yml
+2020-10-02T23:18:27.153534Z  DEBUG - renderer: Compiled: example/doc_root/pillars/02-roles/server/redis.yml
+2020-10-02T23:18:27.153604Z  DEBUG - processor: Merging: example/doc_root/pillars/02-roles/server/redis.yml
+2020-10-02T23:18:27.153631Z  DEBUG - processor: Loading: example/doc_root/pillars/02-roles/custom/php-app-server-common.yml
+2020-10-02T23:18:27.153639Z  DEBUG - processor: Compiling: example/doc_root/pillars/02-roles/custom/php-app-server-common.yml
+2020-10-02T23:18:27.153759Z  DEBUG - renderer: Compiled: example/doc_root/pillars/02-roles/custom/php-app-server-common.yml
+2020-10-02T23:18:27.153835Z  DEBUG - processor: Merging: example/doc_root/pillars/02-roles/custom/php-app-server-common.yml
+2020-10-02T23:18:27.153856Z  DEBUG - processor: Loading: example/doc_root/pillars/02-roles/custom/php-app-server-development.yml
+2020-10-02T23:18:27.153864Z  DEBUG - processor: Compiling: example/doc_root/pillars/02-roles/custom/php-app-server-development.yml
+2020-10-02T23:18:27.154676Z  DEBUG - renderer: Compiled: example/doc_root/pillars/02-roles/custom/php-app-server-development.yml
+2020-10-02T23:18:27.154824Z  DEBUG - processor: Merging: example/doc_root/pillars/02-roles/custom/php-app-server-development.yml
+2020-10-02T23:18:27.154931Z  DEBUG - renderer: Compiled: example/doc_root/server-pillars/stack2.cfg
+2020-10-02T23:18:27.154970Z  DEBUG - processor: Loading: example/doc_root/server-pillars/server2.example.net/clean.yml
+2020-10-02T23:18:27.154978Z  DEBUG - processor: Compiling: example/doc_root/server-pillars/server2.example.net/clean.yml
+2020-10-02T23:18:27.155054Z  DEBUG - renderer: Compiled: example/doc_root/server-pillars/server2.example.net/clean.yml
+2020-10-02T23:18:27.155076Z  DEBUG - processor: Merging: example/doc_root/server-pillars/server2.example.net/clean.yml
+2020-10-02T23:18:27.155086Z  DEBUG - processor: Loading: example/doc_root/server-pillars/server2.example.net/stacker.yml
+2020-10-02T23:18:27.155090Z  DEBUG - processor: Compiling: example/doc_root/server-pillars/server2.example.net/stacker.yml
+2020-10-02T23:18:27.155162Z  DEBUG - renderer: Compiled: example/doc_root/server-pillars/server2.example.net/stacker.yml
+2020-10-02T23:18:27.155181Z  DEBUG - processor: Merging: example/doc_root/server-pillars/server2.example.net/stacker.yml
+2020-10-02T23:18:27.155191Z  DEBUG - processor: Loading: example/doc_root/server-pillars/server2.example.net/users.yml
+2020-10-02T23:18:27.155195Z  DEBUG - processor: Compiling: example/doc_root/server-pillars/server2.example.net/users.yml
+2020-10-02T23:18:27.155451Z  DEBUG - renderer: Compiled: example/doc_root/server-pillars/server2.example.net/users.yml
+2020-10-02T23:18:27.155475Z  DEBUG - processor: Merging: example/doc_root/server-pillars/server2.example.net/users.yml
+2020-10-02T23:18:27.155486Z  DEBUG - processor: Loading: example/doc_root/server-pillars/server2.example.net/zdump.yml
+2020-10-02T23:18:27.155490Z  DEBUG - processor: Compiling: example/doc_root/server-pillars/server2.example.net/zdump.yml
+2020-10-02T23:18:27.155896Z  DEBUG - renderer: Compiled: example/doc_root/server-pillars/server2.example.net/zdump.yml
+2020-10-02T23:18:27.156648Z  DEBUG - processor: Merging: example/doc_root/server-pillars/server2.example.net/zdump.yml
+2020-10-02T23:18:27.156664Z   INFO - processor: End of stack build for: server2.example.net (namespace: prod)
 ```
 
 ## Scaling
@@ -336,7 +339,7 @@ filters:
   indent(width=4, indentfirst=false)
   int(default=0, base=10)
   join(separator='', attribute=none)
-  json()
+  json(indent=none)
   last()
   length()
   list()
@@ -363,6 +366,7 @@ filters:
   traverse(attribute=none, default=none)
   trim()
   truncate(length=255, killwords=false, end='...', leeway=none)
+  unique()
   upper()
   urlencode()
   urlize(trim_url_limit=none, nofollow=false, target=none, rel=none)
