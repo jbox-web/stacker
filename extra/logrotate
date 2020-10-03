@@ -1,0 +1,13 @@
+/data/stacker/shared/log/stacker.log
+{
+  daily
+  rotate 30
+  compress
+  dateext
+  missingok
+  notifempty
+  create
+  postrotate
+    if systemctl -q is-active stacker ; then systemctl kill --signal=USR1 stacker ; fi
+  endscript
+}
