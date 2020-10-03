@@ -6,15 +6,6 @@ module Stacker
         config = Stacker::Config.from_yaml(config_file)
         Stacker.config = config
       end
-
-      def setup_log
-        ::Log.setup do |c|
-          io = File.open(Stacker.config.log_file, "a")
-          backend = ::Log::IOBackend.new(io)
-
-          c.bind "*", :debug, backend
-        end
-      end
     end
 
     class Server < Admiral::Command
@@ -30,7 +21,8 @@ module Stacker
 
       def run
         load_config
-        setup_log
+        Stacker.setup_log
+        Stacker.setup_signals
 
         Kemal.run(args: nil) do |config|
           server = config.server.not_nil!
@@ -87,7 +79,7 @@ module Stacker
 
       def run
         load_config
-        setup_log
+        Stacker.setup_log
 
         grains = flags.grains == "" ? {"id" => arguments.host_name} : Utils.load_json_file(flags.grains)
         pillar = flags.pillar == "" ? {} of String => String : Utils.load_json_file(flags.pillar)

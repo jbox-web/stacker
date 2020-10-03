@@ -17,6 +17,27 @@ module Stacker
   def self.config
     @@config ||= Config.from_yaml("")
   end
+
+  def self.setup_log
+    ::Log.setup do |c|
+      c.bind "*", :debug, ::Log::IOBackend.new(log_file)
+    end
+  end
+
+  def self.log_file
+    @@log_file ||= File.open(config.log_file, "a")
+  end
+
+  def self.setup_signals
+    Signal::USR1.trap do
+      reopen_log_file!
+    end
+  end
+
+  def self.reopen_log_file!
+    @@log_file = nil
+    setup_log
+  end
 end
 
 # Start the CLI
