@@ -60,7 +60,7 @@ module Stacker
     private def func_log
       Crinja.function({object: nil}, :log) do
         object = arguments["object"]
-        Renderer::Log.info { object }
+        Stacker::Renderer::Log.info { object }
         Crinja::Value.new("")
       end
     end
@@ -68,7 +68,7 @@ module Stacker
     private def func_dump
       Crinja.function({object: nil}, :dump) do
         object = arguments["object"]
-        Renderer::Log.info { "\n#{YAML.dump(object)}" }
+        Stacker::Renderer::Log.info { "\n#{YAML.dump(object)}" }
         Crinja::Value.new("")
       end
     end
