@@ -108,9 +108,21 @@ module Stacker
       end
     end
 
+    class Info < Admiral::Command
+      define_help description: "Show Stacker information"
+
+      def run
+        puts "version: #{Stacker::VERSION}"
+        puts
+        context = Context.new("")
+        Utils.crinja_info(context.env)
+      end
+    end
+
     define_version Stacker::VERSION
     define_help description: "Stacker is Salt PillarStack in Crystal"
 
+    register_sub_command info, Info, description: "Show Stacker information"
     register_sub_command server, Server, description: "Run Stacker webserver"
     register_sub_command fetch, Fetch, description: "Fetch host pillars"
 

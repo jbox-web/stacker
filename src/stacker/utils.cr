@@ -185,5 +185,17 @@ module Stacker
 
       result
     end
+
+    def self.crinja_info(env)
+      [env.filters, env.tests, env.functions, env.tags, env.operators].each do |library|
+        puts "#{library.name}s:"
+        names = library.keys
+        names.sort.each do |name|
+          feature = library[name]
+          puts "  #{feature}"
+        end
+        puts
+      end
+    end
   end
 end
