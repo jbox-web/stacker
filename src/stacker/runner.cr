@@ -26,7 +26,10 @@ module Stacker
     end
 
     def self.renderer
-      @@renderer ||= Renderer.new(Stacker.config.doc_root, Stacker.config.entrypoint)
+      @@renderer ||= begin
+        context = Context.new(Stacker.config.doc_root)
+        Renderer.new(context, Stacker.config.entrypoint)
+      end
     end
   end
 end
