@@ -168,7 +168,7 @@ Log levels other than `debug` or `trace` are meaningless.
 
 `trace` level is very verbose as it dumps data before and after merge operations.
 
-`debug` level will render something like this :
+<details><summary>debug level will render something like this :</summary>
 
 ```sh
 2020-10-02T23:18:27.149678Z   INFO - processor: Building stack for: server2.example.net (namespace: prod)
@@ -257,6 +257,7 @@ Log levels other than `debug` or `trace` are meaningless.
 2020-10-02T23:18:27.156648Z  DEBUG - processor: Merging: example/doc_root/server-pillars/server2.example.net/zdump.yml
 2020-10-02T23:18:27.156664Z   INFO - processor: End of stack build for: server2.example.net (namespace: prod)
 ```
+</details>
 
 ## Scaling
 
