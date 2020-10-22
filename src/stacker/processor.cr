@@ -77,7 +77,7 @@ module Stacker
         load_pillars_from_file(dirname, file, data)
 
         with_debug_stack do
-          Utils.deep_merge!(@stack, data)
+          Pillar.deep_merge!(@stack, data)
         end
       end
     end
@@ -95,7 +95,7 @@ module Stacker
 
       hash =
         begin
-          Utils.yaml_to_hash(yaml)
+          Pillar.yaml_to_pillar(yaml)
         rescue e : YAML::ParseException
           Log.error { "Error while parsing yaml #{file}" }
           Log.error { e.message }
@@ -111,7 +111,7 @@ module Stacker
 
       Log.debug { "Merging: #{file}" }
 
-      Utils.deep_merge!(data, hash)
+      Pillar.deep_merge!(data, hash)
     end
 
     private def compilation_data
