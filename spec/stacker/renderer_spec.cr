@@ -38,10 +38,77 @@ describe Stacker::Renderer do
     renderer.compile("spec/fixtures/traverse.j2", {"pillar" => data}).should eq("foo\n['php', 'nginx']")
   end
 
-  it "support traverse filter with default value" do
+  it "support traverse filter with default value: nil" do
+    data = {"id" => "foo", "server" => {"foo" => "bar"}}
+    renderer = create_renderer
+    renderer.compile("spec/fixtures/traverse/default_nil_1.j2", {"pillar" => data}).should eq("null")
+  end
+
+  it "support traverse filter with default value: nil" do
+    data = {"id" => "foo", "server" => {"foo" => "bar"}}
+    renderer = create_renderer
+    renderer.compile("spec/fixtures/traverse/default_nil_2.j2", {"pillar" => data}).should eq("null")
+  end
+
+  it "support traverse filter with default value: true" do
     data = {"id" => "foo", "server" => {"roles" => nil}}
     renderer = create_renderer
-    renderer.compile("spec/fixtures/traverse.j2", {"pillar" => data}).should eq("foo\n[]")
+    renderer.compile("spec/fixtures/traverse/default_true.j2", {"pillar" => data}).should eq("true")
+  end
+
+  it "support traverse filter with default value: false" do
+    data = {"id" => "foo", "server" => {"roles" => nil}}
+    renderer = create_renderer
+    renderer.compile("spec/fixtures/traverse/default_false.j2", {"pillar" => data}).should eq("false")
+  end
+
+  it "support traverse filter with default value: []" do
+    data = {"id" => "foo", "server" => {"roles" => nil}}
+    renderer = create_renderer
+    renderer.compile("spec/fixtures/traverse/default_array_empty.j2", {"pillar" => data}).should eq("[]")
+  end
+
+  it "support traverse filter with default value: {}" do
+    data = {"id" => "foo", "server" => {"roles" => nil}}
+    renderer = create_renderer
+    renderer.compile("spec/fixtures/traverse/default_hash_empty.j2", {"pillar" => data}).should eq("{}")
+  end
+
+  it "support traverse filter with default value: ''" do
+    data = {"id" => "foo", "server" => {"roles" => nil}}
+    renderer = create_renderer
+    renderer.compile("spec/fixtures/traverse/default_string_empty.j2", {"pillar" => data}).should eq("\"\"")
+  end
+
+  it "support traverse filter with default value: 'true'" do
+    data = {"id" => "foo", "server" => {"roles" => nil}}
+    renderer = create_renderer
+    renderer.compile("spec/fixtures/traverse/default_string_true.j2", {"pillar" => data}).should eq("\"true\"")
+  end
+
+  it "support traverse filter with default value: 'false'" do
+    data = {"id" => "foo", "server" => {"roles" => nil}}
+    renderer = create_renderer
+    renderer.compile("spec/fixtures/traverse/default_string_false.j2", {"pillar" => data}).should eq("\"false\"")
+  end
+
+  it "support traverse filter with default value when traversal path doesn't exist (1)" do
+    backend = Log::MemoryBackend.new
+    Stacker::Renderer::Log.backend = backend
+    Stacker::Renderer::Log.level = ::Log::Severity::Debug
+    data = {"id" => "foo"}
+    renderer = create_renderer
+    renderer.compile("spec/fixtures/traverse/traversal_path_inexistent_1.j2", {"pillar" => data}).should eq("\"\"")
+    entry = backend.entries.first
+    entry.source.should eq("renderer")
+    entry.severity.should eq(s(:debug))
+    entry.message.should eq("Attribute 'server:roles' not found in traversal path")
+  end
+
+  it "support traverse filter with default value when traversal path doesn't exist (2)" do
+    data = {"id" => "foo", "server" => {"foo" => "bar"}}
+    renderer = create_renderer
+    renderer.compile("spec/fixtures/traverse/traversal_path_inexistent_2.j2", {"pillar" => data}).should eq("\"\"")
   end
 
   it "support dictsort filter" do

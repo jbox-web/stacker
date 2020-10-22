@@ -1,0 +1,2 @@
+{%- set roles = pillar | traverse('server:roles') -%}
+{{ roles | json }}

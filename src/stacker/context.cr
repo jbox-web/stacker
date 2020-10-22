@@ -40,10 +40,12 @@ module Stacker
         result =
           begin
             Crinja::Resolver.resolve_dig(attribute, target)
-          rescue
+          rescue e : Crinja::UndefinedError
+            Stacker::Renderer::Log.debug { "Attribute '#{attribute}' not found in traversal path" }
+            Crinja::Value.new(nil)
           end
 
-        (result.nil? || result.to_s == "") ? default : result
+        (result.raw.nil? || result.raw.is_a?(Crinja::Undefined)) ? default : result
       end
     end
 
