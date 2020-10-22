@@ -71,6 +71,18 @@ module Stacker
         short: "l",
         default: "info"
 
+      define_flag path : String,
+        description: "Path to YAML file to debug",
+        long: "path",
+        short: "P",
+        default: ""
+
+      define_flag steps : Array(String),
+        description: "Steps to debug",
+        long: "step",
+        short: "s",
+        default: [] of String
+
       define_flag output_format : String,
         description: "Output format",
         long: "output-format",
@@ -83,8 +95,9 @@ module Stacker
 
         grains = flags.grains == "" ? {"id" => arguments.host_name} : Utils.load_json_file(flags.grains)
         pillar = flags.pillar == "" ? {} of String => String : Utils.load_json_file(flags.pillar)
+        steps = flags.steps.empty? ? Stacker::Processor.valid_steps : Stacker::Processor.sanitize_steps_params(flags.steps)
 
-        result = Stacker::Runner.process(arguments.host_name, flags.namespace, grains, pillar, flags.log_level)
+        result = Stacker::Runner.process(arguments.host_name, flags.namespace, grains, pillar, flags.log_level, flags.path, steps)
         puts respond_with(flags.output_format, result)
       end
 

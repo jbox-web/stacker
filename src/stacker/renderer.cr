@@ -22,7 +22,6 @@ module Stacker
         output = ""
       else
         Log.debug { "Compiled: #{file}" }
-        Log.trace { "\n#{output}" }
       end
 
       output

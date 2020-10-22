@@ -13,10 +13,10 @@ module Stacker
     end
 
     private def self.process(env)
-      host_name, namespace, level, format = extract_params(env)
+      host_name, namespace, level, format, path, steps = extract_params(env)
       grains, pillar = env.request.method == "GET" ? extract_grains_and_pillar(host_name) : extract_grains_and_pillar(host_name, env)
 
-      result = Stacker::Runner.process(host_name, namespace, grains, pillar, level)
+      result = Stacker::Runner.process(host_name, namespace, grains, pillar, level, path, steps)
       respond_with(env, format, result)
     end
 
@@ -25,7 +25,9 @@ module Stacker
       namespace = env.params.query["n"]? || "default"
       level = env.params.query["l"]? || "info"
       format = env.params.query["f"]? || "json"
-      {host_name, namespace, level, format}
+      path = env.params.query["p"]? || ""
+      steps = env.params.query["s"]? ? Stacker::Processor.sanitize_steps_params(env.params.query["s"].split(",")) : Stacker::Processor.valid_steps
+      {host_name, namespace, level, format, path, steps}
     end
 
     # GET request

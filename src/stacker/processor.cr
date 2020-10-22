@@ -2,8 +2,18 @@ module Stacker
   class Processor
     Log = ::Log.for("processor", ::Log::Severity::Info)
 
+    VALID_STEPS = ["compile", "yaml-load", "before-merge", "after-merge", "final"]
+
     property grains : Hash(String, String) | Hash(String, JSON::Any) | JSON::Any
     property pillar : Hash(String, String) | Hash(String, JSON::Any) | JSON::Any
+
+    def self.valid_steps
+      VALID_STEPS
+    end
+
+    def self.sanitize_steps_params(steps)
+      steps.reject { |s| !valid_steps.includes?(s) }
+    end
 
     def initialize(@renderer : Renderer, @stacks : Array(String))
       @stack = Pillar.new
@@ -11,13 +21,18 @@ module Stacker
       @grains = {} of String => String
       @pillar = {} of String => String
       @namespace = ""
+      @path = ""
+      @current_path = ""
+      @steps = [] of String
     end
 
-    def run(host_name, grains, pillar, namespace)
+    def run(host_name, grains, pillar, namespace, path, steps)
       @host_name = host_name
       @grains = grains
       @pillar = pillar
       @namespace = namespace
+      @path = path
+      @steps = steps
 
       with_debug_run do
         build_stack
@@ -28,7 +43,14 @@ module Stacker
 
     private def build_stack
       @stacks.each do |stack|
+        @current_path = stack.to_s
+
         result = @renderer.compile(stack, compilation_data)
+
+        with_targeted_trace(step: "compile") do
+          Log.trace { "\n#{result}" }
+        end
+
         result = Utils.string_to_array(result)
 
         result.each do |file|
@@ -36,7 +58,9 @@ module Stacker
         end
       end
 
-      Log.trace { "Stack final:\n#{YAML.dump(@stack)}" }
+      with_targeted_trace(step: "final") do
+        Log.trace { "Stack final:\n#{YAML.dump(@stack)}" }
+      end
     end
 
     private def load_pillars_from_stack(stack, file)
@@ -44,6 +68,8 @@ module Stacker
       files = Dir["#{dirname}/#{file}"].sort
 
       files.each do |file|
+        @current_path = file.to_s
+
         Log.debug { "Loading: #{file}" }
 
         data = Pillar.new
@@ -60,6 +86,11 @@ module Stacker
       Log.debug { "Compiling: #{file}" }
 
       yaml = @renderer.compile(file, compilation_data.merge({"stack_path" => dirname}))
+
+      with_targeted_trace(step: "compile") do
+        Log.trace { "\n#{yaml}" }
+      end
+
       return if yaml.empty?
 
       hash =
@@ -74,7 +105,9 @@ module Stacker
 
       return if hash.nil?
 
-      Log.trace { "Loaded:\n#{YAML.dump(hash)}" }
+      with_targeted_trace(step: "yaml-load") do
+        Log.trace { "Loaded:\n#{YAML.dump(hash)}" }
+      end
 
       Log.debug { "Merging: #{file}" }
 
@@ -92,9 +125,29 @@ module Stacker
     end
 
     private def with_debug_stack(&block)
-      Log.trace { "Stack before:\n#{YAML.dump(@stack)}" }
+      with_targeted_trace(step: "before-merge") do
+        Log.trace { "Stack before:\n#{YAML.dump(@stack)}" }
+      end
+
       yield
-      Log.trace { "Stack after:\n#{YAML.dump(@stack)}" }
+
+      with_targeted_trace(step: "after-merge") do
+        Log.trace { "Stack after:\n#{YAML.dump(@stack)}" }
+      end
+    end
+
+    private def with_targeted_trace(step, &block)
+      if targeted_path? && targeted_step?(step)
+        yield
+      end
+    end
+
+    private def targeted_path?
+      @path == "" || @current_path == @path
+    end
+
+    private def targeted_step?(step)
+      @steps == self.class.valid_steps || @steps.includes?(step)
     end
   end
 end

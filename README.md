@@ -125,7 +125,7 @@ ext_pillar:
 
 ## Namespaces
 
-Use namespaces by using optional query parameter :
+Use namespaces by using optional `n=` query parameter :
 
 ```sh
 curl http://127.0.0.1:3000/server1.example.net?n=dev
@@ -138,7 +138,7 @@ The default namespace when query parameter or CLI flag is omited is `default`.
 
 ## Output format
 
-Set output format by using optional query parameter :
+Set output format by using optional `f=` query parameter :
 
 ```sh
 curl http://127.0.0.1:3000/server1.example.net?f=json
@@ -153,7 +153,7 @@ Only `json` and `yaml` are supported.
 
 ## Logs
 
-Set log level by using optional query parameter :
+Set log level by using optional `l=` query parameter :
 
 ```sh
 curl http://127.0.0.1:3000/server1.example.net?l=debug
@@ -258,6 +258,26 @@ Log levels other than `debug` or `trace` are meaningless.
 2020-10-02T23:18:27.156664Z   INFO - processor: End of stack build for: server2.example.net (namespace: prod)
 ```
 </details>
+
+You can also use the selective logger :
+
+Set the file path to debug by using optional `p=` query parameter :
+
+```sh
+curl http://127.0.0.1:3000/server1.example.net?l=trace&p=doc_root/pillars/02-roles/server/openssh.yml
+```
+
+Or with `--path` flag when using Stacker CLI.
+
+Set the step to debug by using optional `s=` query parameter :
+
+```sh
+curl http://127.0.0.1:3000/server1.example.net?l=trace&p=doc_root/pillars/02-roles/server/openssh.yml&s=compile,yaml-load
+```
+
+Or with `--step` flag when using Stacker CLI.
+
+Valid options for the `step` param are : `compile` | `yaml-load` | `before-merge` | `after-merge` | `final`
 
 ## Scaling
 
