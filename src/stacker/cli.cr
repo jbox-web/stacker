@@ -25,9 +25,12 @@ module Stacker
         Stacker.setup_signals
 
         Kemal.run(args: nil) do |config|
+          # Set environment
+          config.env = Stacker.config.server_environment
+
+          # Start server
           server = config.server.not_nil!
           server.bind_tcp Stacker.config.server_host, Stacker.config.server_port
-          config.env = Stacker.config.server_environment
         end
       end
     end
