@@ -3,8 +3,10 @@ require "log"
 require "admiral"
 require "crinja"
 require "kemal"
+require "systemd_notify"
 
 require "./crinja_patch"
+require "./kemal_patch"
 require "./stacker/*"
 
 module Stacker

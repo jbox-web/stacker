@@ -24,3 +24,7 @@ shards:
     git: https://github.com/luislavena/radix.git
     version: 0.3.9
 
+  systemd_notify:
+    git: https://github.com/n-rodriguez/systemd_notify.cr.git
+    version: 0.1.1+git.commit.9e90bd9eafee766c5106a3d5a6b29675aa2bedd8
+

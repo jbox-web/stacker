@@ -3,10 +3,14 @@ Description=Stacker
 After=network.target
 
 [Service]
+Type=notify
+ExecStart=/usr/local/bin/stacker server
+WorkingDirectory=/data/stacker/current
 User=stacker
 Group=stacker
-WorkingDirectory=/data/stacker/current
-ExecStart=/usr/local/bin/stacker server
+SyslogIdentifier=stacker
+NoNewPrivileges=true
+WatchdogSec=10
 
 [Install]
 WantedBy=multi-user.target

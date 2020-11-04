@@ -17,6 +17,9 @@ dependencies:
   kemal:
     github: kemalcr/kemal
     branch: master
+  systemd_notify:
+    github: n-rodriguez/systemd_notify.cr
+    branch: master
 
 crystal: 0.35.1
 
