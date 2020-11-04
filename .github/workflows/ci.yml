@@ -1,5 +1,5 @@
 ---
-name: Stacker CI
+name: Github CI
 
 on:
   - push
@@ -14,8 +14,10 @@ jobs:
       image: crystallang/crystal
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Install dependencies
-      run: make deps
-    - name: Run tests
-      run: make spec
+      - uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: make deps
+
+      - name: Run tests
+        run: make spec
