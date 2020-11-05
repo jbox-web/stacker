@@ -34,6 +34,11 @@ module Stacker
     Signal::USR1.trap do
       reopen_log_file!
     end
+
+    Signal::TERM.trap do
+      Kemal.stop
+      log_file.close
+    end
   end
 
   def self.reopen_log_file!
