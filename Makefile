@@ -2,8 +2,9 @@
 # Constants #
 #############
 
-PREFIX ?= /usr/local
-INSTALL_DIR=$(PREFIX)/bin
+PREFIX      ?= /usr/local
+INSTALL_DIR  = $(PREFIX)/bin
+COMPILE_OPTS = --threads 4 --release --progress --error-trace
 
 ################
 # Public tasks #
@@ -16,10 +17,10 @@ stacker: ## Compile to development binary
 	crystal build --threads 4 -o bin/stacker src/stacker.cr
 
 stacker-release: clean deps-prod ## Compile to production binary
-	crystal build --threads 4 --release -o bin/stacker src/stacker.cr
+	crystal build $(COMPILE_OPTS) -o bin/stacker src/stacker.cr
 
 stacker-static: clean deps-prod ## Compile to production binary (static mode)
-	crystal build --threads 4 --release --static -o bin/stacker src/stacker.cr
+	crystal build $(COMPILE_OPTS) --static -o bin/stacker src/stacker.cr
 
 spec: ## Run Crystal spec
 	crystal spec
