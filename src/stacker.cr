@@ -12,6 +12,8 @@ require "./stacker/*"
 module Stacker
   VERSION = "0.1.0"
 
+  @@log_file : File? | IO::FileDescriptor?
+
   def self.config=(config : Config)
     @@config = config
   end
@@ -22,12 +24,20 @@ module Stacker
 
   def self.setup_log
     ::Log.setup do |c|
-      c.bind "*", :debug, ::Log::IOBackend.new(log_file)
+      c.bind "*", :debug, logger
     end
   end
 
+  def self.logger
+    @@logger ||= ::Log::IOBackend.new(log_file)
+  end
+
   def self.log_file
-    @@log_file ||= File.open(config.log_file, "a")
+    @@log_file ||= log_to_stdout? ? STDOUT : File.open(config.log_file, "a")
+  end
+
+  def self.log_to_stdout?
+    config.log_file.downcase == "stdout"
   end
 
   def self.setup_signals
