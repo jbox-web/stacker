@@ -1,3 +1,10 @@
+#############
+# Constants #
+#############
+
+PREFIX ?= /usr/local
+INSTALL_DIR=$(PREFIX)/bin
+
 ################
 # Public tasks #
 ################
@@ -8,11 +15,11 @@ all: help
 stacker: ## Compile to development binary
 	crystal build --threads 4 -o bin/stacker src/stacker.cr
 
-stacker-release: ## Compile to production binary
+stacker-release: clean deps-prod ## Compile to production binary
 	crystal build --threads 4 --release -o bin/stacker src/stacker.cr
 
-deps: ## Install dependencies
-	shards install
+stacker-static: clean deps-prod ## Compile to production binary (static mode)
+	crystal build --threads 4 --release --static -o bin/stacker src/stacker.cr
 
 spec: ## Run Crystal spec
 	crystal spec
@@ -20,9 +27,20 @@ spec: ## Run Crystal spec
 clean: ## Cleanup environment
 	rm -rf bin/*
 	rm -rf lib/
-	$(MAKE) deps
 
-.PHONY: all stacker stacker-release deps spec clean
+deps: ## Install development dependencies
+	shards install
+
+deps-prod: ## Install production dependencies
+	shards install --production
+
+install: ## Install stacker in $(INSTALL_DIR)
+	cp bin/stacker $(INSTALL_DIR)/stacker
+
+uninstall: ## Uninstall stacker from $(INSTALL_DIR)
+	rm -f $(INSTALL_DIR)/stacker
+
+.PHONY: all stacker stacker-release stacker-static spec clean deps deps-prod install uninstall
 
 #################
 # Private tasks #

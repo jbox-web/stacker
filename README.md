@@ -15,8 +15,8 @@ Then :
 
 ```sh
 git clone https://github.com/jbox-web/stacker
-make deps
 make stacker-release
+make install
 ```
 
 ## The 10 seconds test
