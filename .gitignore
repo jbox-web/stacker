@@ -9,3 +9,5 @@
 # Ignore all log files
 /log/*
 !/log/.keep
+/example/log/*
+!/example/log/.keep

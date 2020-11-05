@@ -1,0 +1,12 @@
+# Ignore useless data for building lib
+/bin/
+/example/
+/extra/
+/lib/
+/log/
+/salt/
+/spec/
+Dockerfile
+LICENSE
+README.md
+stacker.sh

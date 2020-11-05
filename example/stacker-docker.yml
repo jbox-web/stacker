@@ -1,0 +1,19 @@
+---
+doc_root: doc_root
+entrypoint: server-pillars
+log_file: ./log/stacker.log
+
+stacks:
+  default:
+    - doc_root/server-pillars/stack1.cfg
+  dev:
+    - doc_root/server-pillars/stack1.cfg
+    - doc_root/pillars/stack1.cfg
+  prod:
+    - doc_root/server-pillars/stack1.cfg
+    - doc_root/pillars/stack1.cfg
+    - doc_root/server-pillars/stack2.cfg
+
+server_host: 0.0.0.0
+server_port: 3000
+server_environment: production

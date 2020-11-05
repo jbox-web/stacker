@@ -4,7 +4,10 @@
 
 PREFIX      ?= /usr/local
 INSTALL_DIR  = $(PREFIX)/bin
+SOURCE_FILE  = src/stacker.cr
+OUTPUT_FILE  = bin/stacker
 COMPILE_OPTS = --threads 4 --release --progress --error-trace
+DOCKER_TAG   = jbox-web/stacker:latest
 
 ################
 # Public tasks #
@@ -14,13 +17,13 @@ COMPILE_OPTS = --threads 4 --release --progress --error-trace
 all: help
 
 stacker: ## Compile to development binary
-	crystal build --threads 4 -o bin/stacker src/stacker.cr
+	crystal build --threads 4 -o $(OUTPUT_FILE) $(SOURCE_FILE)
 
 stacker-release: clean deps-prod ## Compile to production binary
-	crystal build $(COMPILE_OPTS) -o bin/stacker src/stacker.cr
+	crystal build $(COMPILE_OPTS) -o $(OUTPUT_FILE) $(SOURCE_FILE)
 
 stacker-static: clean deps-prod ## Compile to production binary (static mode)
-	crystal build $(COMPILE_OPTS) --static -o bin/stacker src/stacker.cr
+	crystal build $(COMPILE_OPTS) --static -o $(OUTPUT_FILE) $(SOURCE_FILE)
 
 spec: ## Run Crystal spec
 	crystal spec
@@ -36,12 +39,15 @@ deps-prod: ## Install production dependencies
 	shards install --production
 
 install: ## Install stacker in $(INSTALL_DIR)
-	cp bin/stacker $(INSTALL_DIR)/stacker
+	cp $(OUTPUT_FILE) $(INSTALL_DIR)/stacker
 
 uninstall: ## Uninstall stacker from $(INSTALL_DIR)
 	rm -f $(INSTALL_DIR)/stacker
 
-.PHONY: all stacker stacker-release stacker-static spec clean deps deps-prod install uninstall
+docker: ## Build Docker image
+	docker build . -t $(DOCKER_TAG)
+
+.PHONY: all stacker stacker-release stacker-static spec clean deps deps-prod install uninstall docker
 
 #################
 # Private tasks #

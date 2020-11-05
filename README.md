@@ -9,6 +9,8 @@ It is implemented using [crinja](https://github.com/straight-shoota/crinja) whic
 
 ## Installation
 
+### Manual compilation
+
 To compile under Debian Buster you will need [Crystal](https://crystal-lang.org/install/on_debian/)
 
 Then :
@@ -16,18 +18,40 @@ Then :
 ```sh
 git clone https://github.com/jbox-web/stacker
 make stacker-release
-make install
 ```
 
-## The 10 seconds test
+### Docker
 
-Start the webserver with sample data :
+In this case you will need... Docker.
+
+Then :
+
+```sh
+git clone https://github.com/jbox-web/stacker
+make docker
+```
+
+**Note :** The Docker mode comes with a [wrapper script](/stacker.sh) to ease interaction with the container
+
+Usage : `stacker.sh {start|stop|restart|status|kill|clean|fetch}`
+
+## The 10 seconds test in Web mode
+
+First we need to start Stacker with sample data :
+
+### Manual compilation
 
 ```sh
 bin/stacker server --config example/stacker.yml
 ```
 
-Fetch pillars with Curl :
+### Docker
+
+```sh
+./stacker.sh start
+```
+
+Then fetch pillars with Curl :
 
 ```sh
 curl --no-progress-meter -X POST -H "Content-Type: application/json" -d @example/grains/server1.curl.json http://127.0.0.1:3000/server1.example.net | jq
@@ -35,15 +59,21 @@ curl --no-progress-meter -X POST -H "Content-Type: application/json" -d @example
 
 You can also navigate to http://127.0.0.1:3000/server1.example.net to see the generated pillars.
 
-OR
+## The 10 seconds test in CLI mode
 
-Fetch pillars with Stacker CLI :
+In this mode you don't need the webserver to be running :
+
+### Manual compilation
 
 ```sh
 bin/stacker fetch server1.example.net --config example/stacker.yml --grains example/grains/server1.json --pillar example/ext_pillar/server1.json | jq
 ```
 
-**Note:** You don't need the webserver to be running when using `bin/stacker fetch`.
+### Docker
+
+```sh
+./stacker.sh fetch server1.example.net --grains grains/server1.json --pillar ext_pillar/server1.json | jq
+```
 
 ## Configuration
 
