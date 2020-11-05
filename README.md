@@ -33,7 +33,7 @@ make docker
 
 **Note :** The Docker mode comes with a [wrapper script](/stacker.sh) to ease interaction with the container
 
-Usage : `stacker.sh {start|stop|restart|status|kill|clean|fetch}`
+Usage : `stacker.sh {start|stop|restart|status|kill|clean|fetch|logs}`
 
 ## The 10 seconds test in Web mode
 

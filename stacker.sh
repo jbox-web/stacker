@@ -58,6 +58,10 @@ function docker_rm() {
   docker rm ${CONTAINER_NAME}
 }
 
+function docker_logs() {
+  docker logs -f ${CONTAINER_NAME}
+}
+
 case "$1" in
   start)
     stopped=$(stopped)
@@ -99,8 +103,12 @@ case "$1" in
     docker_run "$@"
   ;;
 
+  logs)
+    docker_logs
+  ;;
+
   *)
-    echo "Usage: stacker.sh {start|stop|restart|status|kill|clean|fetch}" >&2
+    echo "Usage: stacker.sh {start|stop|restart|status|kill|clean|fetch|logs}" >&2
     exit 3
   ;;
 esac
