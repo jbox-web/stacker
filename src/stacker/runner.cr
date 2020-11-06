@@ -10,14 +10,14 @@ module Stacker
         return {"404" => "Stacker: namespace not found"}
       end
 
-      Utils.with_log_level(level) do
+      Logger.with_log_level(level) do
         run(host_name, namespace, grains, pillar, stack, path, steps)
       end
     end
 
     def self.run(host_name, namespace, grains, pillar, stack, path, steps)
       if renderer.file_exist?(host_name)
-        processor = Stacker::Processor.new(renderer, stack)
+        processor = Processor.new(renderer, stack)
         processor.run(host_name, grains, pillar, namespace, path, steps)
       else
         Log.info { "Host not found : #{host_name}" }

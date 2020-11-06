@@ -16,6 +16,10 @@ module Stacker
 
   @@log_file : File? | IO::FileDescriptor?
 
+  def self.version
+    VERSION
+  end
+
   def self.config=(config : Config)
     @@config = config
   end

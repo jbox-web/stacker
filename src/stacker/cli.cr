@@ -98,9 +98,9 @@ module Stacker
 
         grains = flags.grains == "" ? {"id" => arguments.host_name} : Utils.load_json_file(flags.grains)
         pillar = flags.pillar == "" ? {} of String => String : Utils.load_json_file(flags.pillar)
-        steps = flags.steps.empty? ? Stacker::Processor.valid_steps : Stacker::Processor.sanitize_steps_params(flags.steps)
+        steps = flags.steps.empty? ? Processor.valid_steps : Processor.sanitize_steps_params(flags.steps)
 
-        result = Stacker::Runner.process(arguments.host_name, flags.namespace, grains, pillar, flags.log_level, flags.path, steps)
+        result = Runner.process(arguments.host_name, flags.namespace, grains, pillar, flags.log_level, flags.path, steps)
         puts respond_with(flags.output_format, result)
       end
 
@@ -120,14 +120,14 @@ module Stacker
       define_help description: "Show Stacker information"
 
       def run
-        puts "version: #{Stacker::VERSION}"
+        puts "version: #{Stacker.version}"
         puts
         context = Context.new("")
         Utils.crinja_info(context.env)
       end
     end
 
-    define_version Stacker::VERSION
+    define_version Stacker.version
     define_help description: "Stacker is Salt PillarStack in Crystal"
 
     register_sub_command info, Info, description: "Show Stacker information"
