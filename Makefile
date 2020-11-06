@@ -26,7 +26,11 @@ stacker-static: clean deps-prod ## Compile to production binary (static mode)
 	crystal build $(COMPILE_OPTS) --static -o $(OUTPUT_FILE) $(SOURCE_FILE)
 
 spec: ## Run Crystal spec
-	crystal spec
+	@if tty -s; then \
+	  crystal spec --verbose; \
+	else \
+	  crystal spec; \
+	fi
 
 clean: ## Cleanup environment
 	rm -rf bin/*
