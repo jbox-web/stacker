@@ -4,6 +4,8 @@ require "admiral"
 require "crinja"
 require "kemal"
 require "systemd_notify"
+require "crystal-env/core"
+Crystal::Env.default("development")
 
 require "./crinja_patch"
 require "./kemal_patch"
@@ -58,9 +60,11 @@ module Stacker
 end
 
 # Start the CLI
-begin
-  Stacker::CLI.run
-rescue e : Exception
-  puts e.message
-  exit 1
+unless Crystal.env.test?
+  begin
+    Stacker::CLI.run
+  rescue e : Exception
+    puts e.message
+    exit 1
+  end
 end

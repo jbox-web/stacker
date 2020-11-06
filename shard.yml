@@ -14,6 +14,9 @@ dependencies:
   crinja:
     github: straight-shoota/crinja
     branch: master
+  crystal-env:
+    github: n-rodriguez/crystal-env
+    branch: master
   kemal:
     github: kemalcr/kemal
     branch: master
