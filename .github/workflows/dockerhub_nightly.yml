@@ -3,7 +3,7 @@ name: Dockerhub Nightly
 
 on:
   schedule:
-    - cron: '0 1 * * *'
+    - cron: '0 23 * * *'
 
 jobs:
   test:
@@ -28,7 +28,7 @@ jobs:
       - name: Publish to Dockerhub
         uses: elgohr/Publish-Docker-Github-Action@master
         with:
-          name: jbox-web/stacker
+          name: nicoladmin/stacker
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           tags: nightly
