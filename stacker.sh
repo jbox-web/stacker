@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 CONTAINER_NAME="stacker"
-CONTAINER_IMAGE="jbox-web/stacker:latest"
+CONTAINER_IMAGE="nicoladmin/stacker:nightly"
 CONTAINER_PORT="127.0.0.1:3000:3000"
 CONTAINER_VOLUME="$(pwd)/example:/opt/stacker"
 CONTAINER_ARGS="--config stacker-docker.yml"
