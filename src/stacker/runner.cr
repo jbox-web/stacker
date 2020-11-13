@@ -15,6 +15,7 @@ module Stacker
       end
     end
 
+    # :nodoc:
     def self.run(host_name, namespace, grains, pillar, stack, path, steps)
       if renderer.file_exist?(host_name)
         processor = Processor.new(renderer, stack)
@@ -25,6 +26,7 @@ module Stacker
       end
     end
 
+    # :nodoc:
     def self.renderer
       @@renderer ||= begin
         context = Context.new(Stacker.config.doc_root)

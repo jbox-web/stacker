@@ -51,7 +51,11 @@ uninstall: ## Uninstall stacker from $(INSTALL_DIR)
 docker: ## Build Docker image
 	docker build . -t $(DOCKER_TAG)
 
-.PHONY: all stacker stacker-release stacker-static spec clean deps deps-prod install uninstall docker
+doc: ## Generate Stacker documentation
+	rm -rf docs
+	crystal doc
+
+.PHONY: all stacker stacker-release stacker-static spec clean deps deps-prod install uninstall docker doc
 
 #################
 # Private tasks #

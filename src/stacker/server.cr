@@ -1,4 +1,5 @@
 module Stacker
+  # :nodoc:
   class Server
     get "/" do
       "Stacker root"

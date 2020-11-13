@@ -1,4 +1,5 @@
 module Stacker
+  # :nodoc:
   class Config
     include YAML::Serializable
 

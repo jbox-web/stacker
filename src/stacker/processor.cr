@@ -4,13 +4,18 @@ module Stacker
 
     VALID_STEPS = ["compile", "yaml-load", "before-merge", "after-merge", "final"]
 
+    # :nodoc:
     property grains : Hash(String, String) | Hash(String, JSON::Any) | JSON::Any
+
+    # :nodoc:
     property pillar : Hash(String, String) | Hash(String, JSON::Any) | JSON::Any
 
+    # :nodoc:
     def self.valid_steps
       VALID_STEPS
     end
 
+    # :nodoc:
     def self.sanitize_steps_params(steps)
       steps.reject { |s| !valid_steps.includes?(s) }
     end

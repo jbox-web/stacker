@@ -1,4 +1,5 @@
 module Stacker
+  # :nodoc:
   class CLI < Admiral::Command
     module Config
       def load_config

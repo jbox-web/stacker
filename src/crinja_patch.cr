@@ -1,5 +1,8 @@
+# :nodoc:
 class Crinja
+  # :nodoc:
   module Resolver
+    # :nodoc:
     def self.resolve_dig(name : String, object) : Value
       identifier, _, rest = name.partition(':')
 
@@ -12,7 +15,9 @@ class Crinja
     end
   end
 
+  # :nodoc:
   struct Value
+    # :nodoc:
     def concat(other)
       object = @raw
 
@@ -23,6 +28,7 @@ class Crinja
       end
     end
 
+    # :nodoc:
     def push(value)
       object = @raw
 
@@ -33,6 +39,7 @@ class Crinja
       end
     end
 
+    # :nodoc:
     def to_yaml(yaml)
       object = @raw
 

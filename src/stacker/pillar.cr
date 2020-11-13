@@ -11,7 +11,8 @@ module Stacker
     delegate to_json, to: @container
     delegate to_yaml, to: @container
 
-    def self.yaml_to_pillar(yaml)
+    # Parse **yaml** and convert the result object into Stacker::Pillar object.
+    def self.yaml_to_pillar(yaml : String)
       yaml = YAML.parse(yaml)
 
       return nil if yaml.nil?
@@ -20,6 +21,7 @@ module Stacker
       convert_hash(yaml.as_h)
     end
 
+    # Convert a Hash object into a Stacker::Pillar object.
     def self.convert_hash(hash : Hash)
       s = Pillar.new
 
@@ -41,6 +43,7 @@ module Stacker
       s
     end
 
+    # Convert an Array object into a Stacker::Pillar object.
     def self.convert_array(array : Array)
       acc = [] of Stacker::Pillar::Type
 
@@ -62,6 +65,9 @@ module Stacker
       acc
     end
 
+    # Recursively merge two Stacker::Pillar object.
+    #
+    # It merges **other_hash** in **hash** and returns the modified **hash**.
     def self.deep_merge!(hash, other_hash)
       strategy = other_hash.delete("__") || "merge-last"
 
@@ -92,7 +98,7 @@ module Stacker
       hash
     end
 
-    def self.cleanup_hash!(object)
+    private def self.cleanup_hash!(object)
       return object unless object.is_a?(Stacker::Pillar) || object.is_a?(Array)
 
       if object.is_a?(Stacker::Pillar)
@@ -110,7 +116,7 @@ module Stacker
       object
     end
 
-    def self.concat_list!(list, other_list)
+    private def self.concat_list!(list, other_list)
       strategy = "merge-last"
       hash = other_list[0]?
 

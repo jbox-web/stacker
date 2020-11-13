@@ -6,6 +6,9 @@ module Stacker::Function
     hash
   end
 
+  # Recursively merge two Crinja::Value object.
+  #
+  # It merges **other_hash** in **hash** and returns the modified **hash**.
   def self.deep_merge_crinja!(hash, other_hash)
     hash = hash.raw
     other_hash = other_hash.raw
@@ -30,6 +33,7 @@ module Stacker::Function
     hash
   end
 
+  # Convert any value in Crinja::Value.
   def self.to_crinja_value(value)
     return value if value.is_a?(Crinja::Value)
 
