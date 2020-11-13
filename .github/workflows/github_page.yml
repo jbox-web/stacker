@@ -1,0 +1,46 @@
+---
+name: Github Pages
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    container:
+      image: crystallang/crystal
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: make deps
+
+      - name: Run tests
+        run: make spec
+
+  publish:
+    runs-on: ubuntu-latest
+    needs: test
+    container:
+      image: crystallang/crystal
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: make deps
+
+      - name: Generate documentation
+        run: make doc
+
+      - name: Install publish dependencies
+        run: apt-get update && apt-get install -y rsync
+
+      - name: Publish to Github Pages
+        uses: JamesIves/github-pages-deploy-action@3.7.1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GH_PAGES_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: docs
+          CLEAN: true
