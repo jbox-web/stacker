@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Crystal Docs 0.34.0">
+<meta name="crystal_docs.project_version" content="0.1.0">
+<meta name="crystal_docs.project_name" content="stacker">
+
+
+<link href="css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="js/doc.js"></script>
+
+<svg class="hidden">
+  <symbol id="octicon-link" viewBox="0 0 16 16">
+    <path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+  </symbol>
+</svg>
+
+  <meta id="repository-name" content="stacker">
+  <title>stacker 0.1.0</title>
+  <script type="text/javascript">
+  CrystalDocs.base_path = "";
+  </script>
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="sidebar-header">
+    <div class="search-box">
+      <input type="search" class="search-input" placeholder="Search..." spellcheck="false" aria-label="Search">
+    </div>
+
+    <div class="project-summary">
+      <h1 class="project-name">
+        <a href="index.html">
+          stacker
+        </a>
+      </h1>
+
+      <span class="project-version">
+        0.1.0
+      </span>
+    </div>
+  </div>
+
+  <div class="search-results" class="hidden">
+    <ul class="search-list"></ul>
+  </div>
+
+  <div class="types-list">
+    <ul>
+  
+  <li class="parent " data-id="stacker/Crinja" data-name="crinja">
+      <a href="Crinja.html">Crinja</a>
+      
+        <ul>
+  
+  <li class=" " data-id="stacker/Crinja/Value" data-name="crinja::value">
+      <a href="Crinja/Value.html">Value</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="stacker/Crystal" data-name="crystal">
+      <a href="Crystal.html">Crystal</a>
+      
+        <ul>
+  
+  <li class=" " data-id="stacker/Crystal/Env" data-name="crystal::env">
+      <a href="Crystal/Env.html">Env</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="stacker/Stacker" data-name="stacker">
+      <a href="Stacker.html">Stacker</a>
+      
+        <ul>
+  
+  <li class=" " data-id="stacker/Stacker/Context" data-name="stacker::context">
+      <a href="Stacker/Context.html">Context</a>
+      
+    </li>
+  
+  <li class=" " data-id="stacker/Stacker/Filter" data-name="stacker::filter">
+      <a href="Stacker/Filter.html">Filter</a>
+      
+    </li>
+  
+  <li class=" " data-id="stacker/Stacker/Function" data-name="stacker::function">
+      <a href="Stacker/Function.html">Function</a>
+      
+    </li>
+  
+  <li class=" " data-id="stacker/Stacker/Logger" data-name="stacker::logger">
+      <a href="Stacker/Logger.html">Logger</a>
+      
+    </li>
+  
+  <li class="parent " data-id="stacker/Stacker/Pillar" data-name="stacker::pillar">
+      <a href="Stacker/Pillar.html">Pillar</a>
+      
+        <ul>
+  
+  <li class=" " data-id="stacker/Stacker/Pillar/Type" data-name="stacker::pillar::type">
+      <a href="Stacker/Pillar/Type.html">Type</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="stacker/Stacker/Processor" data-name="stacker::processor">
+      <a href="Stacker/Processor.html">Processor</a>
+      
+    </li>
+  
+  <li class=" " data-id="stacker/Stacker/Renderer" data-name="stacker::renderer">
+      <a href="Stacker/Renderer.html">Renderer</a>
+      
+    </li>
+  
+  <li class=" " data-id="stacker/Stacker/Runner" data-name="stacker::runner">
+      <a href="Stacker/Runner.html">Runner</a>
+      
+    </li>
+  
+  <li class=" " data-id="stacker/Stacker/Utils" data-name="stacker::utils">
+      <a href="Stacker/Utils.html">Utils</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+</ul>
+
+  </div>
+</div>
+
+
+<div class="main-content">
+<h1><a id="stacker-a-lightweight-file-based-cmdb" class="anchor" href="#stacker-a-lightweight-file-based-cmdb">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Stacker - A lightweight file-based CMDB</h1>
+
+<p><a href="https://github.com/jbox-web/stacker/blob/master/LICENSE" target="_blank"><img src="https://img.shields.io/github/license/jbox-web/stacker.svg" alt="GitHub license"/></a>
+<a href="https://github.com/jbox-web/stacker/actions" target="_blank"><img src="https://github.com/jbox-web/stacker/workflows/Stacker%20CI/badge.svg?branch=master" alt="Build Status"/></a></p>
+
+<p>Stacker is <a href="https://docs.saltstack.com/en/master/ref/pillar/all/salt.pillar.stack.html" target="_blank">Salt PillarStack</a> in <a href="https://crystal-lang.org/" target="_blank">Crystal</a>.</p>
+
+<p>It is implemented using <a href="https://github.com/straight-shoota/crinja" target="_blank">crinja</a> which is Jinja2 in Crystal :)</p>
+
+<h2><a id="installation" class="anchor" href="#installation">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Installation</h2>
+
+<h3><a id="manual-compilation" class="anchor" href="#manual-compilation">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Manual compilation</h3>
+
+<p>To compile under Debian Buster you will need <a href="https://crystal-lang.org/install/on_debian/" target="_blank">Crystal</a></p>
+
+<p>Then :</p>
+
+<pre><code class="language-sh">git clone https://github.com/jbox-web/stacker
+make stacker-release</code></pre>
+
+<h3><a id="docker" class="anchor" href="#docker">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Docker</h3>
+
+<p>In this case you will need... Docker.</p>
+
+<p>Then :</p>
+
+<pre><code class="language-sh">git clone https://github.com/jbox-web/stacker
+make docker</code></pre>
+
+<p><strong>Note :</strong> The Docker mode comes with a <a href="/stacker.sh" target="_blank">wrapper script</a> to ease interaction with the container</p>
+
+<p>Usage : <code>stacker.sh {start|stop|restart|status|kill|clean|fetch|logs}</code></p>
+
+<h2><a id="the-10-seconds-test-in-web-mode" class="anchor" href="#the-10-seconds-test-in-web-mode">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>The 10 seconds test in Web mode</h2>
+
+<p>First we need to start Stacker with sample data :</p>
+
+<h3><a id="manual-compilation" class="anchor" href="#manual-compilation">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Manual compilation</h3>
+
+<pre><code class="language-sh">bin/stacker server --config example/stacker.yml</code></pre>
+
+<h3><a id="docker" class="anchor" href="#docker">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Docker</h3>
+
+<pre><code class="language-sh">./stacker.sh start</code></pre>
+
+<p>Then fetch pillars with Curl :</p>
+
+<pre><code class="language-sh">curl --no-progress-meter -X POST -H "Content-Type: application/json" -d @example/grains/server1.curl.json http://127.0.0.1:3000/server1.example.net | jq</code></pre>
+
+<p>You can also navigate to http://127.0.0.1:3000/server1.example.net to see the generated pillars.</p>
+
+<h2><a id="the-10-seconds-test-in-cli-mode" class="anchor" href="#the-10-seconds-test-in-cli-mode">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>The 10 seconds test in CLI mode</h2>
+
+<p>In this mode you don't need the webserver to be running :</p>
+
+<h3><a id="manual-compilation" class="anchor" href="#manual-compilation">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Manual compilation</h3>
+
+<pre><code class="language-sh">bin/stacker fetch server1.example.net --config example/stacker.yml --grains example/grains/server1.json --pillar example/ext_pillar/server1.json | jq</code></pre>
+
+<h3><a id="docker" class="anchor" href="#docker">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Docker</h3>
+
+<pre><code class="language-sh">./stacker.sh fetch server1.example.net --grains grains/server1.json --pillar ext_pillar/server1.json | jq</code></pre>
+
+<h2><a id="configuration" class="anchor" href="#configuration">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Configuration</h2>
+
+<p>By default Stacker looks for it's configuration file in the current directory (<code>stacker.yml</code>).</p>
+
+<p>You can pass an alternative file by using <code>--config</code> flag.</p>
+
+<p>The configuration file is a YAML file looking like this :</p>
+
+<pre><code class="language-yml">---
+doc_root: example/doc_root
+entrypoint: server-pillars
+log_file: ./log/stacker.log
+
+stacks:
+  default:
+    - example/doc_root/server-pillars/stack1.cfg
+  dev:
+    - example/doc_root/server-pillars/stack1.cfg
+    - example/doc_root/pillars/stack1.cfg
+  prod:
+    - example/doc_root/server-pillars/stack1.cfg
+    - example/doc_root/pillars/stack1.cfg
+    - example/doc_root/server-pillars/stack2.cfg
+
+server_host: 127.0.0.1
+server_port: 3000
+server_environment: development</code></pre>
+
+<p><strong>Note :</strong> You can use relative or absolute file path.</p>
+
+<p>Config               | Description
+---------------------|------------
+<code>doc_root</code>           | the webserver document root (must be specified). Since pillar are also crinja templates, it means where are the template files?
+<code>entrypoint</code>         | the webserver entrypoint (must be specified). The directory in the <code>doc_root</code> where we shoud look for <code><minion_d>.yml</code> file
+<code>log_file</code>           | the path to the log file
+<code>stacks</code>             | a hash of namespaced <a href="https://docs.saltstack.com/en/master/ref/pillar/all/salt.pillar.stack.html#list-of-config-files" target="_blank">stack configuration files</a> (must be specified)
+<code>server_host</code>        | ip address to bind to (default <code>127.0.0.1</code>)
+<code>server_port</code>        | port to bind to (default <code>3000</code>)
+<code>server_environment</code> | <code>development</code> or <code>production</code> (default <code>production</code>)</p>
+
+<h2><a id="salt-integration" class="anchor" href="#salt-integration">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Salt integration</h2>
+
+<p>To integrate Stacker with Salt you first need to add the <a href="/salt/stacker.py" target="_blank">stacker pillar module</a> in Salt :</p>
+
+<ol><li>Declare extension modules directory in Salt (<code>/etc/salt/master.conf</code> or <code>/etc/salt/master.d/f_defaults.conf</code>)</li></ol>
+
+<pre><code class="language-yml">extension_modules: /data/salt/modules</code></pre>
+
+<ol><li>Create <code>/data/salt/modules/pillar</code> directory and puts <a href="/salt/stacker.py" target="_blank">stacker module</a> in it</li></ol>
+
+<pre><code class="language-sh">mkdir -p /data/salt/modules/pillar
+wget -O /data/salt/modules/pillar/stacker.py https://raw.githubusercontent.com/jbox-web/stacker/master/salt/stacker.py</code></pre>
+
+<ol><li>Declare the new ext_pillar module in Salt</li></ol>
+
+<pre><code class="language-yml">ext_pillar:
+  - stacker: http://127.0.0.1:3000</code></pre>
+
+<p>You can also pass parameters to Stacker module :</p>
+
+<pre><code class="language-yml">ext_pillar:
+  - stacker:
+      host: http://127.0.0.1:3000
+      namespace: 'production'
+      log_level: 'debug'</code></pre>
+
+<ol><li>Restart Salt, you're done :)</li></ol>
+
+<h2><a id="namespaces" class="anchor" href="#namespaces">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Namespaces</h2>
+
+<p>Use namespaces by using optional <code>n=</code> query parameter :</p>
+
+<pre><code class="language-sh">curl http://127.0.0.1:3000/server1.example.net?n=dev
+curl http://127.0.0.1:3000/server1.example.net?n=prod</code></pre>
+
+<p>Or with <code>--namespace</code> flag when using Stacker CLI.</p>
+
+<p>The default namespace when query parameter or CLI flag is omited is <code>default</code>.</p>
+
+<h2><a id="output-format" class="anchor" href="#output-format">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Output format</h2>
+
+<p>Set output format by using optional <code>f=</code> query parameter :</p>
+
+<pre><code class="language-sh">curl http://127.0.0.1:3000/server1.example.net?f=json
+curl http://127.0.0.1:3000/server1.example.net?f=yaml</code></pre>
+
+<p>Or with <code>--output-format</code> flag when using Stacker CLI.</p>
+
+<p>The default output format when query parameter or CLI flag is omited is <code>json</code>.</p>
+
+<p>Only <code>json</code> and <code>yaml</code> are supported.</p>
+
+<h2><a id="logs" class="anchor" href="#logs">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Logs</h2>
+
+<p>Set log level by using optional <code>l=</code> query parameter :</p>
+
+<pre><code class="language-sh">curl http://127.0.0.1:3000/server1.example.net?l=debug
+curl http://127.0.0.1:3000/server1.example.net?l=trace</code></pre>
+
+<p>Or with <code>--log-level</code> flag when using Stacker CLI.</p>
+
+<p>The default log level when query parameter or CLI flag is omited is <code>info</code>.</p>
+
+<p>Log levels other than <code>debug</code> or <code>trace</code> are meaningless.</p>
+
+<p><code>trace</code> level is very verbose as it dumps data before and after merge operations.</p>
+
+<p>&lt;details>&lt;summary>debug level will render something like this :&lt;/summary></p>
+
+<pre><code class="language-sh">2020-10-02T23:18:27.149678Z   INFO - processor: Building stack for: server2.example.net (namespace: prod)
+2020-10-02T23:18:27.149897Z  DEBUG - renderer: Compiled: example/doc_root/server-pillars/stack1.cfg
+2020-10-02T23:18:27.149927Z  DEBUG - processor: Loading: example/doc_root/server-pillars/01-base.yml
+2020-10-02T23:18:27.149936Z  DEBUG - processor: Compiling: example/doc_root/server-pillars/01-base.yml
+2020-10-02T23:18:27.150030Z  DEBUG - renderer: Compiled: example/doc_root/server-pillars/01-base.yml
+2020-10-02T23:18:27.150078Z  DEBUG - processor: Merging: example/doc_root/server-pillars/01-base.yml
+2020-10-02T23:18:27.150099Z  DEBUG - processor: Loading: example/doc_root/server-pillars/server2.example.net.yml
+2020-10-02T23:18:27.150109Z  DEBUG - processor: Compiling: example/doc_root/server-pillars/server2.example.net.yml
+2020-10-02T23:18:27.150190Z  DEBUG - renderer: Compiled: example/doc_root/server-pillars/server2.example.net.yml
+2020-10-02T23:18:27.150263Z  DEBUG - processor: Merging: example/doc_root/server-pillars/server2.example.net.yml
+2020-10-02T23:18:27.150705Z  DEBUG - renderer: Compiled: example/doc_root/pillars/stack1.cfg
+2020-10-02T23:18:27.150775Z  DEBUG - processor: Loading: example/doc_root/pillars/01-base/01-base.yml
+2020-10-02T23:18:27.150784Z  DEBUG - processor: Compiling: example/doc_root/pillars/01-base/01-base.yml
+2020-10-02T23:18:27.150873Z  DEBUG - renderer: Compiled: example/doc_root/pillars/01-base/01-base.yml
+2020-10-02T23:18:27.150932Z  DEBUG - processor: Merging: example/doc_root/pillars/01-base/01-base.yml
+2020-10-02T23:18:27.150942Z  DEBUG - processor: Loading: example/doc_root/pillars/01-base/app1.yml
+2020-10-02T23:18:27.150949Z  DEBUG - processor: Compiling: example/doc_root/pillars/01-base/app1.yml
+2020-10-02T23:18:27.151042Z  DEBUG - renderer: Compiled: example/doc_root/pillars/01-base/app1.yml
+2020-10-02T23:18:27.151091Z  DEBUG - processor: Merging: example/doc_root/pillars/01-base/app1.yml
+2020-10-02T23:18:27.151108Z  DEBUG - processor: Loading: example/doc_root/pillars/01-base/zdump.yml
+2020-10-02T23:18:27.151115Z  DEBUG - processor: Compiling: example/doc_root/pillars/01-base/zdump.yml
+2020-10-02T23:18:27.151208Z  DEBUG - renderer: Compiled: example/doc_root/pillars/01-base/zdump.yml
+2020-10-02T23:18:27.151238Z  DEBUG - processor: Merging: example/doc_root/pillars/01-base/zdump.yml
+2020-10-02T23:18:27.151267Z  DEBUG - processor: Loading: example/doc_root/pillars/02-roles/common/locale.yml
+2020-10-02T23:18:27.151286Z  DEBUG - processor: Compiling: example/doc_root/pillars/02-roles/common/locale.yml
+2020-10-02T23:18:27.151392Z  DEBUG - renderer: Compiled: example/doc_root/pillars/02-roles/common/locale.yml
+2020-10-02T23:18:27.151426Z  DEBUG - processor: Merging: example/doc_root/pillars/02-roles/common/locale.yml
+2020-10-02T23:18:27.151452Z  DEBUG - processor: Loading: example/doc_root/pillars/02-roles/common/timezone.yml
+2020-10-02T23:18:27.151462Z  DEBUG - processor: Compiling: example/doc_root/pillars/02-roles/common/timezone.yml
+2020-10-02T23:18:27.151572Z  DEBUG - renderer: Compiled: example/doc_root/pillars/02-roles/common/timezone.yml
+2020-10-02T23:18:27.151597Z  DEBUG - processor: Merging: example/doc_root/pillars/02-roles/common/timezone.yml
+2020-10-02T23:18:27.151619Z  DEBUG - processor: Loading: example/doc_root/pillars/02-roles/common/users.yml
+2020-10-02T23:18:27.151627Z  DEBUG - processor: Compiling: example/doc_root/pillars/02-roles/common/users.yml
+2020-10-02T23:18:27.151795Z  DEBUG - renderer: Compiled: example/doc_root/pillars/02-roles/common/users.yml
+2020-10-02T23:18:27.151858Z  DEBUG - processor: Merging: example/doc_root/pillars/02-roles/common/users.yml
+2020-10-02T23:18:27.151879Z  DEBUG - processor: Loading: example/doc_root/pillars/02-roles/client/salt.yml
+2020-10-02T23:18:27.151887Z  DEBUG - processor: Compiling: example/doc_root/pillars/02-roles/client/salt.yml
+2020-10-02T23:18:27.152009Z  DEBUG - renderer: Compiled: example/doc_root/pillars/02-roles/client/salt.yml
+2020-10-02T23:18:27.152039Z  DEBUG - processor: Merging: example/doc_root/pillars/02-roles/client/salt.yml
+2020-10-02T23:18:27.152060Z  DEBUG - processor: Loading: example/doc_root/pillars/02-roles/server/openssh.yml
+2020-10-02T23:18:27.152069Z  DEBUG - processor: Compiling: example/doc_root/pillars/02-roles/server/openssh.yml
+2020-10-02T23:18:27.152231Z  DEBUG - renderer: Compiled: example/doc_root/pillars/02-roles/server/openssh.yml
+2020-10-02T23:18:27.152331Z  DEBUG - processor: Merging: example/doc_root/pillars/02-roles/server/openssh.yml
+2020-10-02T23:18:27.152351Z  DEBUG - processor: Loading: example/doc_root/pillars/02-roles/server/docker.yml
+2020-10-02T23:18:27.152360Z  DEBUG - processor: Compiling: example/doc_root/pillars/02-roles/server/docker.yml
+2020-10-02T23:18:27.152478Z  DEBUG - renderer: Compiled: example/doc_root/pillars/02-roles/server/docker.yml
+2020-10-02T23:18:27.152528Z  DEBUG - processor: Merging: example/doc_root/pillars/02-roles/server/docker.yml
+2020-10-02T23:18:27.152547Z  DEBUG - processor: Loading: example/doc_root/pillars/02-roles/server/nodejs.yml
+2020-10-02T23:18:27.152554Z  DEBUG - processor: Compiling: example/doc_root/pillars/02-roles/server/nodejs.yml
+2020-10-02T23:18:27.152688Z  DEBUG - renderer: Compiled: example/doc_root/pillars/02-roles/server/nodejs.yml
+2020-10-02T23:18:27.152729Z  DEBUG - processor: Merging: example/doc_root/pillars/02-roles/server/nodejs.yml
+2020-10-02T23:18:27.152748Z  DEBUG - processor: Loading: example/doc_root/pillars/02-roles/server/php.yml
+2020-10-02T23:18:27.152756Z  DEBUG - processor: Compiling: example/doc_root/pillars/02-roles/server/php.yml
+2020-10-02T23:18:27.152931Z  DEBUG - renderer: Compiled: example/doc_root/pillars/02-roles/server/php.yml
+2020-10-02T23:18:27.153030Z  DEBUG - processor: Merging: example/doc_root/pillars/02-roles/server/php.yml
+2020-10-02T23:18:27.153050Z  DEBUG - processor: Loading: example/doc_root/pillars/02-roles/server/redis.yml
+2020-10-02T23:18:27.153059Z  DEBUG - processor: Compiling: example/doc_root/pillars/02-roles/server/redis.yml
+2020-10-02T23:18:27.153534Z  DEBUG - renderer: Compiled: example/doc_root/pillars/02-roles/server/redis.yml
+2020-10-02T23:18:27.153604Z  DEBUG - processor: Merging: example/doc_root/pillars/02-roles/server/redis.yml
+2020-10-02T23:18:27.153631Z  DEBUG - processor: Loading: example/doc_root/pillars/02-roles/custom/php-app-server-common.yml
+2020-10-02T23:18:27.153639Z  DEBUG - processor: Compiling: example/doc_root/pillars/02-roles/custom/php-app-server-common.yml
+2020-10-02T23:18:27.153759Z  DEBUG - renderer: Compiled: example/doc_root/pillars/02-roles/custom/php-app-server-common.yml
+2020-10-02T23:18:27.153835Z  DEBUG - processor: Merging: example/doc_root/pillars/02-roles/custom/php-app-server-common.yml
+2020-10-02T23:18:27.153856Z  DEBUG - processor: Loading: example/doc_root/pillars/02-roles/custom/php-app-server-development.yml
+2020-10-02T23:18:27.153864Z  DEBUG - processor: Compiling: example/doc_root/pillars/02-roles/custom/php-app-server-development.yml
+2020-10-02T23:18:27.154676Z  DEBUG - renderer: Compiled: example/doc_root/pillars/02-roles/custom/php-app-server-development.yml
+2020-10-02T23:18:27.154824Z  DEBUG - processor: Merging: example/doc_root/pillars/02-roles/custom/php-app-server-development.yml
+2020-10-02T23:18:27.154931Z  DEBUG - renderer: Compiled: example/doc_root/server-pillars/stack2.cfg
+2020-10-02T23:18:27.154970Z  DEBUG - processor: Loading: example/doc_root/server-pillars/server2.example.net/clean.yml
+2020-10-02T23:18:27.154978Z  DEBUG - processor: Compiling: example/doc_root/server-pillars/server2.example.net/clean.yml
+2020-10-02T23:18:27.155054Z  DEBUG - renderer: Compiled: example/doc_root/server-pillars/server2.example.net/clean.yml
+2020-10-02T23:18:27.155076Z  DEBUG - processor: Merging: example/doc_root/server-pillars/server2.example.net/clean.yml
+2020-10-02T23:18:27.155086Z  DEBUG - processor: Loading: example/doc_root/server-pillars/server2.example.net/stacker.yml
+2020-10-02T23:18:27.155090Z  DEBUG - processor: Compiling: example/doc_root/server-pillars/server2.example.net/stacker.yml
+2020-10-02T23:18:27.155162Z  DEBUG - renderer: Compiled: example/doc_root/server-pillars/server2.example.net/stacker.yml
+2020-10-02T23:18:27.155181Z  DEBUG - processor: Merging: example/doc_root/server-pillars/server2.example.net/stacker.yml
+2020-10-02T23:18:27.155191Z  DEBUG - processor: Loading: example/doc_root/server-pillars/server2.example.net/users.yml
+2020-10-02T23:18:27.155195Z  DEBUG - processor: Compiling: example/doc_root/server-pillars/server2.example.net/users.yml
+2020-10-02T23:18:27.155451Z  DEBUG - renderer: Compiled: example/doc_root/server-pillars/server2.example.net/users.yml
+2020-10-02T23:18:27.155475Z  DEBUG - processor: Merging: example/doc_root/server-pillars/server2.example.net/users.yml
+2020-10-02T23:18:27.155486Z  DEBUG - processor: Loading: example/doc_root/server-pillars/server2.example.net/zdump.yml
+2020-10-02T23:18:27.155490Z  DEBUG - processor: Compiling: example/doc_root/server-pillars/server2.example.net/zdump.yml
+2020-10-02T23:18:27.155896Z  DEBUG - renderer: Compiled: example/doc_root/server-pillars/server2.example.net/zdump.yml
+2020-10-02T23:18:27.156648Z  DEBUG - processor: Merging: example/doc_root/server-pillars/server2.example.net/zdump.yml
+2020-10-02T23:18:27.156664Z   INFO - processor: End of stack build for: server2.example.net (namespace: prod)</code></pre>
+
+<p>&lt;/details></p>
+
+<p>You can also use the selective logger :</p>
+
+<p>Set the file path to debug by using optional <code>p=</code> query parameter :</p>
+
+<pre><code class="language-sh">curl http://127.0.0.1:3000/server1.example.net?l=trace&p=doc_root/pillars/02-roles/server/openssh.yml</code></pre>
+
+<p>Or with <code>--path</code> flag when using Stacker CLI.</p>
+
+<p>Set the step to debug by using optional <code>s=</code> query parameter :</p>
+
+<pre><code class="language-sh">curl http://127.0.0.1:3000/server1.example.net?l=trace&p=doc_root/pillars/02-roles/server/openssh.yml&s=compile,yaml-load</code></pre>
+
+<p>Or with <code>--step</code> flag when using Stacker CLI.</p>
+
+<p>Valid options for the <code>step</code> param are : <code>compile</code> | <code>yaml-load</code> | <code>before-merge</code> | <code>after-merge</code> | <code>final</code></p>
+
+<h2><a id="scaling" class="anchor" href="#scaling">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Scaling</h2>
+
+<p>The Stacker's web design leads to great possibilities :</p>
+
+<ul><li>You can move Stacker and the pillar rendering out of Salt server :</li></ul>
+
+<pre><code class="language-yml">ext_pillar:
+  - stacker: http://stacker.example.corp:3000</code></pre>
+
+<ul><li>You can run multiple instances of Stacker and call them sequentially :</li></ul>
+
+<pre><code class="language-yml">ext_pillar:
+  - stacker: http://127.0.0.1:3000
+  - stacker: http://127.0.0.1:4000
+  - stacker: http://127.0.0.1:5000</code></pre>
+
+<p>With each instance having it's own stack configuration :)</p>
+
+<h2><a id="deployment" class="anchor" href="#deployment">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Deployment</h2>
+
+<p>You can use the <a href="/extra/stacker.service" target="_blank">provided systemd unit</a> to manage the Stacker daemon.</p>
+
+<h2><a id="merging-strategies" class="anchor" href="#merging-strategies">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Merging strategies</h2>
+
+<p>Stacker implements <a href="https://docs.saltstack.com/en/master/ref/pillar/all/salt.pillar.stack.html#merging-strategies" target="_blank">merging strategies</a> like PillarStack so you can use them in Stacker too :)</p>
+
+<p>It works the same way and it's <a href="/spec/stacker/utils_spec.cr" target="_blank">tested</a>.</p>
+
+<h2><a id="template-syntax" class="anchor" href="#template-syntax">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Template syntax</h2>
+
+<p>The <a href="https://github.com/straight-shoota/crinja/blob/master/TEMPLATE_SYNTAX.md" target="_blank">template syntax</a> is almost the same than Jinja2.</p>
+
+<p><a href="https://docs.saltstack.com/en/master/ref/pillar/all/salt.pillar.stack.html#overall-process" target="_blank">Like PillarStack</a> you have access to these variables :</p>
+
+<ul><li><code>stack</code></li><li><code>pillar</code></li><li><code>minion_id</code></li><li><code>grains</code> (instead of <code>__grains__</code>)</li></ul>
+
+<p>Stacker adds a bunch of filters and functions :</p>
+
+<p>Filters :</p>
+
+<ul><li>json filter (dump json without character escaping) (like the <a href="https://docs.saltstack.com/en/latest/topics/jinja/index.html#tojson" target="_blank">Salt one</a>)</li><li>traverse filter (like the <a href="https://docs.saltstack.com/en/latest/topics/jinja/index.html#traverse" target="_blank">Salt one</a>)</li><li>unique filter (like the <a href="https://docs.saltstack.com/en/latest/topics/jinja/index.html#unique" target="_blank">Salt one</a>)</li></ul>
+
+<p>Functions :</p>
+
+<ul><li>log function (like the <a href="https://docs.saltstack.com/en/latest/topics/jinja/index.html#logs" target="_blank">Salt one</a>)</li><li>dump function (it dumps objects to YAML in log file)</li><li>array_push function</li><li>merge_dict function</li></ul>
+
+<p>The following filters/tests/functions/tags/operators are supported :</p>
+
+<pre><code>filters:
+  abs()
+  append(string<span class="o">=</span>)
+  attr(name<span class="o">=</span>)
+  batch(linecount<span class="o">=</span><span class="n">2</span>, fill_with<span class="o">=</span>none)
+  capitalize()
+  center(width<span class="o">=</span><span class="n">80</span>)
+  date(format<span class="o">=</span>)
+  default(default_value<span class="o">=</span></code></pre>
+
+<h2><a id="roadmap" class="anchor" href="#roadmap">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Roadmap</h2>
+
+<ul><li>implement <a href="https://github.com/saltstack/salt/blob/a670b4ae72ec11f5485c216c54059e14223019b8/salt/pillar/stack.py#L77" target="_blank">Select Stacker config through grains|pillar|opts matching</a></li><li>add documentation about "Stacker - Sample Project"</li></ul>
+</div>
+</body>
+</html>
