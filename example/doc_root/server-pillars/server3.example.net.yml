@@ -1,0 +1,24 @@
+---
+stacker:
+  filters:
+    json: {{ {'foo': 'bar'} | json }}
+    traverse: {{  stack | traverse('my_server:network') | json }}
+    unique: {{  ['a', 'a', 'a'] | unique }}
+
+  functions:
+{% set array = [] %}
+{% for item in [1, 2, 3] %}
+{% do array_push(array, item) %}
+{% endfor %}
+    array_push: {{ array }}
+
+{% set hash = {'foo': 'bar'} %}
+{% do merge_dict(hash, {'bar': 'baz'}) %}
+    merge_dict: {{ hash | json }}
+    log: "Check the log file"
+
+{% do log("TEST LOG") %}
+
+    dump: "Check the log file"
+
+{% do dump({'foo': 'bar'}) %}
