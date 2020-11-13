@@ -254,7 +254,7 @@ make stacker-release</code></pre>
 
 <pre><code class="language-sh">docker pull nicoladmin/stacker:nightly</code></pre>
 
-<p><strong>Note :</strong> The Docker mode comes with a <a href="/stacker.sh" target="_blank">wrapper script</a> to ease interactions with the container</p>
+<p><strong>Note :</strong> The Docker mode comes with a <a href="https://github.com/jbox-web/stacker/blob/master/stacker.sh" target="_blank">wrapper script</a> to ease interactions with the container</p>
 
 <p>Usage : <code>stacker.sh {start|stop|restart|status|kill|clean|fetch|logs}</code></p>
 
@@ -368,7 +368,7 @@ server_environment: development</code></pre>
 
 <pre><code class="language-yml">extension_modules: /data/salt/modules</code></pre>
 
-<ol><li>Create <code>/data/salt/modules/pillar</code> directory and puts <a href="/salt/stacker.py" target="_blank">stacker module</a> in it</li></ol>
+<ol><li>Create <code>/data/salt/modules/pillar</code> directory and puts <a href="https://github.com/jbox-web/stacker/blob/master/salt/stacker.py" target="_blank">stacker module</a> in it</li></ol>
 
 <pre><code class="language-sh">mkdir -p /data/salt/modules/pillar
 wget -O /data/salt/modules/pillar/stacker.py https://raw.githubusercontent.com/jbox-web/stacker/master/salt/stacker.py</code></pre>
@@ -579,7 +579,7 @@ curl http://127.0.0.1:3000/server1.example.net?l=trace</code></pre>
   </svg>
 </a>Deployment</h2>
 
-<p>You can use the <a href="/extra/stacker.service" target="_blank">provided systemd unit</a> to manage the Stacker daemon.</p>
+<p>You can use the <a href="https://github.com/jbox-web/stacker/blob/master/extra/stacker.service" target="_blank">provided systemd unit</a> to manage the Stacker daemon.</p>
 
 <h2><a id="merging-strategies" class="anchor" href="#merging-strategies">
   <svg class="octicon-link" aria-hidden="true">
@@ -633,7 +633,7 @@ curl http://127.0.0.1:3000/server1.example.net?l=trace</code></pre>
   </svg>
 </a>Extend Stacker</h2>
 
-<p>If you need to add filters (or functions) just drop a new class with a few lines of Crystal code in <a href="/src/runtime" target="_blank">/src/runtime</a> and recompile Stacker with <code>make stacker</code> (dev mode) or <code>make stacker-release</code> (release mode).</p>
+<p>If you need to add filters (or functions) just drop a new class with a few lines of Crystal code in <a href="https://github.com/jbox-web/stacker/tree/master/src/runtime" target="_blank">/src/runtime</a> and recompile Stacker with <code>make stacker</code> (dev mode) or <code>make stacker-release</code> (release mode).</p>
 
 <p>Your custom filters (or functions) should be available in Jinja templates. To be sure run <code>stacker info</code> and check the Crinja environment info.</p>
 
