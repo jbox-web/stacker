@@ -41,6 +41,14 @@ describe Stacker::Renderer do
   end
 
   describe "filters" do
+    describe "json" do
+      it "support json filter" do
+        renderer = create_renderer
+        output = renderer.compile("spec/fixtures/filters/json.j2", Hash(String, String).new)
+        output.should eq("{\n  \"foo\": [\n    \"a\",\n    \"a\",\n    \"a\"\n  ],\n  \"bar\": 1,\n  \"true\": true,\n  \"false\": false\n}")
+      end
+    end
+
     describe "traverse" do
       it "support traverse filter" do
         data = {"id" => "foo", "server" => {"roles" => ["php", "nginx"]}}
@@ -119,6 +127,14 @@ describe Stacker::Renderer do
         data = {"id" => "foo", "server" => {"foo" => "bar"}}
         renderer = create_renderer
         renderer.compile("spec/fixtures/filters/traverse/traversal_path_inexistent_2.j2", {"pillar" => data}).should eq("\"\"")
+      end
+    end
+
+    describe "unique" do
+      it "support unique filter" do
+        renderer = create_renderer
+        output = renderer.compile("spec/fixtures/filters/unique.j2", Hash(String, String).new)
+        output.should eq("['a']")
       end
     end
 
