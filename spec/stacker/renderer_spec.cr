@@ -13,6 +13,20 @@ describe Stacker::Renderer do
       end
     end
 
+    describe "dump" do
+      # See: https://github.com/crystal-lang/crystal/blob/master/spec/std/log/log_spec.cr#L147
+      it "support dump function" do
+        backend = Log::MemoryBackend.new
+        Stacker::Renderer::Log.backend = backend
+        renderer = create_renderer
+        renderer.compile("spec/fixtures/functions/dump.j2", Hash(String, String).new).should eq("")
+        entry = backend.entries.first
+        entry.source.should eq("renderer")
+        entry.severity.should eq(s(:info))
+        entry.message.should eq("\n---\nfoo: bar\n")
+      end
+    end
+
     describe "log" do
       # See: https://github.com/crystal-lang/crystal/blob/master/spec/std/log/log_spec.cr#L147
       it "support log function" do
