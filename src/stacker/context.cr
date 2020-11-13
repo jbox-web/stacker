@@ -1,14 +1,14 @@
 module Stacker
   class Context
-    # Retrieve the Crinja runtime instance
+    # Retrieve the `Crinja` runtime instance
     getter env
 
-    # Retrieve the Crinja runtime root dir
+    # Retrieve the `Crinja` runtime root dir
     getter root_dir
 
-    # This class is a wrapper around Crinja.
+    # `Context` is a wrapper around `Crinja`.
     #
-    # It creates and setup a new Crinja environment to compile Jinja templates.
+    # It creates and setup a new `Crinja` environment to compile Jinja templates.
     #
     # Filters and functions defined under `src/runtime` will be
     # automaticaly loaded.

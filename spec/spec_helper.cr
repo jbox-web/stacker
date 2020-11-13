@@ -5,7 +5,7 @@ require "../src/stacker"
 
 def load_yaml(file)
   yaml = YAML.parse(File.read(file))
-  Stacker::Pillar.convert_hash(yaml.as_h)
+  Stacker::Value.convert_hash(yaml.as_h)
 end
 
 def create_renderer

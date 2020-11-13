@@ -1,15 +1,15 @@
 require "../spec_helper.cr"
 
-describe Stacker::Pillar do
+describe Stacker::Value do
   describe ".yaml_to_pillar" do
     it "convert YAML to internal structure" do
       inspect = <<-'TPL'
-      Stacker::Pillar(@container={"foo" => Stacker::Pillar(@container={"bar" => [1, "127.0.0.1", true], "is_true" => true, "is_false" => false, "is_array" => [], "is_hash" => Stacker::Pillar(@container={}), "nested" => Stacker::Pillar(@container={"foo" => Stacker::Pillar(@container={"bar" => [1, "127.0.0.1", false], "is_true" => true, "is_false" => false, "is_array" => [], "is_hash" => Stacker::Pillar(@container={})})})})})
+      Stacker::Value(@container={"foo" => Stacker::Value(@container={"bar" => [1, "127.0.0.1", true], "is_true" => true, "is_false" => false, "is_array" => [], "is_hash" => Stacker::Value(@container={}), "nested" => Stacker::Value(@container={"foo" => Stacker::Value(@container={"bar" => [1, "127.0.0.1", false], "is_true" => true, "is_false" => false, "is_array" => [], "is_hash" => Stacker::Value(@container={})})})})})
       TPL
 
       file = "spec/fixtures/merge_strategies/input/test.yml"
       yaml = File.read(file)
-      hash = Stacker::Pillar.yaml_to_pillar(yaml)
+      hash = Stacker::Value.yaml_to_pillar(yaml)
       generated_yaml = File.read("spec/fixtures/merge_strategies/output/test.yml")
 
       hash.inspect.should eq(inspect)
@@ -20,11 +20,11 @@ describe Stacker::Pillar do
   describe ".convert_hash" do
     it "convert YAML to internal structure" do
       inspect = <<-'TPL'
-      Stacker::Pillar(@container={"foo" => Stacker::Pillar(@container={"bar" => [1, "127.0.0.1", true], "is_true" => true, "is_false" => false, "is_array" => [], "is_hash" => Stacker::Pillar(@container={}), "nested" => Stacker::Pillar(@container={"foo" => Stacker::Pillar(@container={"bar" => [1, "127.0.0.1", false], "is_true" => true, "is_false" => false, "is_array" => [], "is_hash" => Stacker::Pillar(@container={})})})})})
+      Stacker::Value(@container={"foo" => Stacker::Value(@container={"bar" => [1, "127.0.0.1", true], "is_true" => true, "is_false" => false, "is_array" => [], "is_hash" => Stacker::Value(@container={}), "nested" => Stacker::Value(@container={"foo" => Stacker::Value(@container={"bar" => [1, "127.0.0.1", false], "is_true" => true, "is_false" => false, "is_array" => [], "is_hash" => Stacker::Value(@container={})})})})})
       TPL
 
       yaml = YAML.parse(File.read("spec/fixtures/merge_strategies/input/test.yml"))
-      hash = Stacker::Pillar.convert_hash(yaml.as_h)
+      hash = Stacker::Value.convert_hash(yaml.as_h)
       generated_yaml = File.read("spec/fixtures/merge_strategies/output/test.yml")
 
       hash.inspect.should eq(inspect)
@@ -38,7 +38,7 @@ describe Stacker::Pillar do
       hash2 = load_yaml("spec/fixtures/merge_strategies/input/deep_merge_dict2.yml")
       generated_yaml = File.read("spec/fixtures/merge_strategies/output/deep_merge.yml")
 
-      Stacker::Pillar.deep_merge!(hash1, hash2)
+      Stacker::Value.deep_merge!(hash1, hash2)
       YAML.dump(hash1).should eq(generated_yaml)
     end
 
@@ -49,7 +49,7 @@ describe Stacker::Pillar do
           hash2 = load_yaml("spec/fixtures/merge_strategies/input/merge_strategy_hash/merge_last_2.yml")
           generated_yaml = File.read("spec/fixtures/merge_strategies/output/merge_strategy_hash/merge_last.yml")
 
-          Stacker::Pillar.deep_merge!(hash1, hash2)
+          Stacker::Value.deep_merge!(hash1, hash2)
           YAML.dump(hash1).should eq(generated_yaml)
         end
       end
@@ -60,7 +60,7 @@ describe Stacker::Pillar do
           hash2 = load_yaml("spec/fixtures/merge_strategies/input/merge_strategy_hash/merge_first_2.yml")
           generated_yaml = File.read("spec/fixtures/merge_strategies/output/merge_strategy_hash/merge_first.yml")
 
-          Stacker::Pillar.deep_merge!(hash1, hash2)
+          Stacker::Value.deep_merge!(hash1, hash2)
           YAML.dump(hash1).should eq(generated_yaml)
         end
       end
@@ -71,7 +71,7 @@ describe Stacker::Pillar do
           hash2 = load_yaml("spec/fixtures/merge_strategies/input/merge_strategy_hash/remove_2.yml")
           generated_yaml = File.read("spec/fixtures/merge_strategies/output/merge_strategy_hash/remove.yml")
 
-          Stacker::Pillar.deep_merge!(hash1, hash2)
+          Stacker::Value.deep_merge!(hash1, hash2)
           YAML.dump(hash1).should eq(generated_yaml)
         end
       end
@@ -82,7 +82,7 @@ describe Stacker::Pillar do
           hash2 = load_yaml("spec/fixtures/merge_strategies/input/merge_strategy_hash/overwrite_2.yml")
           generated_yaml = File.read("spec/fixtures/merge_strategies/output/merge_strategy_hash/overwrite.yml")
 
-          Stacker::Pillar.deep_merge!(hash1, hash2)
+          Stacker::Value.deep_merge!(hash1, hash2)
           YAML.dump(hash1).should eq(generated_yaml)
         end
       end
@@ -95,7 +95,7 @@ describe Stacker::Pillar do
           hash2 = load_yaml("spec/fixtures/merge_strategies/input/merge_strategy_array/merge_last_2.yml")
           generated_yaml = File.read("spec/fixtures/merge_strategies/output/merge_strategy_array/merge_last.yml")
 
-          Stacker::Pillar.deep_merge!(hash1, hash2)
+          Stacker::Value.deep_merge!(hash1, hash2)
           YAML.dump(hash1).should eq(generated_yaml)
         end
       end
@@ -106,7 +106,7 @@ describe Stacker::Pillar do
           hash2 = load_yaml("spec/fixtures/merge_strategies/input/merge_strategy_array/merge_first_2.yml")
           generated_yaml = File.read("spec/fixtures/merge_strategies/output/merge_strategy_array/merge_first.yml")
 
-          Stacker::Pillar.deep_merge!(hash1, hash2)
+          Stacker::Value.deep_merge!(hash1, hash2)
           YAML.dump(hash1).should eq(generated_yaml)
         end
       end
@@ -117,7 +117,7 @@ describe Stacker::Pillar do
           hash2 = load_yaml("spec/fixtures/merge_strategies/input/merge_strategy_array/remove_2.yml")
           generated_yaml = File.read("spec/fixtures/merge_strategies/output/merge_strategy_array/remove.yml")
 
-          Stacker::Pillar.deep_merge!(hash1, hash2)
+          Stacker::Value.deep_merge!(hash1, hash2)
           YAML.dump(hash1).should eq(generated_yaml)
         end
       end
@@ -128,7 +128,7 @@ describe Stacker::Pillar do
           hash2 = load_yaml("spec/fixtures/merge_strategies/input/merge_strategy_array/overwrite_2.yml")
           generated_yaml = File.read("spec/fixtures/merge_strategies/output/merge_strategy_array/overwrite.yml")
 
-          Stacker::Pillar.deep_merge!(hash1, hash2)
+          Stacker::Value.deep_merge!(hash1, hash2)
           YAML.dump(hash1).should eq(generated_yaml)
         end
       end

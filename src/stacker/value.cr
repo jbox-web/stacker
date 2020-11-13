@@ -1,6 +1,10 @@
 module Stacker
-  struct Pillar
-    alias Type = Bool | Float64 | Float32 | Int64 | Int32 | String | Time | Nil | Pillar | Array(Type)
+  # `Value` represents an object inside the Stacker runtime.
+  #
+  # It wraps a Crystal value in #raw and defines methods to access properties of the wrapped value while being agnostic about the actual type of the wrapped raw value.
+  struct Value
+    # Raw type wrapped by `Value`.
+    alias Type = Bool | Float64 | Float32 | Int64 | Int32 | String | Time | Nil | Value | Array(Type)
 
     def initialize
       @container = {} of String => Type
@@ -11,7 +15,7 @@ module Stacker
     delegate to_json, to: @container
     delegate to_yaml, to: @container
 
-    # Parse **yaml** and convert the result object into Stacker::Pillar object.
+    # Parse **yaml** and convert the result object into Stacker::Value object.
     def self.yaml_to_pillar(yaml : String)
       yaml = YAML.parse(yaml)
 
@@ -21,9 +25,9 @@ module Stacker
       convert_hash(yaml.as_h)
     end
 
-    # Convert a Hash object into a Stacker::Pillar object.
+    # Convert a Hash object into a Stacker::Value object.
     def self.convert_hash(hash : Hash)
-      s = Pillar.new
+      s = new
 
       hash.each do |k, v|
         k = k.raw if k.responds_to?(:raw)
@@ -43,9 +47,9 @@ module Stacker
       s
     end
 
-    # Convert an Array object into a Stacker::Pillar object.
+    # Convert an Array object into a Stacker::Value object.
     def self.convert_array(array : Array)
-      acc = [] of Stacker::Pillar::Type
+      acc = [] of Type
 
       array.each do |val|
         val = val.raw if val.responds_to?(:raw)
@@ -65,7 +69,7 @@ module Stacker
       acc
     end
 
-    # Recursively merge two Stacker::Pillar object.
+    # Recursively merge two Stacker::Value object.
     #
     # It merges **other_hash** in **hash** and returns the modified **hash**.
     def self.deep_merge!(hash, other_hash)
@@ -82,7 +86,7 @@ module Stacker
         this_value = hash[current_key]?
 
         hash[current_key] =
-          if this_value.is_a?(Stacker::Pillar) && other_value.is_a?(Stacker::Pillar)
+          if this_value.is_a?(Stacker::Value) && other_value.is_a?(Stacker::Value)
             if strategy == "merge-first"
               deep_merge!(other_value, this_value)
             else
@@ -99,16 +103,16 @@ module Stacker
     end
 
     private def self.cleanup_hash!(object)
-      return object unless object.is_a?(Stacker::Pillar) || object.is_a?(Array)
+      return object unless object.is_a?(Stacker::Value) || object.is_a?(Array)
 
-      if object.is_a?(Stacker::Pillar)
+      if object.is_a?(Stacker::Value)
         object.delete("__")
         object.each do |k, v|
           object[k] = cleanup_hash!(v)
         end
       elsif object.is_a?(Array)
         hash = object[0]?
-        if hash.is_a?(Stacker::Pillar) && (strat = hash["__"]?)
+        if hash.is_a?(Stacker::Value) && (strat = hash["__"]?)
           object.delete_at(0)
         end
       end
@@ -120,7 +124,7 @@ module Stacker
       strategy = "merge-last"
       hash = other_list[0]?
 
-      if hash.is_a?(Stacker::Pillar) && (strat = hash["__"]?)
+      if hash.is_a?(Stacker::Value) && (strat = hash["__"]?)
         strategy = strat
         other_list.delete_at(0)
       end

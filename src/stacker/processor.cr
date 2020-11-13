@@ -21,7 +21,7 @@ module Stacker
     end
 
     def initialize(@renderer : Renderer, @stacks : Array(String))
-      @stack = Pillar.new
+      @stack = Value.new
       @host_name = ""
       @grains = {} of String => String
       @pillar = {} of String => String
@@ -77,12 +77,12 @@ module Stacker
 
         Log.debug { "Loading: #{file}" }
 
-        data = Pillar.new
+        data = Value.new
 
         load_pillars_from_file(dirname, file, data)
 
         with_debug_stack do
-          Pillar.deep_merge!(@stack, data)
+          Value.deep_merge!(@stack, data)
         end
       end
     end
@@ -100,7 +100,7 @@ module Stacker
 
       hash =
         begin
-          Pillar.yaml_to_pillar(yaml)
+          Value.yaml_to_pillar(yaml)
         rescue e : YAML::ParseException
           Log.error { "Error while parsing yaml #{file}" }
           Log.error { e.message }
@@ -116,7 +116,7 @@ module Stacker
 
       Log.debug { "Merging: #{file}" }
 
-      Pillar.deep_merge!(data, hash)
+      Value.deep_merge!(data, hash)
     end
 
     private def compilation_data
