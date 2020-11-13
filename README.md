@@ -5,9 +5,9 @@
 
 Stacker is [Salt PillarStack](https://docs.saltstack.com/en/master/ref/pillar/all/salt.pillar.stack.html) in [Crystal](https://crystal-lang.org/).
 
-Documentation : https://jbox-web.github.io/stacker/index.html
-
 It is implemented using [crinja](https://github.com/straight-shoota/crinja) which is Jinja2 in Crystal :)
+
+[Documentation](https://jbox-web.github.io/stacker/index.html)
 
 ## Installation
 
@@ -29,11 +29,10 @@ In this case you will need... Docker.
 Then :
 
 ```sh
-git clone https://github.com/jbox-web/stacker
-make docker
+docker pull nicoladmin/stacker:nightly
 ```
 
-**Note :** The Docker mode comes with a [wrapper script](/stacker.sh) to ease interaction with the container
+**Note :** The Docker mode comes with a [wrapper script](https://github.com/jbox-web/stacker/blob/master/stacker.sh) to ease interactions with the container
 
 Usage : `stacker.sh {start|stop|restart|status|kill|clean|fetch|logs}`
 
@@ -129,7 +128,7 @@ To integrate Stacker with Salt you first need to add the [stacker pillar module]
 extension_modules: /data/salt/modules
 ```
 
-2. Create `/data/salt/modules/pillar` directory and puts [stacker module](/salt/stacker.py) in it
+2. Create `/data/salt/modules/pillar` directory and puts [stacker module](https://github.com/jbox-web/stacker/blob/master/salt/stacker.py) in it
 
 ```sh
 mkdir -p /data/salt/modules/pillar
@@ -185,6 +184,10 @@ Only `json` and `yaml` are supported.
 
 ## Logs
 
+* log level
+
+The log level is dynamic. No need to restart the web server :)
+
 Set log level by using optional `l=` query parameter :
 
 ```sh
@@ -198,7 +201,7 @@ The default log level when query parameter or CLI flag is omited is `info`.
 
 Log levels other than `debug` or `trace` are meaningless.
 
-`trace` level is very verbose as it dumps data before and after merge operations.
+`trace` level is very verbose as it dumps data before and after merge operations. In this case you might need some filtering, see below...
 
 <details><summary>debug level will render something like this :</summary>
 
@@ -291,7 +294,7 @@ Log levels other than `debug` or `trace` are meaningless.
 ```
 </details>
 
-You can also use the selective logger :
+* filter logs by template path
 
 Set the file path to debug by using optional `p=` query parameter :
 
@@ -300,6 +303,8 @@ curl http://127.0.0.1:3000/server1.example.net?l=trace&p=doc_root/pillars/02-rol
 ```
 
 Or with `--path` flag when using Stacker CLI.
+
+* filter logs by steps
 
 Set the step to debug by using optional `s=` query parameter :
 
@@ -315,7 +320,7 @@ Valid options for the `step` param are : `compile` | `yaml-load` | `before-merge
 
 The Stacker's web design leads to great possibilities :
 
-* You can move Stacker and the pillar rendering out of Salt server :
+* You can move Stacker and the pillar rendering process out of Salt server :
 
 ```yml
 ext_pillar:
@@ -326,16 +331,16 @@ ext_pillar:
 
 ```yml
 ext_pillar:
-  - stacker: http://127.0.0.1:3000
-  - stacker: http://127.0.0.1:4000
-  - stacker: http://127.0.0.1:5000
+  - stacker: http://127.0.0.1:3000?n=foo
+  - stacker: http://127.0.0.1:4000?n=bar
+  - stacker: http://127.0.0.1:5000?n=baz
 ```
 
 With each instance having it's own stack configuration :)
 
 ## Deployment
 
-You can use the [provided systemd unit](/extra/stacker.service) to manage the Stacker daemon.
+You can use the [provided systemd unit](https://github.com/jbox-web/stacker/blob/master/extra/stacker.service) to manage the Stacker daemon.
 
 ## Merging strategies
 
@@ -369,7 +374,7 @@ Functions :
 * array_push function
 * merge_dict function
 
-You can see examples of code in the [documentation](https://jbox-web.github.io/stacker/index.html).
+You can see examples of code in the [documentation](https://jbox-web.github.io/stacker/Stacker/Runtime/Filter.html).
 
 The following filters/tests/functions/tags/operators are supported :
 
@@ -515,9 +520,11 @@ operators:
 
 ## Extend Stacker
 
-If you need to add filters (or functions) just drop a new class with a few lines of Crystal code in [/src/runtime](/src/runtime) and recompile Stacker with `make stacker` (dev mode) or `make stacker-release` (release mode).
+If you need to add filters (or functions) just drop a new class with a few lines of Crystal code in [/src/runtime](https://github.com/jbox-web/stacker/tree/master/src/runtime) and recompile Stacker with `make stacker` (dev mode) or `make stacker-release` (release mode).
 
 Your custom filters (or functions) should be available in Jinja templates. To be sure run `stacker info` and check the Crinja environment info.
+
+Then feel free to submit a PR if you think it will be useful for people.
 
 **Note:** `make stacker-static` only works on Alpine Linux because it's the only distribution where Crystal supports static linking.
 
