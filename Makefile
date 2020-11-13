@@ -7,7 +7,7 @@ INSTALL_DIR  = $(PREFIX)/bin
 SOURCE_FILE  = src/stacker.cr
 OUTPUT_FILE  = bin/stacker
 COMPILE_OPTS = --threads 4 --release --progress --error-trace
-DOCKER_TAG   = jbox-web/stacker:latest
+DOCKER_TAG   = nicoladmin/stacker:nightly
 
 ################
 # Public tasks #
