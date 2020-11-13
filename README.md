@@ -5,6 +5,8 @@
 
 Stacker is [Salt PillarStack](https://docs.saltstack.com/en/master/ref/pillar/all/salt.pillar.stack.html) in [Crystal](https://crystal-lang.org/).
 
+Documentation : https://jbox-web.github.io/stacker/index.html
+
 It is implemented using [crinja](https://github.com/straight-shoota/crinja) which is Jinja2 in Crystal :)
 
 ## Installation
@@ -367,6 +369,8 @@ Functions :
 * array_push function
 * merge_dict function
 
+You can see examples of code in the [documentation](https://jbox-web.github.io/stacker/index.html).
+
 The following filters/tests/functions/tags/operators are supported :
 
 ```
@@ -508,6 +512,14 @@ operators:
   operator[or]
   operator[~]
 ```
+
+## Extend Stacker
+
+If you need to add filters (or functions) just drop a new class with a few lines of Crystal code in [/src/runtime](/src/runtime) and recompile Stacker with `make stacker` (dev mode) or `make stacker-release` (release mode).
+
+Your custom filters (or functions) should be available in Jinja templates. To be sure run `stacker info` and check the Crinja environment info.
+
+**Note:** `make stacker-static` only works on Alpine Linux because it's the only distribution where Crystal supports static linking.
 
 ## Roadmap
 
