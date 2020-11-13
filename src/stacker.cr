@@ -11,6 +11,9 @@ require "./crinja_patch"
 require "./kemal_patch"
 require "./stacker/*"
 
+require "./runtime/filter/*"
+require "./runtime/function/*"
+
 module Stacker
   VERSION = "0.1.0"
 
