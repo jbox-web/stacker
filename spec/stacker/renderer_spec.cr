@@ -49,7 +49,7 @@ describe Stacker::Renderer do
 
       it "support (deep) merge_dict function" do
         renderer = create_renderer
-        renderer.compile("spec/fixtures/functions/deep_merge_dict.j2", Hash(String, String).new).should eq("{'string' => 'b string', 'integer' => 2, 'is_true' => false, 'is_false' => true, 'old_key' => 'foo', 'hash' => {'foo' => 'bar', 'nested' => {'hash' => 'bar', 'hash1' => 'child1', 'array' => ['foo', 'bar'], 'hash2' => 'child2'}, 'bar' => 'baz'}, 'array' => ['string1', 11, true, false, 'string2', 12, false, true], 'new_key' => 'foo'}")
+        renderer.compile("spec/fixtures/functions/merge_dict_deep.j2", Hash(String, String).new).should eq("{'string' => 'b string', 'integer' => 2, 'is_true' => false, 'is_false' => true, 'old_key' => 'foo', 'hash' => {'foo' => 'bar', 'nested' => {'hash' => 'bar', 'hash1' => 'child1', 'array' => ['foo', 'bar'], 'hash2' => 'child2'}, 'bar' => 'baz'}, 'array' => ['string1', 11, true, false, 'string2', 12, false, true], 'new_key' => 'foo'}")
       end
     end
   end
