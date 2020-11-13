@@ -8,7 +8,7 @@ module Stacker
 
     # This class is a wrapper around Crinja.
     #
-    # It creates and setup a new Crinja environment.
+    # It creates and setup a new Crinja environment to compile Jinja templates.
     #
     # Filters and functions defined under `src/runtime` will be
     # automaticaly loaded.
