@@ -427,6 +427,10 @@ curl http://127.0.0.1:3000/server1.example.net?f=yaml</code></pre>
   </svg>
 </a>Logs</h2>
 
+<ul><li>log level</li></ul>
+
+<p>The log level is dynamic. No need to restart the web server :)</p>
+
 <p>Set log level by using optional <code>l=</code> query parameter :</p>
 
 <pre><code class="language-sh">curl http://127.0.0.1:3000/server1.example.net?l=debug
@@ -530,13 +534,15 @@ curl http://127.0.0.1:3000/server1.example.net?l=trace</code></pre>
 
 <p>&lt;/details></p>
 
-<p>You can also use the selective logger :</p>
+<ul><li>filter logs by template path</li></ul>
 
 <p>Set the file path to debug by using optional <code>p=</code> query parameter :</p>
 
 <pre><code class="language-sh">curl http://127.0.0.1:3000/server1.example.net?l=trace&p=doc_root/pillars/02-roles/server/openssh.yml</code></pre>
 
 <p>Or with <code>--path</code> flag when using Stacker CLI.</p>
+
+<ul><li>filter logs by steps</li></ul>
 
 <p>Set the step to debug by using optional <code>s=</code> query parameter :</p>
 
