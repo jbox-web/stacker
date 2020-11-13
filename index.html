@@ -219,9 +219,9 @@
 
 <p>Stacker is <a href="https://docs.saltstack.com/en/master/ref/pillar/all/salt.pillar.stack.html" target="_blank">Salt PillarStack</a> in <a href="https://crystal-lang.org/" target="_blank">Crystal</a>.</p>
 
-<p>Documentation : https://jbox-web.github.io/stacker/index.html</p>
-
 <p>It is implemented using <a href="https://github.com/straight-shoota/crinja" target="_blank">crinja</a> which is Jinja2 in Crystal :)</p>
+
+<p><a href="https://jbox-web.github.io/stacker/index.html" target="_blank">Documentation</a></p>
 
 <h2><a id="installation" class="anchor" href="#installation">
   <svg class="octicon-link" aria-hidden="true">
@@ -252,10 +252,9 @@ make stacker-release</code></pre>
 
 <p>Then :</p>
 
-<pre><code class="language-sh">git clone https://github.com/jbox-web/stacker
-make docker</code></pre>
+<pre><code class="language-sh">docker pull nicoladmin/stacker:nightly</code></pre>
 
-<p><strong>Note :</strong> The Docker mode comes with a <a href="/stacker.sh" target="_blank">wrapper script</a> to ease interaction with the container</p>
+<p><strong>Note :</strong> The Docker mode comes with a <a href="/stacker.sh" target="_blank">wrapper script</a> to ease interactions with the container</p>
 
 <p>Usage : <code>stacker.sh {start|stop|restart|status|kill|clean|fetch|logs}</code></p>
 
@@ -442,7 +441,7 @@ curl http://127.0.0.1:3000/server1.example.net?l=trace</code></pre>
 
 <p>Log levels other than <code>debug</code> or <code>trace</code> are meaningless.</p>
 
-<p><code>trace</code> level is very verbose as it dumps data before and after merge operations.</p>
+<p><code>trace</code> level is very verbose as it dumps data before and after merge operations. In this case you might need some filtering, see below...</p>
 
 <p>&lt;details>&lt;summary>debug level will render something like this :&lt;/summary></p>
 
@@ -560,7 +559,7 @@ curl http://127.0.0.1:3000/server1.example.net?l=trace</code></pre>
 
 <p>The Stacker's web design leads to great possibilities :</p>
 
-<ul><li>You can move Stacker and the pillar rendering out of Salt server :</li></ul>
+<ul><li>You can move Stacker and the pillar rendering process out of Salt server :</li></ul>
 
 <pre><code class="language-yml">ext_pillar:
   - stacker: http://stacker.example.corp:3000</code></pre>
@@ -568,9 +567,9 @@ curl http://127.0.0.1:3000/server1.example.net?l=trace</code></pre>
 <ul><li>You can run multiple instances of Stacker and call them sequentially :</li></ul>
 
 <pre><code class="language-yml">ext_pillar:
-  - stacker: http://127.0.0.1:3000
-  - stacker: http://127.0.0.1:4000
-  - stacker: http://127.0.0.1:5000</code></pre>
+  - stacker: http://127.0.0.1:3000?n=foo
+  - stacker: http://127.0.0.1:4000?n=bar
+  - stacker: http://127.0.0.1:5000?n=baz</code></pre>
 
 <p>With each instance having it's own stack configuration :)</p>
 
@@ -614,7 +613,7 @@ curl http://127.0.0.1:3000/server1.example.net?l=trace</code></pre>
 
 <ul><li>log function (like the <a href="https://docs.saltstack.com/en/latest/topics/jinja/index.html#logs" target="_blank">Salt one</a>)</li><li>dump function (it dumps objects to YAML in log file)</li><li>array_push function</li><li>merge_dict function</li></ul>
 
-<p>You can see examples of code in the <a href="https://jbox-web.github.io/stacker/index.html" target="_blank">documentation</a>.</p>
+<p>You can see examples of code in the <a href="https://jbox-web.github.io/stacker/Stacker/Runtime/Filter.html" target="_blank">documentation</a>.</p>
 
 <p>The following filters/tests/functions/tags/operators are supported :</p>
 
@@ -637,6 +636,8 @@ curl http://127.0.0.1:3000/server1.example.net?l=trace</code></pre>
 <p>If you need to add filters (or functions) just drop a new class with a few lines of Crystal code in <a href="/src/runtime" target="_blank">/src/runtime</a> and recompile Stacker with <code>make stacker</code> (dev mode) or <code>make stacker-release</code> (release mode).</p>
 
 <p>Your custom filters (or functions) should be available in Jinja templates. To be sure run <code>stacker info</code> and check the Crinja environment info.</p>
+
+<p>Then feel free to submit a PR if you think it will be useful for people.</p>
 
 <p><strong>Note:</strong> <code>make stacker-static</code> only works on Alpine Linux because it's the only distribution where Crystal supports static linking.</p>
 
