@@ -18,7 +18,7 @@
 </svg>
 
   <meta id="repository-name" content="stacker">
-  <title>Stacker::Pillar - stacker 0.1.0</title>
+  <title>Stacker::Value - stacker 0.1.0</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../";
   </script>
@@ -93,21 +93,6 @@
   
   <li class=" " data-id="stacker/Stacker/Logger" data-name="stacker::logger">
       <a href="../Stacker/Logger.html">Logger</a>
-      
-    </li>
-  
-  <li class="parent open current" data-id="stacker/Stacker/Pillar" data-name="stacker::pillar">
-      <a href="../Stacker/Pillar.html">Pillar</a>
-      
-        <ul>
-  
-  <li class=" " data-id="stacker/Stacker/Pillar/Type" data-name="stacker::pillar::type">
-      <a href="../Stacker/Pillar/Type.html">Type</a>
-      
-    </li>
-  
-</ul>
-
       
     </li>
   
@@ -196,6 +181,21 @@
       
     </li>
   
+  <li class="parent open current" data-id="stacker/Stacker/Value" data-name="stacker::value">
+      <a href="../Stacker/Value.html">Value</a>
+      
+        <ul>
+  
+  <li class=" " data-id="stacker/Stacker/Value/Type" data-name="stacker::value::type">
+      <a href="../Stacker/Value/Type.html">Type</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
 </ul>
 
       
@@ -210,15 +210,28 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">struct</span> Stacker::Pillar
+  <span class="kind">struct</span> Stacker::Value
 
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../Stacker/Pillar.html">Stacker::Pillar</a></li><li class="superclass">Struct</li><li class="superclass">Value</li><li class="superclass">Object</li></ul>
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../Stacker/Value.html">Stacker::Value</a></li><li class="superclass">Struct</li><li class="superclass">Value</li><li class="superclass">Object</li></ul>
 
 
 
+
+  <h2>
+    <a id="overview" class="anchor" href="#overview">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Overview
+  </h2>
+
+  <p><code><a href="../Stacker/Value.html">Value</a></code> represents an object inside the Stacker runtime.</p>
+
+<p>It wraps a Crystal value in #raw and defines methods to access properties of the wrapped value while being agnostic about the actual type of the wrapped raw value.</p>
 
 
 
@@ -279,28 +292,28 @@
       <li class="entry-summary">
         <a href="#convert_array(array:Array)-class-method" class="signature"><strong>.convert_array</strong>(array : Array)</a>
         
-          <div class="summary"><p>Convert an Array object into a Stacker::Pillar object.</p></div>
+          <div class="summary"><p>Convert an Array object into a Stacker::Value object.</p></div>
         
       </li>
     
       <li class="entry-summary">
         <a href="#convert_hash(hash:Hash)-class-method" class="signature"><strong>.convert_hash</strong>(hash : Hash)</a>
         
-          <div class="summary"><p>Convert a Hash object into a Stacker::Pillar object.</p></div>
+          <div class="summary"><p>Convert a Hash object into a Stacker::Value object.</p></div>
         
       </li>
     
       <li class="entry-summary">
         <a href="#deep_merge!(hash,other_hash)-class-method" class="signature"><strong>.deep_merge!</strong>(hash, other_hash)</a>
         
-          <div class="summary"><p>Recursively merge two Stacker::Pillar object.</p></div>
+          <div class="summary"><p>Recursively merge two Stacker::Value object.</p></div>
         
       </li>
     
       <li class="entry-summary">
         <a href="#yaml_to_pillar(yaml:String)-class-method" class="signature"><strong>.yaml_to_pillar</strong>(yaml : String)</a>
         
-          <div class="summary"><p>Parse <strong>yaml</strong> and convert the result object into Stacker::Pillar object.</p></div>
+          <div class="summary"><p>Parse <strong>yaml</strong> and convert the result object into Stacker::Value object.</p></div>
         
       </li>
     
@@ -354,7 +367,7 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#raw:Hash(String,Stacker::Pillar::Type)-instance-method" class="signature"><strong>#raw</strong> : Hash(String, Stacker::Pillar::Type)</a>
+        <a href="#raw:Hash(String,Stacker::Value::Type)-instance-method" class="signature"><strong>#raw</strong> : Hash(String, Stacker::Value::Type)</a>
         
       </li>
     
@@ -464,7 +477,7 @@
       
         <div class="doc">
           
-          <p>Convert an Array object into a Stacker::Pillar object.</p>
+          <p>Convert an Array object into a Stacker::Value object.</p>
         </div>
       
       <br/>
@@ -483,7 +496,7 @@
       
         <div class="doc">
           
-          <p>Convert a Hash object into a Stacker::Pillar object.</p>
+          <p>Convert a Hash object into a Stacker::Value object.</p>
         </div>
       
       <br/>
@@ -502,7 +515,7 @@
       
         <div class="doc">
           
-          <p>Recursively merge two Stacker::Pillar object.</p>
+          <p>Recursively merge two Stacker::Value object.</p>
 
 <p>It merges <strong>other_hash</strong> in <strong>hash</strong> and returns the modified <strong>hash</strong>.</p>
         </div>
@@ -523,7 +536,7 @@
       
         <div class="doc">
           
-          <p>Parse <strong>yaml</strong> and convert the result object into Stacker::Pillar object.</p>
+          <p>Parse <strong>yaml</strong> and convert the result object into Stacker::Value object.</p>
         </div>
       
       <br/>
@@ -642,12 +655,12 @@
       </div>
     </div>
   
-    <div class="entry-detail" id="raw:Hash(String,Stacker::Pillar::Type)-instance-method">
+    <div class="entry-detail" id="raw:Hash(String,Stacker::Value::Type)-instance-method">
       <div class="signature">
         
-        def <strong>raw</strong> : Hash(String, <a href="../Stacker/Pillar/Type.html">Stacker::Pillar::Type</a>)
+        def <strong>raw</strong> : Hash(String, <a href="../Stacker/Value/Type.html">Stacker::Value::Type</a>)
 
-        <a class="method-permalink" href="#raw:Hash(String,Stacker::Pillar::Type)-instance-method">#</a>
+        <a class="method-permalink" href="#raw:Hash(String,Stacker::Value::Type)-instance-method">#</a>
       </div>
       
       <br/>
