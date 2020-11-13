@@ -91,16 +91,6 @@
       
     </li>
   
-  <li class=" " data-id="stacker/Stacker/Filter" data-name="stacker::filter">
-      <a href="Stacker/Filter.html">Filter</a>
-      
-    </li>
-  
-  <li class=" " data-id="stacker/Stacker/Function" data-name="stacker::function">
-      <a href="Stacker/Function.html">Function</a>
-      
-    </li>
-  
   <li class=" " data-id="stacker/Stacker/Logger" data-name="stacker::logger">
       <a href="Stacker/Logger.html">Logger</a>
       
@@ -136,6 +126,71 @@
       
     </li>
   
+  <li class="parent " data-id="stacker/Stacker/Runtime" data-name="stacker::runtime">
+      <a href="Stacker/Runtime.html">Runtime</a>
+      
+        <ul>
+  
+  <li class="parent " data-id="stacker/Stacker/Runtime/Filter" data-name="stacker::runtime::filter">
+      <a href="Stacker/Runtime/Filter.html">Filter</a>
+      
+        <ul>
+  
+  <li class=" " data-id="stacker/Stacker/Runtime/Filter/Json" data-name="stacker::runtime::filter::json">
+      <a href="Stacker/Runtime/Filter/Json.html">Json</a>
+      
+    </li>
+  
+  <li class=" " data-id="stacker/Stacker/Runtime/Filter/Traverse" data-name="stacker::runtime::filter::traverse">
+      <a href="Stacker/Runtime/Filter/Traverse.html">Traverse</a>
+      
+    </li>
+  
+  <li class=" " data-id="stacker/Stacker/Runtime/Filter/Unique" data-name="stacker::runtime::filter::unique">
+      <a href="Stacker/Runtime/Filter/Unique.html">Unique</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="stacker/Stacker/Runtime/Function" data-name="stacker::runtime::function">
+      <a href="Stacker/Runtime/Function.html">Function</a>
+      
+        <ul>
+  
+  <li class=" " data-id="stacker/Stacker/Runtime/Function/ArrayPush" data-name="stacker::runtime::function::arraypush">
+      <a href="Stacker/Runtime/Function/ArrayPush.html">ArrayPush</a>
+      
+    </li>
+  
+  <li class=" " data-id="stacker/Stacker/Runtime/Function/Dump" data-name="stacker::runtime::function::dump">
+      <a href="Stacker/Runtime/Function/Dump.html">Dump</a>
+      
+    </li>
+  
+  <li class=" " data-id="stacker/Stacker/Runtime/Function/Log" data-name="stacker::runtime::function::log">
+      <a href="Stacker/Runtime/Function/Log.html">Log</a>
+      
+    </li>
+  
+  <li class=" " data-id="stacker/Stacker/Runtime/Function/MergeDict" data-name="stacker::runtime::function::mergedict">
+      <a href="Stacker/Runtime/Function/MergeDict.html">MergeDict</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
   <li class=" " data-id="stacker/Stacker/Utils" data-name="stacker::utils">
       <a href="Stacker/Utils.html">Utils</a>
       
@@ -163,6 +218,8 @@
 <a href="https://github.com/jbox-web/stacker/actions" target="_blank"><img src="https://github.com/jbox-web/stacker/workflows/Stacker%20CI/badge.svg?branch=master" alt="Build Status"/></a></p>
 
 <p>Stacker is <a href="https://docs.saltstack.com/en/master/ref/pillar/all/salt.pillar.stack.html" target="_blank">Salt PillarStack</a> in <a href="https://crystal-lang.org/" target="_blank">Crystal</a>.</p>
+
+<p>Documentation : https://jbox-web.github.io/stacker/index.html</p>
 
 <p>It is implemented using <a href="https://github.com/straight-shoota/crinja" target="_blank">crinja</a> which is Jinja2 in Crystal :)</p>
 
@@ -551,6 +608,8 @@ curl http://127.0.0.1:3000/server1.example.net?l=trace</code></pre>
 
 <ul><li>log function (like the <a href="https://docs.saltstack.com/en/latest/topics/jinja/index.html#logs" target="_blank">Salt one</a>)</li><li>dump function (it dumps objects to YAML in log file)</li><li>array_push function</li><li>merge_dict function</li></ul>
 
+<p>You can see examples of code in the <a href="https://jbox-web.github.io/stacker/index.html" target="_blank">documentation</a>.</p>
+
 <p>The following filters/tests/functions/tags/operators are supported :</p>
 
 <pre><code>filters:
@@ -562,6 +621,18 @@ curl http://127.0.0.1:3000/server1.example.net?l=trace</code></pre>
   center(width<span class="o">=</span><span class="n">80</span>)
   date(format<span class="o">=</span>)
   default(default_value<span class="o">=</span></code></pre>
+
+<h2><a id="extend-stacker" class="anchor" href="#extend-stacker">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Extend Stacker</h2>
+
+<p>If you need to add filters (or functions) just drop a new class with a few lines of Crystal code in <a href="/src/runtime" target="_blank">/src/runtime</a> and recompile Stacker with <code>make stacker</code> (dev mode) or <code>make stacker-release</code> (release mode).</p>
+
+<p>Your custom filters (or functions) should be available in Jinja templates. To be sure run <code>stacker info</code> and check the Crinja environment info.</p>
+
+<p><strong>Note:</strong> <code>make stacker-static</code> only works on Alpine Linux because it's the only distribution where Crystal supports static linking.</p>
 
 <h2><a id="roadmap" class="anchor" href="#roadmap">
   <svg class="octicon-link" aria-hidden="true">
