@@ -1,3 +1,4 @@
+# Load external libs
 require "yaml"
 require "log"
 require "admiral"
@@ -7,10 +8,14 @@ require "systemd_notify"
 require "crystal-env/core"
 Crystal::Env.default("development")
 
+# Load patches
 require "./crinja_patch"
 require "./kemal_patch"
+
+# Load stacker
 require "./stacker/*"
 
+# Load Crinja extensions
 require "./runtime/filter/*"
 require "./runtime/function/*"
 
