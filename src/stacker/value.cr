@@ -16,7 +16,7 @@ module Stacker
     delegate to_yaml, to: @container
 
     # Parse **yaml** and convert the result object into Stacker::Value object.
-    def self.yaml_to_pillar(yaml : String)
+    def self.from_yaml(yaml : String)
       yaml = YAML.parse(yaml)
 
       return nil if yaml.nil?

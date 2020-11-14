@@ -104,7 +104,7 @@ module Stacker
 
       hash =
         begin
-          Value.yaml_to_pillar(yaml)
+          Value.from_yaml(yaml)
         rescue e : YAML::ParseException
           Log.error { "Error while parsing yaml #{file}" }
           Log.error { e.message }

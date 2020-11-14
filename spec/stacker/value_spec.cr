@@ -1,7 +1,7 @@
 require "../spec_helper.cr"
 
 describe Stacker::Value do
-  describe ".yaml_to_pillar" do
+  describe ".from_yaml" do
     it "convert YAML to internal structure" do
       inspect = <<-'TPL'
       Stacker::Value(@container={"foo" => Stacker::Value(@container={"bar" => [1, "127.0.0.1", true], "is_true" => true, "is_false" => false, "is_array" => [], "is_hash" => Stacker::Value(@container={}), "nested" => Stacker::Value(@container={"foo" => Stacker::Value(@container={"bar" => [1, "127.0.0.1", false], "is_true" => true, "is_false" => false, "is_array" => [], "is_hash" => Stacker::Value(@container={})})})})})
@@ -9,7 +9,7 @@ describe Stacker::Value do
 
       file = "spec/fixtures/merge_strategies/input/test.yml"
       yaml = File.read(file)
-      hash = Stacker::Value.yaml_to_pillar(yaml)
+      hash = Stacker::Value.from_yaml(yaml)
       generated_yaml = File.read("spec/fixtures/merge_strategies/output/test.yml")
 
       hash.inspect.should eq(inspect)
