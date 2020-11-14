@@ -17,6 +17,10 @@ module Stacker
       setup_env(@env, @root_dir)
     end
 
+    def self.crinja_info
+      new("").crinja_info
+    end
+
     def crinja_info
       [@env.filters, @env.tests, @env.functions, @env.tags, @env.operators].each do |library|
         puts "#{library.name}s:"

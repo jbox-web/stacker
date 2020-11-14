@@ -127,8 +127,7 @@ module Stacker
       def run
         puts "version: #{Stacker.version}"
         puts
-        context = Context.new("")
-        context.crinja_info
+        Context.crinja_info
       end
     end
 
