@@ -56,7 +56,7 @@ module Stacker
           Log.trace { "\n#{result}" }
         end
 
-        result = Utils.string_to_array(result)
+        result = string_to_array(result)
 
         result.each do |file|
           load_pillars_from_stack(stack, file)
@@ -66,6 +66,10 @@ module Stacker
       with_targeted_trace(step: "final") do
         Log.trace { "Stack final:\n#{YAML.dump(@stack)}" }
       end
+    end
+
+    private def string_to_array(string)
+      string.split("\n").reject(&.empty?)
     end
 
     private def load_pillars_from_stack(stack, file)

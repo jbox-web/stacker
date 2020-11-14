@@ -97,12 +97,16 @@ module Stacker
         load_config
         Stacker.setup_log
 
-        grains = flags.grains == "" ? {"id" => arguments.host_name} : Utils.load_json_file(flags.grains)
-        pillar = flags.pillar == "" ? {} of String => String : Utils.load_json_file(flags.pillar)
+        grains = flags.grains == "" ? {"id" => arguments.host_name} : load_json_file(flags.grains)
+        pillar = flags.pillar == "" ? {} of String => String : load_json_file(flags.pillar)
         steps = flags.steps.empty? ? Processor.valid_steps : Processor.sanitize_steps_params(flags.steps)
 
         result = Runner.process(arguments.host_name, flags.namespace, grains, pillar, flags.log_level, flags.path, steps)
         puts respond_with(flags.output_format, result)
+      end
+
+      private def load_json_file(file)
+        JSON.parse(File.read(file))
       end
 
       private def respond_with(format, result)
@@ -124,7 +128,7 @@ module Stacker
         puts "version: #{Stacker.version}"
         puts
         context = Context.new("")
-        Utils.crinja_info(context.env)
+        context.crinja_info
       end
     end
 

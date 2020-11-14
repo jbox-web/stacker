@@ -17,6 +17,18 @@ module Stacker
       setup_env(@env, @root_dir)
     end
 
+    def crinja_info
+      [@env.filters, @env.tests, @env.functions, @env.tags, @env.operators].each do |library|
+        puts "#{library.name}s:"
+        names = library.keys
+        names.sort.each do |name|
+          feature = library[name]
+          puts "  #{feature}"
+        end
+        puts
+      end
+    end
+
     private def setup_env(env, root_dir)
       env.loader = Crinja::Loader::FileSystemLoader.new(root_dir)
       env.config.register_defaults = true

@@ -7,7 +7,7 @@ module Stacker
 
     def file_exist?(file)
       entrypoint = "#{@context.root_dir}/#{@entrypoint}/#{file}.yml"
-      Utils.file_exists?(entrypoint)
+      File.exists?(entrypoint)
     end
 
     def compile(file, data)
