@@ -11,9 +11,5 @@ module Stacker
     property server_host : String = "127.0.0.1"
     property server_port : Int32 = 3000
     property server_environment : String = "production"
-
-    def to_hash
-      Hash(String, String | Array(String)).from_yaml(YAML.dump(self))
-    end
   end
 end
