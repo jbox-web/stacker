@@ -155,5 +155,9 @@ module Stacker
     def raw
       @container
     end
+
+    def deep_merge!(other)
+      self.class.deep_merge!(self, other)
+    end
   end
 end

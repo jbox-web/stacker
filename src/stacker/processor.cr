@@ -86,7 +86,7 @@ module Stacker
         load_pillars_from_file(dirname, file, data)
 
         with_debug_stack do
-          Value.deep_merge!(@stack, data)
+          @stack.deep_merge!(data)
         end
       end
     end
@@ -120,7 +120,7 @@ module Stacker
 
       Log.debug { "Merging: #{file}" }
 
-      Value.deep_merge!(data, hash)
+      data.deep_merge!(hash)
     end
 
     private def compilation_data
