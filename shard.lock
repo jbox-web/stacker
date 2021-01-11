@@ -6,11 +6,11 @@ shards:
 
   crinja:
     git: https://github.com/straight-shoota/crinja.git
-    version: 0.6.1+git.commit.e1fa1754828ffb2ac2cf3942512d8ca8c419c73a
+    version: 0.6.1+git.commit.09cb28f5dd256feac7c5161f871bcec17ba5da7e
 
   crystal-env:
-    git: https://github.com/n-rodriguez/crystal-env.git
-    version: 0.1.0+git.commit.03338c3df988cfdcb59f9996c4cc703df3e9274a
+    git: https://github.com/crystal-lang/crystal-env.git
+    version: 0.1.0+git.commit.be17067ae807386f28751b6b8f3dc343f6c2607a
 
   exception_page:
     git: https://github.com/crystal-loot/exception_page.git
@@ -18,7 +18,7 @@ shards:
 
   kemal:
     git: https://github.com/kemalcr/kemal.git
-    version: 0.26.1+git.commit.a819d4792bbc63d993d6dd2b15f9af5efb0c2d8c
+    version: 0.27.0+git.commit.bf9f627ac789d2ebe573629904f02beb9e4089d5
 
   kilt:
     git: https://github.com/jeromegn/kilt.git
@@ -29,6 +29,6 @@ shards:
     version: 0.3.9
 
   systemd_notify:
-    git: https://github.com/n-rodriguez/systemd_notify.cr.git
-    version: 0.1.1+git.commit.9e90bd9eafee766c5106a3d5a6b29675aa2bedd8
+    git: https://github.com/serge-name/systemd_notify.cr.git
+    version: 0.1.2+git.commit.9bbe6003e76a062117c755d8cf7fc30f78f45fab
 

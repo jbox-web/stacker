@@ -15,13 +15,13 @@ dependencies:
     github: straight-shoota/crinja
     branch: master
   crystal-env:
-    github: n-rodriguez/crystal-env
+    github: crystal-lang/crystal-env
     branch: master
   kemal:
     github: kemalcr/kemal
     branch: master
   systemd_notify:
-    github: n-rodriguez/systemd_notify.cr
+    github: serge-name/systemd_notify.cr
     branch: master
 
 crystal: 0.35.1
