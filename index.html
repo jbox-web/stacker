@@ -3,16 +3,21 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 0.35.1">
+<meta name="generator" content="Crystal Docs 0.34.0">
 <meta name="crystal_docs.project_version" content="0.1.0">
 <meta name="crystal_docs.project_name" content="stacker">
-
 
 
 <link href="css/style.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="js/doc.js"></script>
 
-  <meta name="repository-name" content="stacker">
+<svg class="hidden">
+  <symbol id="octicon-link" viewBox="0 0 16 16">
+    <path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+  </symbol>
+</svg>
+
+  <meta id="repository-name" content="stacker">
   <title>stacker 0.1.0</title>
   <script type="text/javascript">
   CrystalDocs.base_path = "";
@@ -20,11 +25,6 @@
 </head>
 <body>
 
-<svg class="hidden">
-  <symbol id="octicon-link" viewBox="0 0 16 16">
-    <path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
-  </symbol>
-</svg>
 <div class="sidebar">
   <div class="sidebar-header">
     <div class="search-box">
@@ -44,7 +44,7 @@
     </div>
   </div>
 
-  <div class="search-results hidden">
+  <div class="search-results" class="hidden">
     <ul class="search-list"></ul>
   </div>
 
@@ -209,14 +209,14 @@
   </svg>
 </a>Stacker - A lightweight file-based CMDB</h1>
 
-<p><a href="https://github.com/jbox-web/stacker/blob/master/LICENSE"><img src="https://img.shields.io/github/license/jbox-web/stacker.svg" alt="GitHub license"/></a>
-<a href="https://github.com/jbox-web/stacker/actions"><img src="https://github.com/jbox-web/stacker/workflows/Stacker%20CI/badge.svg?branch=master" alt="Build Status"/></a></p>
+<p><a href="https://github.com/jbox-web/stacker/blob/master/LICENSE" target="_blank"><img src="https://img.shields.io/github/license/jbox-web/stacker.svg" alt="GitHub license"/></a>
+<a href="https://github.com/jbox-web/stacker/actions" target="_blank"><img src="https://github.com/jbox-web/stacker/workflows/Stacker%20CI/badge.svg?branch=master" alt="Build Status"/></a></p>
 
-<p>Stacker is <a href="https://docs.saltstack.com/en/master/ref/pillar/all/salt.pillar.stack.html">Salt PillarStack</a> in <a href="https://crystal-lang.org/">Crystal</a>.</p>
+<p>Stacker is <a href="https://docs.saltstack.com/en/master/ref/pillar/all/salt.pillar.stack.html" target="_blank">Salt PillarStack</a> in <a href="https://crystal-lang.org/" target="_blank">Crystal</a>.</p>
 
-<p>It is implemented using <a href="https://github.com/straight-shoota/crinja">crinja</a> which is Jinja2 in Crystal :)</p>
+<p>It is implemented using <a href="https://github.com/straight-shoota/crinja" target="_blank">crinja</a> which is Jinja2 in Crystal :)</p>
 
-<p><a href="https://jbox-web.github.io/stacker/index.html">Documentation</a></p>
+<p><a href="https://jbox-web.github.io/stacker/index.html" target="_blank">Documentation</a></p>
 
 <h2><a id="installation" class="anchor" href="#installation">
   <svg class="octicon-link" aria-hidden="true">
@@ -230,7 +230,7 @@
   </svg>
 </a>Manual compilation</h3>
 
-<p>To compile under Debian Buster you will need <a href="https://crystal-lang.org/install/on_debian/">Crystal</a></p>
+<p>To compile under Debian Buster you will need <a href="https://crystal-lang.org/install/on_debian/" target="_blank">Crystal</a></p>
 
 <p>Then :</p>
 
@@ -249,7 +249,7 @@ make stacker-release</code></pre>
 
 <pre><code class="language-sh">docker pull nicoladmin/stacker:nightly</code></pre>
 
-<p><strong>Note :</strong> The Docker mode comes with a <a href="https://github.com/jbox-web/stacker/blob/master/stacker.sh">wrapper script</a> to ease interactions with the container</p>
+<p><strong>Note :</strong> The Docker mode comes with a <a href="https://github.com/jbox-web/stacker/blob/master/stacker.sh" target="_blank">wrapper script</a> to ease interactions with the container</p>
 
 <p>Usage : <code>stacker.sh {start|stop|restart|status|kill|clean|fetch|logs}</code></p>
 
@@ -346,7 +346,7 @@ server_environment: development</code></pre>
 <code>doc_root</code>           | the webserver document root (must be specified). Since pillar are also crinja templates, it means where are the template files?
 <code>entrypoint</code>         | the webserver entrypoint (must be specified). The directory in the <code>doc_root</code> where we shoud look for <code><minion_d>.yml</code> file
 <code>log_file</code>           | the path to the log file
-<code>stacks</code>             | a hash of namespaced <a href="https://docs.saltstack.com/en/master/ref/pillar/all/salt.pillar.stack.html#list-of-config-files">stack configuration files</a> (must be specified)
+<code>stacks</code>             | a hash of namespaced <a href="https://docs.saltstack.com/en/master/ref/pillar/all/salt.pillar.stack.html#list-of-config-files" target="_blank">stack configuration files</a> (must be specified)
 <code>server_host</code>        | ip address to bind to (default <code>127.0.0.1</code>)
 <code>server_port</code>        | port to bind to (default <code>3000</code>)
 <code>server_environment</code> | <code>development</code> or <code>production</code> (default <code>production</code>)</p>
@@ -357,13 +357,13 @@ server_environment: development</code></pre>
   </svg>
 </a>Salt integration</h2>
 
-<p>To integrate Stacker with Salt you first need to add the <a href="/salt/stacker.py">stacker pillar module</a> in Salt :</p>
+<p>To integrate Stacker with Salt you first need to add the <a href="/salt/stacker.py" target="_blank">stacker pillar module</a> in Salt :</p>
 
 <ol><li>Declare extension modules directory in Salt (<code>/etc/salt/master.conf</code> or <code>/etc/salt/master.d/f_defaults.conf</code>)</li></ol>
 
 <pre><code class="language-yml">extension_modules: /data/salt/modules</code></pre>
 
-<ol><li>Create <code>/data/salt/modules/pillar</code> directory and puts <a href="https://github.com/jbox-web/stacker/blob/master/salt/stacker.py">stacker module</a> in it</li></ol>
+<ol><li>Create <code>/data/salt/modules/pillar</code> directory and puts <a href="https://github.com/jbox-web/stacker/blob/master/salt/stacker.py" target="_blank">stacker module</a> in it</li></ol>
 
 <pre><code class="language-sh">mkdir -p /data/salt/modules/pillar
 wget -O /data/salt/modules/pillar/stacker.py https://raw.githubusercontent.com/jbox-web/stacker/master/salt/stacker.py</code></pre>
@@ -574,7 +574,7 @@ curl http://127.0.0.1:3000/server1.example.net?l=trace</code></pre>
   </svg>
 </a>Deployment</h2>
 
-<p>You can use the <a href="https://github.com/jbox-web/stacker/blob/master/extra/stacker.service">provided systemd unit</a> to manage the Stacker daemon.</p>
+<p>You can use the <a href="https://github.com/jbox-web/stacker/blob/master/extra/stacker.service" target="_blank">provided systemd unit</a> to manage the Stacker daemon.</p>
 
 <h2><a id="merging-strategies" class="anchor" href="#merging-strategies">
   <svg class="octicon-link" aria-hidden="true">
@@ -582,9 +582,9 @@ curl http://127.0.0.1:3000/server1.example.net?l=trace</code></pre>
   </svg>
 </a>Merging strategies</h2>
 
-<p>Stacker implements <a href="https://docs.saltstack.com/en/master/ref/pillar/all/salt.pillar.stack.html#merging-strategies">merging strategies</a> like PillarStack so you can use them in Stacker too :)</p>
+<p>Stacker implements <a href="https://docs.saltstack.com/en/master/ref/pillar/all/salt.pillar.stack.html#merging-strategies" target="_blank">merging strategies</a> like PillarStack so you can use them in Stacker too :)</p>
 
-<p>It works the same way and it's <a href="/spec/stacker/utils_spec.cr">tested</a>.</p>
+<p>It works the same way and it's <a href="/spec/stacker/utils_spec.cr" target="_blank">tested</a>.</p>
 
 <h2><a id="template-syntax" class="anchor" href="#template-syntax">
   <svg class="octicon-link" aria-hidden="true">
@@ -592,9 +592,9 @@ curl http://127.0.0.1:3000/server1.example.net?l=trace</code></pre>
   </svg>
 </a>Template syntax</h2>
 
-<p>The <a href="https://github.com/straight-shoota/crinja/blob/master/TEMPLATE_SYNTAX.md">template syntax</a> is almost the same than Jinja2.</p>
+<p>The <a href="https://github.com/straight-shoota/crinja/blob/master/TEMPLATE_SYNTAX.md" target="_blank">template syntax</a> is almost the same than Jinja2.</p>
 
-<p><a href="https://docs.saltstack.com/en/master/ref/pillar/all/salt.pillar.stack.html#overall-process">Like PillarStack</a> you have access to these variables :</p>
+<p><a href="https://docs.saltstack.com/en/master/ref/pillar/all/salt.pillar.stack.html#overall-process" target="_blank">Like PillarStack</a> you have access to these variables :</p>
 
 <ul><li><code>stack</code></li><li><code>pillar</code></li><li><code>minion_id</code></li><li><code>grains</code> (instead of <code>__grains__</code>)</li></ul>
 
@@ -602,153 +602,25 @@ curl http://127.0.0.1:3000/server1.example.net?l=trace</code></pre>
 
 <p>Filters :</p>
 
-<ul><li>json filter (dump json without character escaping) (like the <a href="https://docs.saltstack.com/en/latest/topics/jinja/index.html#tojson">Salt one</a>)</li><li>traverse filter (like the <a href="https://docs.saltstack.com/en/latest/topics/jinja/index.html#traverse">Salt one</a>)</li><li>unique filter (like the <a href="https://docs.saltstack.com/en/latest/topics/jinja/index.html#unique">Salt one</a>)</li></ul>
+<ul><li>json filter (dump json without character escaping) (like the <a href="https://docs.saltstack.com/en/latest/topics/jinja/index.html#tojson" target="_blank">Salt one</a>)</li><li>traverse filter (like the <a href="https://docs.saltstack.com/en/latest/topics/jinja/index.html#traverse" target="_blank">Salt one</a>)</li><li>unique filter (like the <a href="https://docs.saltstack.com/en/latest/topics/jinja/index.html#unique" target="_blank">Salt one</a>)</li></ul>
 
 <p>Functions :</p>
 
-<ul><li>log function (like the <a href="https://docs.saltstack.com/en/latest/topics/jinja/index.html#logs">Salt one</a>)</li><li>dump function (it dumps objects to YAML in log file)</li><li>array_push function</li><li>merge_dict function</li></ul>
+<ul><li>log function (like the <a href="https://docs.saltstack.com/en/latest/topics/jinja/index.html#logs" target="_blank">Salt one</a>)</li><li>dump function (it dumps objects to YAML in log file)</li><li>array_push function</li><li>merge_dict function</li></ul>
 
-<p>You can see examples of code in the <a href="https://jbox-web.github.io/stacker/Stacker/Runtime/Filter.html">documentation</a>.</p>
+<p>You can see examples of code in the <a href="https://jbox-web.github.io/stacker/Stacker/Runtime/Filter.html" target="_blank">documentation</a>.</p>
 
 <p>The following filters/tests/functions/tags/operators are supported :</p>
 
-<pre><code class="language-crystal">filters:
+<pre><code>filters:
   abs()
-  append(string=)
-  attr(name=)
-  batch(linecount=2, fill_with=none)
+  append(string<span class="o">=</span>)
+  attr(name<span class="o">=</span>)
+  batch(linecount<span class="o">=</span><span class="n">2</span>, fill_with<span class="o">=</span>none)
   capitalize()
-  center(width=80)
-  date(format=)
-  default(default_value='', boolean=false)
-  dictsort(case_sensitive=false, by='key')
-  escape()
-  filesizeformat(binary=false)
-  first()
-  float(default=0.0)
-  forceescape()
-  format()
-  groupby(attribute=)
-  indent(width=4, indentfirst=false)
-  int(default=0, base=10)
-  join(separator='', attribute=none)
-  json(indent=none)
-  last()
-  length()
-  list()
-  lower()
-  map()
-  pprint(verbose=false)
-  prepend(string=)
-  random()
-  reject()
-  rejectattr()
-  replace(old=, new=, count=none)
-  reverse()
-  round(precision=0, method='common', base=10)
-  safe()
-  select()
-  selectattr()
-  slice(slices=2, fill_with=none)
-  sort(reverse=false, case_sensitive=false, attribute=none)
-  string()
-  striptags()
-  sum(attribute=none, start=0)
-  title()
-  tojson(indent=none)
-  traverse(attribute=none, default=none)
-  trim()
-  truncate(length=255, killwords=false, end='...', leeway=none)
-  unique()
-  upper()
-  urlencode()
-  urlize(trim_url_limit=none, nofollow=false, target=none, rel=none)
-  wordcount()
-  wordwrap(width=79, break_long_words=true, wrapstring=none)
-  xmlattr(autoescape=true)
-
-tests:
-  callable()
-  defined()
-  divisibleby(num=)
-  equalto(other=)
-  escaped()
-  even()
-  greaterthan(other=0)
-  in(seq=[])
-  iterable()
-  lessthan(other=0)
-  lower()
-  mapping()
-  nil()
-  none()
-  number()
-  odd()
-  sameas(other=)
-  sequence()
-  string()
-  undefined()
-  upper()
-
-functions:
-  array_push(array=[], item=none)
-  cycler()
-  debug()
-  dict()
-  dump(object=none)
-  joiner(sep=', ')
-  log(object=none)
-  merge_dict(hash=none, other=none)
-  range(start=0, stop=0, step=1)
-  super()
-
-tags:
-  autoescape~endautoescape
-  block~endblock
-  call~endcall
-  do
-  elif
-  else
-  endautoescape
-  endblock
-  endcall
-  endfilter
-  endfor
-  endif
-  endmacro
-  endraw
-  endset
-  endwith
-  extends
-  filter~endfilter
-  for~endfor
-  from
-  if~endif
-  import
-  include
-  macro~endmacro
-  raw~endraw
-  set~endset
-  with~endwith
-
-operators:
-  operator[!=]
-  operator[%]
-  operator[*]
-  operator[**]
-  operator[+]
-  operator[-]
-  operator[/]
-  operator[//]
-  operator[<]
-  operator[<=]
-  operator[==]
-  operator[>]
-  operator[>=]
-  operator[and]
-  operator[not]
-  operator[or]
-  operator[~]</code></pre>
+  center(width<span class="o">=</span><span class="n">80</span>)
+  date(format<span class="o">=</span>)
+  default(default_value<span class="o">=</span></code></pre>
 
 <h2><a id="extend-stacker" class="anchor" href="#extend-stacker">
   <svg class="octicon-link" aria-hidden="true">
@@ -756,7 +628,7 @@ operators:
   </svg>
 </a>Extend Stacker</h2>
 
-<p>If you need to add filters (or functions) just drop a new class with a few lines of Crystal code in <a href="https://github.com/jbox-web/stacker/tree/master/src/runtime">/src/runtime</a> and recompile Stacker with <code>make stacker</code> (dev mode) or <code>make stacker-release</code> (release mode).</p>
+<p>If you need to add filters (or functions) just drop a new class with a few lines of Crystal code in <a href="https://github.com/jbox-web/stacker/tree/master/src/runtime" target="_blank">/src/runtime</a> and recompile Stacker with <code>make stacker</code> (dev mode) or <code>make stacker-release</code> (release mode).</p>
 
 <p>Your custom filters (or functions) should be available in Jinja templates. To be sure run <code>stacker info</code> and check the Crinja environment info.</p>
 
@@ -770,7 +642,7 @@ operators:
   </svg>
 </a>Roadmap</h2>
 
-<ul><li>implement <a href="https://github.com/saltstack/salt/blob/a670b4ae72ec11f5485c216c54059e14223019b8/salt/pillar/stack.py#L77">Select Stacker config through grains|pillar|opts matching</a></li><li>add documentation about "Stacker - Sample Project"</li></ul>
+<ul><li>implement <a href="https://github.com/saltstack/salt/blob/a670b4ae72ec11f5485c216c54059e14223019b8/salt/pillar/stack.py#L77" target="_blank">Select Stacker config through grains|pillar|opts matching</a></li><li>add documentation about "Stacker - Sample Project"</li></ul>
 </div>
 </body>
 </html>
