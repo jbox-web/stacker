@@ -8,7 +8,7 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     container:
       image: crystallang/crystal
     steps:
@@ -21,7 +21,7 @@ jobs:
         run: make spec
 
   publish:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     needs: test
     container:
       image: crystallang/crystal
