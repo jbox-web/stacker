@@ -6,7 +6,7 @@ shards:
 
   crinja:
     git: https://github.com/straight-shoota/crinja.git
-    version: 0.6.1+git.commit.09cb28f5dd256feac7c5161f871bcec17ba5da7e
+    version: 0.6.1+git.commit.9309c092c9bfada611b5186ea5f5b19d51a57d83
 
   crystal-env:
     git: https://github.com/crystal-lang/crystal-env.git
