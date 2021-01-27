@@ -127,6 +127,9 @@ module Stacker
       def run
         puts "version: #{Stacker.version}"
         puts
+        puts "crystal:"
+        puts Crystal::DESCRIPTION
+        puts
         Context.crinja_info
       end
     end
