@@ -76,6 +76,24 @@ bin/stacker fetch server1.example.net --config example/stacker.yml --grains exam
 ./stacker.sh fetch server1.example.net --grains grains/server1.json --pillar ext_pillar/server1.json | jq
 ```
 
+## Usage
+
+```sh
+Usage:
+  bin/stacker [flags...] [arg...]
+
+Stacker is Salt PillarStack in Crystal
+
+Flags:
+  --help     # Displays help for the current command.
+  --version  # Displays the version of the current application.
+
+Subcommands:
+  fetch      # Fetch host pillars
+  info       # Show Stacker information
+  server     # Run Stacker webserver
+```
+
 ## Configuration
 
 By default Stacker looks for it's configuration file in the current directory (`stacker.yml`).
@@ -346,7 +364,7 @@ You can use the [provided systemd unit](https://github.com/jbox-web/stacker/blob
 
 Stacker implements [merging strategies](https://docs.saltstack.com/en/master/ref/pillar/all/salt.pillar.stack.html#merging-strategies) like PillarStack so you can use them in Stacker too :)
 
-It works the same way and it's [tested](/spec/stacker/utils_spec.cr).
+It works the same way and it's [tested](/spec/stacker/value_spec.cr#L45).
 
 ## Template syntax
 
@@ -374,7 +392,7 @@ Functions :
 * array_push function
 * merge_dict function
 
-You can see examples of code in the [documentation](https://jbox-web.github.io/stacker/Stacker/Runtime/Filter.html).
+You can see examples of code in the [documentation](https://jbox-web.github.io/stacker/Stacker/Runtime/Filter/Json.html).
 
 The following filters/tests/functions/tags/operators are supported :
 
