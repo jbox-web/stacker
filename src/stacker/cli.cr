@@ -1,17 +1,7 @@
 module Stacker
   # :nodoc:
   class CLI < Admiral::Command
-    module Config
-      def load_config
-        config_file = File.read(flags.config)
-        config = Stacker::Config.from_yaml(config_file)
-        Stacker.config = config
-      end
-    end
-
     class Server < Admiral::Command
-      include Config
-
       define_help description: "Run Stacker webserver"
 
       define_flag config : String,
@@ -21,24 +11,14 @@ module Stacker
         default: "stacker.yml"
 
       def run
-        load_config
+        Stacker.load_config(flags.config)
         Stacker.setup_log
         Stacker.setup_signals
-
-        Kemal.run(args: nil) do |config|
-          # Set environment
-          config.env = Stacker.config.server_environment
-
-          # Start server
-          server = config.server.not_nil!
-          server.bind_tcp Stacker.config.server_host, Stacker.config.server_port
-        end
+        Stacker.start_server
       end
     end
 
     class Fetch < Admiral::Command
-      include Config
-
       define_help description: "Fetch host pillars"
 
       define_argument host_name : String,
@@ -94,7 +74,7 @@ module Stacker
         default: "json"
 
       def run
-        load_config
+        Stacker.load_config(flags.config)
         Stacker.setup_log
 
         grains = flags.grains.empty? ? {"id" => arguments.host_name} : load_json_file(flags.grains)

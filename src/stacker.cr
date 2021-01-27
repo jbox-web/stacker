@@ -36,6 +36,11 @@ module Stacker
     @@config ||= Config.from_yaml("")
   end
 
+  def self.load_config(config_path)
+    config_file = File.read(config_path)
+    self.config = Stacker::Config.from_yaml(config_file)
+  end
+
   def self.setup_log
     ::Log.setup do |c|
       c.bind "*", :debug, logger
@@ -60,14 +65,33 @@ module Stacker
     end
 
     Signal::TERM.trap do
-      Kemal.stop
-      log_file.close
+      stop_server
+      close_log_file!
     end
+  end
+
+  def self.close_log_file!
+    log_file.close
   end
 
   def self.reopen_log_file!
     @@log_file = nil
     setup_log
+  end
+
+  def self.start_server
+    Kemal.run(args: nil) do |kemal_config|
+      # Set environment
+      kemal_config.env = config.server_environment
+
+      # Start server
+      server = kemal_config.server.not_nil!
+      server.bind_tcp config.server_host, config.server_port
+    end
+  end
+
+  def self.stop_server
+    Kemal.stop
   end
 end
 
