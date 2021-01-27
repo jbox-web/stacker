@@ -307,6 +307,26 @@ make stacker-release</code></pre>
 
 <pre><code class="language-sh">./stacker.sh fetch server1.example.net --grains grains/server1.json --pillar ext_pillar/server1.json | jq</code></pre>
 
+<h2><a id="usage" class="anchor" href="#usage">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Usage</h2>
+
+<pre><code class="language-sh">Usage:
+  bin/stacker [flags...] [arg...]
+
+Stacker is Salt PillarStack in Crystal
+
+Flags:
+  --help     # Displays help for the current command.
+  --version  # Displays the version of the current application.
+
+Subcommands:
+  fetch      # Fetch host pillars
+  info       # Show Stacker information
+  server     # Run Stacker webserver</code></pre>
+
 <h2><a id="configuration" class="anchor" href="#configuration">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
@@ -584,7 +604,7 @@ curl http://127.0.0.1:3000/server1.example.net?l=trace</code></pre>
 
 <p>Stacker implements <a href="https://docs.saltstack.com/en/master/ref/pillar/all/salt.pillar.stack.html#merging-strategies">merging strategies</a> like PillarStack so you can use them in Stacker too :)</p>
 
-<p>It works the same way and it's <a href="/spec/stacker/utils_spec.cr">tested</a>.</p>
+<p>It works the same way and it's <a href="/spec/stacker/value_spec.cr#L45">tested</a>.</p>
 
 <h2><a id="template-syntax" class="anchor" href="#template-syntax">
   <svg class="octicon-link" aria-hidden="true">
@@ -608,7 +628,7 @@ curl http://127.0.0.1:3000/server1.example.net?l=trace</code></pre>
 
 <ul><li>log function (like the <a href="https://docs.saltstack.com/en/latest/topics/jinja/index.html#logs">Salt one</a>)</li><li>dump function (it dumps objects to YAML in log file)</li><li>array_push function</li><li>merge_dict function</li></ul>
 
-<p>You can see examples of code in the <a href="https://jbox-web.github.io/stacker/Stacker/Runtime/Filter.html">documentation</a>.</p>
+<p>You can see examples of code in the <a href="https://jbox-web.github.io/stacker/Stacker/Runtime/Filter/Json.html">documentation</a>.</p>
 
 <p>The following filters/tests/functions/tags/operators are supported :</p>
 
