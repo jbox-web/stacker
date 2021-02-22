@@ -1,8 +1,13 @@
 name: stacker
+
 version: 0.1.0
 
+crystal: 0.36.1
+
+license: MIT
+
 authors:
-  - Nicolas Rodriguez <nicoladmin@free.fr>
+  - Nicolas Rodriguez <nico@nicoladmin.fr>
 
 targets:
   stacker:
@@ -23,7 +28,3 @@ dependencies:
   systemd_notify:
     github: serge-name/systemd_notify.cr
     branch: master
-
-crystal: 0.36.0
-
-license: MIT
