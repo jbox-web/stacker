@@ -1,11 +1,16 @@
-# Load external libs
-require "yaml"
+# Load std libs
 require "log"
+require "yaml"
+
+# Load external libs
+require "crystal-env/core"
+
 require "admiral"
 require "crinja"
 require "kemal"
 require "systemd_notify"
-require "crystal-env/core"
+
+# Set environment
 Crystal::Env.default("development")
 
 # Load patches
