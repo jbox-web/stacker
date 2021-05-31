@@ -5,7 +5,7 @@ shards:
     version: 1.11.4
 
   backtracer:
-    git: https://github.com/Sija/backtracer.cr.git
+    git: https://github.com/sija/backtracer.cr.git
     version: 1.2.1
 
   crinja:
@@ -13,8 +13,8 @@ shards:
     version: 0.7.0+git.commit.15c267c5280bcb78a1f3f472ac5cb3843176fdd1
 
   crystal-env:
-    git: https://github.com/n-rodriguez/crystal-env.git
-    version: 0.1.0+git.commit.07f1983ee37e6d3582f14ceea90822c47dd6dbf2
+    git: https://github.com/crystal-lang/crystal-env.git
+    version: 0.1.0+git.commit.172cf5709b56831b8a2581d826f0262ac4f7cffd
 
   exception_page:
     git: https://github.com/crystal-loot/exception_page.git
@@ -33,6 +33,6 @@ shards:
     version: 0.4.1
 
   systemd_notify:
-    git: https://github.com/n-rodriguez/systemd_notify.cr.git
-    version: 0.1.2+git.commit.9aa3c119c6049164e70201c5a1b047087d13508d
+    git: https://github.com/serge-name/systemd_notify.cr.git
+    version: 0.1.2+git.commit.6d67cf722f037885a68ab82235f883a1ee7825be
 

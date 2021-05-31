@@ -3,7 +3,7 @@
 #########
 
 # Build from Crystal upstream
-FROM crystallang/crystal:0.36.0-alpine AS builder
+FROM crystallang/crystal:1.0.0-alpine AS builder
 
 # Set build environment
 WORKDIR /stacker-build
