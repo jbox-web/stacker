@@ -1,0 +1,17 @@
+#############
+# Constants #
+#############
+
+SOURCE_FILE  = src/stacker.cr
+OUTPUT_FILE  = bin/stacker
+COMPILE_OPTS = --threads 4 --release --progress --error-trace
+
+clean: ## Cleanup environment
+	rm -rf bin/*
+	rm -rf lib/
+
+deps-prod: ## Install production dependencies
+	shards install --production
+
+stacker-static: clean deps-prod ## Compile to production binary (static mode)
+	crystal build $(COMPILE_OPTS) --static -o $(OUTPUT_FILE) $(SOURCE_FILE)
