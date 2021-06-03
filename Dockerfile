@@ -22,11 +22,14 @@ RUN make stacker-static
 ###########
 
 # Build from Alpine upstream
-FROM library/alpine
+FROM gcr.io/distroless/static-debian10
 
 # Grab stacker binary from **builder** step and inject it in the final image
-COPY --from=builder /stacker-build/bin/stacker /usr/local/bin/stacker
+COPY --from=builder /stacker-build/bin/stacker /usr/bin/stacker
 
 # Set runtime environment
-WORKDIR /opt/stacker
+USER nonroot
+ENV USER nonroot
+ENV HOME /home/nonroot
+WORKDIR /home/nonroot
 ENTRYPOINT ["stacker"]
