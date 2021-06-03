@@ -6,6 +6,7 @@
 FROM crystallang/crystal:1.0.0-alpine AS builder
 
 # Set build environment
+RUN apk add --update yaml-static
 WORKDIR /stacker-build
 COPY Makefile shard.yml shard.lock /stacker-build/
 COPY src/ /stacker-build/src/
