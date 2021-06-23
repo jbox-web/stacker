@@ -24,7 +24,7 @@ def ext_pillar(minion_id, pillar, *args, **kwargs):
   if namespace != None:
     params['n'] = namespace
 
-  data = json.dumps({ 'grains': __grains__, 'pillar': pillar })
+  data = json.dumps({ 'grains': __grains__.value(), 'pillar': pillar })
 
   result = salt.utils.http.query(
     host,
