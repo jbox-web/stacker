@@ -2,7 +2,7 @@ version: 2.0
 shards:
   admiral:
     git: https://github.com/jwaldrip/admiral.cr.git
-    version: 1.11.4
+    version: 1.12.1
 
   backtracer:
     git: https://github.com/sija/backtracer.cr.git
@@ -10,7 +10,7 @@ shards:
 
   crinja:
     git: https://github.com/straight-shoota/crinja.git
-    version: 0.7.0+git.commit.15c267c5280bcb78a1f3f472ac5cb3843176fdd1
+    version: 0.8.0+git.commit.ca17c3d698b2d1d7ccc702079e93e31788caabb2
 
   crystal-env:
     git: https://github.com/crystal-lang/crystal-env.git
@@ -34,5 +34,5 @@ shards:
 
   systemd_notify:
     git: https://github.com/serge-name/systemd_notify.cr.git
-    version: 0.1.2+git.commit.6d67cf722f037885a68ab82235f883a1ee7825be
+    version: 0.1.3+git.commit.c21c34df94ea954ac0989d445e5fc9aaa525bfae
 
