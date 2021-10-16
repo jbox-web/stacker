@@ -16,6 +16,11 @@ DOCKER_TAG   = nicoladmin/stacker:nightly
 # This is the default task
 all: help
 
+setup: ## Setup local environment
+	asdf plugin add crystal || true
+	asdf install
+	asdf current
+
 stacker: ## Compile to development binary
 	crystal build --threads 4 -o $(OUTPUT_FILE) $(SOURCE_FILE)
 
@@ -55,7 +60,7 @@ doc: ## Generate Stacker documentation
 	rm -rf docs
 	crystal doc
 
-.PHONY: all stacker stacker-release stacker-static spec clean deps deps-prod install uninstall docker doc
+.PHONY: all setup stacker stacker-release stacker-static spec clean deps deps-prod install uninstall docker doc
 
 #################
 # Private tasks #
