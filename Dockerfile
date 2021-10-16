@@ -3,7 +3,7 @@
 #########
 
 # Build from Crystal upstream
-FROM crystallang/crystal:1.0.0-alpine AS builder
+FROM crystallang/crystal:1.2.0-alpine AS builder
 
 # Set build environment
 RUN apk add --update yaml-static
