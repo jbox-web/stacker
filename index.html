@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 1.0.0">
+<meta name="generator" content="Crystal Docs 1.1.1">
 <meta name="crystal_docs.project_version" content="master">
 <meta name="crystal_docs.project_name" content="stacker">
 
@@ -203,116 +203,83 @@
 
 
 <div class="main-content">
-<h1><a id="stacker-a-lightweight-file-based-cmdb" class="anchor" href="#stacker-a-lightweight-file-based-cmdb">
-  <svg class="octicon-link" aria-hidden="true">
+<h1><a id="stacker-a-lightweight-file-based-cmdb" class="anchor" href="#stacker-a-lightweight-file-based-cmdb">  <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>Stacker - A lightweight file-based CMDB</h1>
-
-<p><a href="https://github.com/jbox-web/stacker/blob/master/LICENSE"><img src="https://img.shields.io/github/license/jbox-web/stacker.svg" alt="GitHub license"/></a>
-<a href="https://github.com/jbox-web/stacker/actions"><img src="https://github.com/jbox-web/stacker/workflows/Stacker%20CI/badge.svg?branch=master" alt="Build Status"/></a></p>
-
+<p><a href="https://github.com/jbox-web/stacker/blob/master/LICENSE"><img src="https://img.shields.io/github/license/jbox-web/stacker.svg" alt="GitHub license" /></a>
+<a href="https://github.com/jbox-web/stacker/actions"><img src="https://github.com/jbox-web/stacker/workflows/Stacker%20CI/badge.svg?branch=master" alt="Build Status" /></a></p>
 <p>Stacker is <a href="https://docs.saltstack.com/en/master/ref/pillar/all/salt.pillar.stack.html">Salt PillarStack</a> in <a href="https://crystal-lang.org/">Crystal</a>.</p>
-
 <p>It is implemented using <a href="https://github.com/straight-shoota/crinja">crinja</a> which is Jinja2 in Crystal :)</p>
-
 <p><a href="https://jbox-web.github.io/stacker/index.html">Documentation</a></p>
-
 <h2><a id="installation" class="anchor" href="#installation">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>Installation</h2>
-
 <h3><a id="manual-compilation" class="anchor" href="#manual-compilation">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>Manual compilation</h3>
-
 <p>To compile under Debian Buster you will need <a href="https://crystal-lang.org/install/on_debian/">Crystal</a></p>
-
 <p>Then :</p>
-
 <pre><code class="language-sh">git clone https://github.com/jbox-web/stacker
 make stacker-release</code></pre>
-
 <h3><a id="docker" class="anchor" href="#docker">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>Docker</h3>
-
 <p>In this case you will need... Docker.</p>
-
 <p>Then :</p>
-
 <pre><code class="language-sh">docker pull nicoladmin/stacker:nightly</code></pre>
-
 <p><strong>Note :</strong> The Docker mode comes with a <a href="https://github.com/jbox-web/stacker/blob/master/stacker.sh">wrapper script</a> to ease interactions with the container</p>
-
 <p>Usage : <code>stacker.sh {start|stop|restart|status|kill|clean|fetch|logs}</code></p>
-
 <h2><a id="the-10-seconds-test-in-web-mode" class="anchor" href="#the-10-seconds-test-in-web-mode">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>The 10 seconds test in Web mode</h2>
-
 <p>First we need to start Stacker with sample data :</p>
-
-<h3><a id="manual-compilation" class="anchor" href="#manual-compilation">
+<h3><a id="manual-compilation-1" class="anchor" href="#manual-compilation-1">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>Manual compilation</h3>
-
 <pre><code class="language-sh">bin/stacker server --config example/stacker.yml</code></pre>
-
-<h3><a id="docker" class="anchor" href="#docker">
+<h3><a id="docker-1" class="anchor" href="#docker-1">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>Docker</h3>
-
 <pre><code class="language-sh">./stacker.sh start</code></pre>
-
 <p>Then fetch pillars with Curl :</p>
-
-<pre><code class="language-sh">curl --no-progress-meter -X POST -H "Content-Type: application/json" -d @example/grains/server1.curl.json http://127.0.0.1:3000/server1.example.net | jq</code></pre>
-
+<pre><code class="language-sh">curl --no-progress-meter -X POST -H &quot;Content-Type: application/json&quot; -d @example/grains/server1.curl.json http://127.0.0.1:3000/server1.example.net | jq</code></pre>
 <p>You can also navigate to http://127.0.0.1:3000/server1.example.net to see the generated pillars.</p>
-
 <h2><a id="the-10-seconds-test-in-cli-mode" class="anchor" href="#the-10-seconds-test-in-cli-mode">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>The 10 seconds test in CLI mode</h2>
-
 <p>In this mode you don't need the webserver to be running :</p>
-
-<h3><a id="manual-compilation" class="anchor" href="#manual-compilation">
+<h3><a id="manual-compilation-2" class="anchor" href="#manual-compilation-2">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>Manual compilation</h3>
-
 <pre><code class="language-sh">bin/stacker fetch server1.example.net --config example/stacker.yml --grains example/grains/server1.json --pillar example/ext_pillar/server1.json | jq</code></pre>
-
-<h3><a id="docker" class="anchor" href="#docker">
+<h3><a id="docker-2" class="anchor" href="#docker-2">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>Docker</h3>
-
 <pre><code class="language-sh">./stacker.sh fetch server1.example.net --grains grains/server1.json --pillar ext_pillar/server1.json | jq</code></pre>
-
 <h2><a id="usage" class="anchor" href="#usage">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>Usage</h2>
-
 <pre><code class="language-sh">Usage:
   bin/stacker [flags...] [arg...]
 
@@ -326,19 +293,14 @@ Subcommands:
   fetch      # Fetch host pillars
   info       # Show Stacker information
   server     # Run Stacker webserver</code></pre>
-
 <h2><a id="configuration" class="anchor" href="#configuration">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>Configuration</h2>
-
 <p>By default Stacker looks for it's configuration file in the current directory (<code>stacker.yml</code>).</p>
-
 <p>You can pass an alternative file by using <code>--config</code> flag.</p>
-
 <p>The configuration file is a YAML file looking like this :</p>
-
 <pre><code class="language-yml">---
 doc_root: example/doc_root
 entrypoint: server-pillars
@@ -358,9 +320,7 @@ stacks:
 server_host: 127.0.0.1
 server_port: 3000
 server_environment: development</code></pre>
-
 <p><strong>Note :</strong> You can use relative or absolute file path.</p>
-
 <p>Config               | Description
 ---------------------|------------
 <code>doc_root</code>           | the webserver document root (must be specified). Since pillar are also crinja templates, it means where are the template files?
@@ -370,96 +330,73 @@ server_environment: development</code></pre>
 <code>server_host</code>        | ip address to bind to (default <code>127.0.0.1</code>)
 <code>server_port</code>        | port to bind to (default <code>3000</code>)
 <code>server_environment</code> | <code>development</code> or <code>production</code> (default <code>production</code>)</p>
-
 <h2><a id="salt-integration" class="anchor" href="#salt-integration">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>Salt integration</h2>
-
 <p>To integrate Stacker with Salt you first need to add the <a href="/salt/stacker.py">stacker pillar module</a> in Salt :</p>
-
-<ol><li>Declare extension modules directory in Salt (<code>/etc/salt/master.conf</code> or <code>/etc/salt/master.d/f_defaults.conf</code>)</li></ol>
-
+<ol>
+<li>Declare extension modules directory in Salt (<code>/etc/salt/master.conf</code> or <code>/etc/salt/master.d/f_defaults.conf</code>)</li>
+</ol>
 <pre><code class="language-yml">extension_modules: /data/salt/modules</code></pre>
-
-<ol><li>Create <code>/data/salt/modules/pillar</code> directory and puts <a href="https://github.com/jbox-web/stacker/blob/master/salt/stacker.py">stacker module</a> in it</li></ol>
-
+<ol start="2">
+<li>Create <code>/data/salt/modules/pillar</code> directory and puts <a href="https://github.com/jbox-web/stacker/blob/master/salt/stacker.py">stacker module</a> in it</li>
+</ol>
 <pre><code class="language-sh">mkdir -p /data/salt/modules/pillar
 wget -O /data/salt/modules/pillar/stacker.py https://raw.githubusercontent.com/jbox-web/stacker/master/salt/stacker.py</code></pre>
-
-<ol><li>Declare the new ext_pillar module in Salt</li></ol>
-
+<ol start="3">
+<li>Declare the new ext_pillar module in Salt</li>
+</ol>
 <pre><code class="language-yml">ext_pillar:
   - stacker: http://127.0.0.1:3000</code></pre>
-
 <p>You can also pass parameters to Stacker module :</p>
-
 <pre><code class="language-yml">ext_pillar:
   - stacker:
       host: http://127.0.0.1:3000
       namespace: 'production'
       log_level: 'debug'</code></pre>
-
-<ol><li>Restart Salt, you're done :)</li></ol>
-
+<ol start="4">
+<li>Restart Salt, you're done :)</li>
+</ol>
 <h2><a id="namespaces" class="anchor" href="#namespaces">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>Namespaces</h2>
-
 <p>Use namespaces by using optional <code>n=</code> query parameter :</p>
-
 <pre><code class="language-sh">curl http://127.0.0.1:3000/server1.example.net?n=dev
 curl http://127.0.0.1:3000/server1.example.net?n=prod</code></pre>
-
 <p>Or with <code>--namespace</code> flag when using Stacker CLI.</p>
-
 <p>The default namespace when query parameter or CLI flag is omited is <code>default</code>.</p>
-
 <h2><a id="output-format" class="anchor" href="#output-format">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>Output format</h2>
-
 <p>Set output format by using optional <code>f=</code> query parameter :</p>
-
 <pre><code class="language-sh">curl http://127.0.0.1:3000/server1.example.net?f=json
 curl http://127.0.0.1:3000/server1.example.net?f=yaml</code></pre>
-
 <p>Or with <code>--output-format</code> flag when using Stacker CLI.</p>
-
 <p>The default output format when query parameter or CLI flag is omited is <code>json</code>.</p>
-
 <p>Only <code>json</code> and <code>yaml</code> are supported.</p>
-
 <h2><a id="logs" class="anchor" href="#logs">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>Logs</h2>
-
-<ul><li>log level</li></ul>
-
+<ul>
+<li>log level</li>
+</ul>
 <p>The log level is dynamic. No need to restart the web server :)</p>
-
 <p>Set log level by using optional <code>l=</code> query parameter :</p>
-
 <pre><code class="language-sh">curl http://127.0.0.1:3000/server1.example.net?l=debug
 curl http://127.0.0.1:3000/server1.example.net?l=trace</code></pre>
-
 <p>Or with <code>--log-level</code> flag when using Stacker CLI.</p>
-
 <p>The default log level when query parameter or CLI flag is omited is <code>info</code>.</p>
-
 <p>Log levels other than <code>debug</code> or <code>trace</code> are meaningless.</p>
-
 <p><code>trace</code> level is very verbose as it dumps data before and after merge operations. In this case you might need some filtering, see below...</p>
-
-<p>&lt;details>&lt;summary>debug level will render something like this :&lt;/summary></p>
-
+<details><summary>debug level will render something like this :</summary>
 <pre><code class="language-sh">2020-10-02T23:18:27.149678Z   INFO - processor: Building stack for: server2.example.net (namespace: prod)
 2020-10-02T23:18:27.149897Z  DEBUG - renderer: Compiled: example/doc_root/server-pillars/stack1.cfg
 2020-10-02T23:18:27.149927Z  DEBUG - processor: Loading: example/doc_root/server-pillars/01-base.yml
@@ -545,93 +482,81 @@ curl http://127.0.0.1:3000/server1.example.net?l=trace</code></pre>
 2020-10-02T23:18:27.155896Z  DEBUG - renderer: Compiled: example/doc_root/server-pillars/server2.example.net/zdump.yml
 2020-10-02T23:18:27.156648Z  DEBUG - processor: Merging: example/doc_root/server-pillars/server2.example.net/zdump.yml
 2020-10-02T23:18:27.156664Z   INFO - processor: End of stack build for: server2.example.net (namespace: prod)</code></pre>
-
-<p>&lt;/details></p>
-
-<ul><li>filter logs by template path</li></ul>
-
+</details>
+<ul>
+<li>filter logs by template path</li>
+</ul>
 <p>Set the file path to debug by using optional <code>p=</code> query parameter :</p>
-
-<pre><code class="language-sh">curl http://127.0.0.1:3000/server1.example.net?l=trace&p=doc_root/pillars/02-roles/server/openssh.yml</code></pre>
-
+<pre><code class="language-sh">curl http://127.0.0.1:3000/server1.example.net?l=trace&amp;p=doc_root/pillars/02-roles/server/openssh.yml</code></pre>
 <p>Or with <code>--path</code> flag when using Stacker CLI.</p>
-
-<ul><li>filter logs by steps</li></ul>
-
+<ul>
+<li>filter logs by steps</li>
+</ul>
 <p>Set the step to debug by using optional <code>s=</code> query parameter :</p>
-
-<pre><code class="language-sh">curl http://127.0.0.1:3000/server1.example.net?l=trace&p=doc_root/pillars/02-roles/server/openssh.yml&s=compile,yaml-load</code></pre>
-
+<pre><code class="language-sh">curl http://127.0.0.1:3000/server1.example.net?l=trace&amp;p=doc_root/pillars/02-roles/server/openssh.yml&amp;s=compile,yaml-load</code></pre>
 <p>Or with <code>--step</code> flag when using Stacker CLI.</p>
-
 <p>Valid options for the <code>step</code> param are : <code>compile</code> | <code>yaml-load</code> | <code>before-merge</code> | <code>after-merge</code> | <code>final</code></p>
-
 <h2><a id="scaling" class="anchor" href="#scaling">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>Scaling</h2>
-
 <p>The Stacker's web design leads to great possibilities :</p>
-
-<ul><li>You can move Stacker and the pillar rendering process out of Salt server :</li></ul>
-
+<ul>
+<li>You can move Stacker and the pillar rendering process out of Salt server :</li>
+</ul>
 <pre><code class="language-yml">ext_pillar:
   - stacker: http://stacker.example.corp:3000</code></pre>
-
-<ul><li>You can run multiple instances of Stacker and call them sequentially :</li></ul>
-
+<ul>
+<li>You can run multiple instances of Stacker and call them sequentially :</li>
+</ul>
 <pre><code class="language-yml">ext_pillar:
   - stacker: http://127.0.0.1:3000?n=foo
   - stacker: http://127.0.0.1:4000?n=bar
   - stacker: http://127.0.0.1:5000?n=baz</code></pre>
-
 <p>With each instance having it's own stack configuration :)</p>
-
 <h2><a id="deployment" class="anchor" href="#deployment">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>Deployment</h2>
-
 <p>You can use the <a href="https://github.com/jbox-web/stacker/blob/master/extra/stacker.service">provided systemd unit</a> to manage the Stacker daemon.</p>
-
 <h2><a id="merging-strategies" class="anchor" href="#merging-strategies">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>Merging strategies</h2>
-
 <p>Stacker implements <a href="https://docs.saltstack.com/en/master/ref/pillar/all/salt.pillar.stack.html#merging-strategies">merging strategies</a> like PillarStack so you can use them in Stacker too :)</p>
-
 <p>It works the same way and it's <a href="/spec/stacker/value_spec.cr#L45">tested</a>.</p>
-
 <h2><a id="template-syntax" class="anchor" href="#template-syntax">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>Template syntax</h2>
-
 <p>The <a href="https://github.com/straight-shoota/crinja/blob/master/TEMPLATE_SYNTAX.md">template syntax</a> is almost the same than Jinja2.</p>
-
 <p><a href="https://docs.saltstack.com/en/master/ref/pillar/all/salt.pillar.stack.html#overall-process">Like PillarStack</a> you have access to these variables :</p>
-
-<ul><li><code>stack</code></li><li><code>pillar</code></li><li><code>minion_id</code></li><li><code>grains</code> (instead of <code>__grains__</code>)</li></ul>
-
+<ul>
+<li><code>stack</code></li>
+<li><code>pillar</code></li>
+<li><code>minion_id</code></li>
+<li><code>grains</code> (instead of <code>__grains__</code>)</li>
+</ul>
 <p>Stacker adds a bunch of filters and functions :</p>
-
 <p>Filters :</p>
-
-<ul><li>json filter (dump json without character escaping) (like the <a href="https://docs.saltstack.com/en/latest/topics/jinja/index.html#tojson">Salt one</a>)</li><li>traverse filter (like the <a href="https://docs.saltstack.com/en/latest/topics/jinja/index.html#traverse">Salt one</a>)</li><li>unique filter (like the <a href="https://docs.saltstack.com/en/latest/topics/jinja/index.html#unique">Salt one</a>)</li></ul>
-
+<ul>
+<li>json filter (dump json without character escaping) (like the <a href="https://docs.saltstack.com/en/latest/topics/jinja/index.html#tojson">Salt one</a>)</li>
+<li>traverse filter (like the <a href="https://docs.saltstack.com/en/latest/topics/jinja/index.html#traverse">Salt one</a>)</li>
+<li>unique filter (like the <a href="https://docs.saltstack.com/en/latest/topics/jinja/index.html#unique">Salt one</a>)</li>
+</ul>
 <p>Functions :</p>
-
-<ul><li>log function (like the <a href="https://docs.saltstack.com/en/latest/topics/jinja/index.html#logs">Salt one</a>)</li><li>dump function (it dumps objects to YAML in log file)</li><li>array_push function</li><li>merge_dict function</li></ul>
-
+<ul>
+<li>log function (like the <a href="https://docs.saltstack.com/en/latest/topics/jinja/index.html#logs">Salt one</a>)</li>
+<li>dump function (it dumps objects to YAML in log file)</li>
+<li>array_push function</li>
+<li>merge_dict function</li>
+</ul>
 <p>You can see examples of code in the <a href="https://jbox-web.github.io/stacker/Stacker/Runtime/Filter/Json.html">documentation</a>.</p>
-
 <p>The following filters/tests/functions/tags/operators are supported :</p>
-
 <pre><code class="language-crystal">filters:
   abs()
   append(string=)
@@ -769,28 +694,24 @@ operators:
   operator[not]
   operator[or]
   operator[~]</code></pre>
-
 <h2><a id="extend-stacker" class="anchor" href="#extend-stacker">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>Extend Stacker</h2>
-
 <p>If you need to add filters (or functions) just drop a new class with a few lines of Crystal code in <a href="https://github.com/jbox-web/stacker/tree/master/src/runtime">/src/runtime</a> and recompile Stacker with <code>make stacker</code> (dev mode) or <code>make stacker-release</code> (release mode).</p>
-
 <p>Your custom filters (or functions) should be available in Jinja templates. To be sure run <code>stacker info</code> and check the Crinja environment info.</p>
-
 <p>Then feel free to submit a PR if you think it will be useful for people.</p>
-
 <p><strong>Note:</strong> <code>make stacker-static</code> only works on Alpine Linux because it's the only distribution where Crystal supports static linking.</p>
-
 <h2><a id="roadmap" class="anchor" href="#roadmap">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>Roadmap</h2>
-
-<ul><li>implement <a href="https://github.com/saltstack/salt/blob/a670b4ae72ec11f5485c216c54059e14223019b8/salt/pillar/stack.py#L77">Select Stacker config through grains|pillar|opts matching</a></li><li>add documentation about "Stacker - Sample Project"</li></ul>
+<ul>
+<li>implement <a href="https://github.com/saltstack/salt/blob/a670b4ae72ec11f5485c216c54059e14223019b8/salt/pillar/stack.py#L77">Select Stacker config through grains|pillar|opts matching</a></li>
+<li>add documentation about &quot;Stacker - Sample Project&quot;</li>
+</ul>
 </div>
 </body>
 </html>
