@@ -3,10 +3,19 @@
 #############
 
 SOURCE_FILE  = src/stacker.cr
-OUTPUT_FILE  = bin/stacker
+OUTPUT_FILE  = bin/stacker-${TARGETOS}-${TARGETARCH}
 COMPILE_OPTS = --threads 4 --release --progress --error-trace
 
-deps-prod: ## Install production dependencies
+debug: ## Display build environment config
+	@uname -a
+	@echo "TARGETPLATFORM: ${TARGETPLATFORM}"
+	@echo "TARGETOS: ${TARGETOS}"
+	@echo "TARGETARCH: ${TARGETARCH}"
+	@echo "TARGETVARIANT: ${TARGETVARIANT}"
+	@echo "SOURCE_FILE: $(SOURCE_FILE)"
+	@echo "OUTPUT_FILE: $(OUTPUT_FILE)"
+
+deps-prod: debug ## Install production dependencies
 	shards install --production
 
 stacker-static: deps-prod ## Compile to production binary (static mode)

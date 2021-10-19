@@ -1,6 +1,7 @@
 # Ignore generated data
 /docs/
 /lib/
+/packages/
 
 # Ignore all bin files
 /bin/*

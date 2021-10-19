@@ -1,3 +1,7 @@
+# Ensure that every command in this Makefile
+# will run with bash instead of the default sh
+SHELL := /usr/bin/env bash
+
 #############
 # Constants #
 #############
@@ -53,8 +57,15 @@ install: ## Install stacker in $(INSTALL_DIR)
 uninstall: ## Uninstall stacker from $(INSTALL_DIR)
 	rm -f $(INSTALL_DIR)/stacker
 
-docker: ## Build Docker image
+docker-image: ## Build Docker image for local development
 	docker build . -t $(DOCKER_TAG)
+
+docker-release: ## Build multiplatforms Docker images with Earthly
+	earthly --ci --output +all-docker-images
+
+binary-release: ## Build static binary with Earthly
+	earthly --ci --output +all-binaries
+	cd packages; for f in *; do shasum --algorithm 256 $$f > $$f.sha256; done
 
 doc: ## Generate Stacker documentation
 	rm -rf docs
