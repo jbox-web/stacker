@@ -27,7 +27,7 @@ function docker_create() {
         ${CONTAINER_ARGS}
 }
 
-function docker_run() {
+function docker_fetch() {
   local args="$@"
   docker run \
         --rm \
@@ -36,6 +36,15 @@ function docker_run() {
         fetch \
         ${CONTAINER_ARGS} \
         ${args}
+}
+
+function docker_info() {
+  docker run \
+        --rm \
+        --volume ${CONTAINER_VOLUME} \
+        ${CONTAINER_IMAGE} \
+        info \
+        ${CONTAINER_ARGS}
 }
 
 function docker_start() {
@@ -100,7 +109,11 @@ case "$1" in
 
   fetch)
     shift
-    docker_run "$@"
+    docker_fetch "$@"
+  ;;
+
+  info)
+    docker_info
   ;;
 
   logs)
@@ -108,7 +121,7 @@ case "$1" in
   ;;
 
   *)
-    echo "Usage: stacker.sh {start|stop|restart|status|kill|clean|fetch|logs}" >&2
+    echo "Usage: stacker.sh {start|stop|restart|status|kill|clean|fetch|info|logs}" >&2
     exit 3
   ;;
 esac
