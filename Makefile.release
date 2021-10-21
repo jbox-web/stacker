@@ -6,6 +6,10 @@ SOURCE_FILE  = src/stacker.cr
 OUTPUT_FILE  = bin/stacker-${TARGETOS}-${TARGETARCH}
 COMPILE_OPTS = --threads 4 --release --progress --error-trace
 
+#########
+# Tasks #
+#########
+
 debug: ## Display build environment config
 	@uname -a
 	@echo "TARGETPLATFORM: ${TARGETPLATFORM}"

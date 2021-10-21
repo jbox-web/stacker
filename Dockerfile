@@ -2,7 +2,7 @@
 # BUILD #
 #########
 
-# Build from Crystal upstream image
+# Build stacker with Crystal upstream image
 # Use alpine variant to build static binary
 FROM crystallang/crystal:1.2.0-alpine AS binary-file
 
@@ -37,7 +37,7 @@ RUN make stacker-static
 # RUNTIME #
 ###########
 
-# Build from Alpine upstream
+# Build distroless images \o/
 FROM gcr.io/distroless/static-debian11 AS docker-image
 
 # Fetch platforms variables from ARGS
