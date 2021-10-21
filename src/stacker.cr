@@ -25,7 +25,7 @@ require "./runtime/filter/*"
 require "./runtime/function/*"
 
 module Stacker
-  VERSION = "0.1.0"
+  VERSION = "1.0.0"
 
   @@log_file : File? | IO::FileDescriptor?
 
