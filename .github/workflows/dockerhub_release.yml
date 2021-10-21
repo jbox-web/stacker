@@ -24,21 +24,16 @@ jobs:
     runs-on: ubuntu-20.04
     needs: test
     steps:
+      - name: Git checkout
+        uses: actions/checkout@v2
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
       - name: Setup Earthly
         uses: earthly/actions/setup-earthly@v1
         with:
           version: v0.5.24
-
-      # See: https://docs.earthly.dev/docs/guides/multi-platform#github-actions
-      - name: Set up QEMU
-        id: qemu
-        uses: docker/setup-qemu-action@v1
-        with:
-          image: tonistiigi/binfmt:latest
-          platforms: all
-
-      - name: Git checkout
-        uses: actions/checkout@v2
 
       - name: Build static binary
         run: make binary-release
