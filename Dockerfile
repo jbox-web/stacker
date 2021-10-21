@@ -41,10 +41,8 @@ RUN make stacker-static
 FROM gcr.io/distroless/static-debian11 AS docker-image
 
 # Fetch platforms variables from ARGS
-ARG TARGETPLATFORM
 ARG TARGETOS
 ARG TARGETARCH
-ARG TARGETVARIANT
 
 # Grab stacker binary from **binary-file** step and inject it in the final image
 COPY --from=binary-file /build/bin/stacker-${TARGETOS}-${TARGETARCH} /usr/bin/stacker
