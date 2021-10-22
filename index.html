@@ -208,7 +208,7 @@
   </svg>
 </a>Stacker - A lightweight file-based CMDB</h1>
 <p><a href="https://github.com/jbox-web/stacker/blob/master/LICENSE"><img src="https://img.shields.io/github/license/jbox-web/stacker.svg" alt="GitHub license" /></a>
-<a href="https://github.com/jbox-web/stacker/actions"><img src="https://github.com/jbox-web/stacker/workflows/Stacker%20CI/badge.svg?branch=master" alt="Build Status" /></a></p>
+<a href="https://github.com/jbox-web/stacker/actions/workflows/ci.yml"><img src="https://github.com/jbox-web/stacker/actions/workflows/ci.yml/badge.svg" alt="Build Status" /></a></p>
 <p>Stacker is <a href="https://docs.saltstack.com/en/master/ref/pillar/all/salt.pillar.stack.html">Salt PillarStack</a> in <a href="https://crystal-lang.org/">Crystal</a>.</p>
 <p>It is implemented using <a href="https://github.com/straight-shoota/crinja">crinja</a> which is Jinja2 in Crystal :)</p>
 <p><a href="https://jbox-web.github.io/stacker/index.html">Documentation</a></p>
@@ -217,24 +217,22 @@
     <use href="#octicon-link"/>
   </svg>
 </a>Installation</h2>
-<h3><a id="manual-compilation" class="anchor" href="#manual-compilation">
+<h3><a id="manual-installation" class="anchor" href="#manual-installation">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
-</a>Manual compilation</h3>
-<p>To compile under Debian Buster you will need <a href="https://crystal-lang.org/install/on_debian/">Crystal</a></p>
-<p>Then :</p>
-<pre><code class="language-sh">git clone https://github.com/jbox-web/stacker
-make stacker-release</code></pre>
+</a>Manual installation</h3>
+<p>Grab the latest binary from the <a href="https://github.com/jbox-web/stacker/releases">releases</a> page and run it with the <a href="https://github.com/jbox-web/stacker/tree/master/example">sample configuration project</a>:</p>
+<p>If you use <a href="https://github.com/asdf-vm/asdf">asdf</a> you can also install Stacker with <a href="https://github.com/jbox-web/asdf-stacker">asdf-stacker</a>.</p>
 <h3><a id="docker" class="anchor" href="#docker">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>Docker</h3>
-<p>In this case you will need... Docker.</p>
-<p>Then :</p>
-<pre><code class="language-sh">docker pull nicoladmin/stacker:nightly</code></pre>
+<pre><code class="language-sh">docker pull nicoladmin/stacker:latest</code></pre>
 <p><strong>Note :</strong> The Docker mode comes with a <a href="https://github.com/jbox-web/stacker/blob/master/stacker.sh">wrapper script</a> to ease interactions with the container</p>
+<pre><code class="language-sh">curl -sSL -o stacker.sh https://raw.githubusercontent.com/jbox-web/stacker/master/stacker.sh
+chmod +x stacker.sh</code></pre>
 <p>Usage : <code>stacker.sh {start|stop|restart|status|kill|clean|fetch|logs}</code></p>
 <h2><a id="the-10-seconds-test-in-web-mode" class="anchor" href="#the-10-seconds-test-in-web-mode">
   <svg class="octicon-link" aria-hidden="true">
@@ -242,12 +240,12 @@ make stacker-release</code></pre>
   </svg>
 </a>The 10 seconds test in Web mode</h2>
 <p>First we need to start Stacker with sample data :</p>
-<h3><a id="manual-compilation-1" class="anchor" href="#manual-compilation-1">
+<h3><a id="manual-installation-1" class="anchor" href="#manual-installation-1">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
-</a>Manual compilation</h3>
-<pre><code class="language-sh">bin/stacker server --config example/stacker.yml</code></pre>
+</a>Manual installation</h3>
+<pre><code class="language-sh">stacker server --config example/stacker.yml</code></pre>
 <h3><a id="docker-1" class="anchor" href="#docker-1">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
@@ -263,12 +261,12 @@ make stacker-release</code></pre>
   </svg>
 </a>The 10 seconds test in CLI mode</h2>
 <p>In this mode you don't need the webserver to be running :</p>
-<h3><a id="manual-compilation-2" class="anchor" href="#manual-compilation-2">
+<h3><a id="manual-installation-2" class="anchor" href="#manual-installation-2">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
-</a>Manual compilation</h3>
-<pre><code class="language-sh">bin/stacker fetch server1.example.net --config example/stacker.yml --grains example/grains/server1.json --pillar example/ext_pillar/server1.json | jq</code></pre>
+</a>Manual installation</h3>
+<pre><code class="language-sh">stacker fetch server1.example.net --config example/stacker.yml --grains example/grains/server1.json --pillar example/ext_pillar/server1.json | jq</code></pre>
 <h3><a id="docker-2" class="anchor" href="#docker-2">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
@@ -281,7 +279,7 @@ make stacker-release</code></pre>
   </svg>
 </a>Usage</h2>
 <pre><code class="language-sh">Usage:
-  bin/stacker [flags...] [arg...]
+  stacker [flags...] [arg...]
 
 Stacker is Salt PillarStack in Crystal
 
@@ -703,6 +701,18 @@ operators:
 <p>Your custom filters (or functions) should be available in Jinja templates. To be sure run <code>stacker info</code> and check the Crinja environment info.</p>
 <p>Then feel free to submit a PR if you think it will be useful for people.</p>
 <p><strong>Note:</strong> <code>make stacker-static</code> only works on Alpine Linux because it's the only distribution where Crystal supports static linking.</p>
+<h2><a id="development" class="anchor" href="#development">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Development</h2>
+<p>To compile Stacker you will need <a href="https://crystal-lang.org">Crystal</a> compiler.</p>
+<p>You can easily setup your development environment with <a href="https://github.com/asdf-vm/asdf">asdf</a> :</p>
+<pre><code class="language-sh">git clone https://github.com/jbox-web/stacker
+make setup  # Install asdf Crystal plugin and install Crystal compiler
+make deps   # Install Stacker dependencies
+make build  # Build Stacker in development mode
+make relase # Build Stacker in production mode</code></pre>
 <h2><a id="roadmap" class="anchor" href="#roadmap">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
