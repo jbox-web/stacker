@@ -1,9 +1,9 @@
 ---
-name: CI
+name: CI Nightly
 
 on:
-  - push
-  - pull_request
+  schedule:
+    - cron: '0 23 * * *'
 
 
 jobs:
@@ -16,7 +16,8 @@ jobs:
       - name: Setup Crystal
         uses: crystal-lang/install-crystal@v1
         with:
-          crystal: 1.2.0
+          crystal: nightly
+          shards: nightly
 
       - name: Install dependencies
         run: make deps
@@ -33,7 +34,8 @@ jobs:
       - name: Setup Crystal
         uses: crystal-lang/install-crystal@v1
         with:
-          crystal: 1.2.0
+          crystal: nightly
+          shards: nightly
 
       - name: Install dependencies
         run: make deps

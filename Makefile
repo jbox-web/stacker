@@ -8,47 +8,76 @@ SHELL := /usr/bin/env bash
 
 PREFIX      ?= /usr/local
 INSTALL_DIR  = $(PREFIX)/bin
+
 SOURCE_FILE  = src/stacker.cr
 OUTPUT_FILE  = bin/stacker
-COMPILE_OPTS = --threads 4 --release --progress --error-trace
-DOCKER_TAG   = nicoladmin/stacker:nightly
 
-################
-# Public tasks #
-################
+SPEC_OPTS            =
+COMPILE_OPTS_DEV     = --threads 4
+COMPILE_OPTS_RELEASE = --threads 4 --release --error-trace
+
+ifeq ($(shell tty -s && echo true),true)
+  SPEC_OPTS += --verbose
+  COMPILE_OPTS_DEV += --progress
+  COMPILE_OPTS_RELEASE += --progress
+endif
 
 # This is the default task
 all: help
+
+.PHONY: all
+
+#####################
+# Development tasks #
+#####################
 
 setup: ## Setup local environment
 	asdf plugin add crystal || true
 	asdf install
 	asdf current
 
-stacker: ## Compile to development binary
-	crystal build --threads 4 -o $(OUTPUT_FILE) $(SOURCE_FILE)
+build: ## Compile to development binary
+	crystal build $(COMPILE_OPTS_DEV) -o $(OUTPUT_FILE) $(SOURCE_FILE)
 
-stacker-release: clean deps-prod ## Compile to production binary
-	crystal build $(COMPILE_OPTS) -o $(OUTPUT_FILE) $(SOURCE_FILE)
-
-stacker-static: clean deps-prod ## Compile to production binary (static mode)
-	crystal build $(COMPILE_OPTS) --static -o $(OUTPUT_FILE) $(SOURCE_FILE)
-
-spec: ## Run Crystal spec
-	@if tty -s; then \
-	  crystal spec --verbose; \
-	else \
-	  crystal spec; \
-	fi
+deps: ## Install development dependencies
+	shards install
 
 clean: ## Cleanup environment
 	rm -rf bin/*
 	rm -rf lib/
 
-deps: ## Install development dependencies
-	shards install
+spec: ## Run Crystal spec
+	crystal spec $(SPEC_OPTS)
 
-deps-prod: ## Install production dependencies
+doc: ## Generate Stacker documentation
+	rm -rf docs
+	crystal doc
+
+.PHONY: setup build deps clean spec doc
+
+
+############################
+# Docker Development tasks #
+############################
+
+docker-image: ## Build local platform Docker image for local development
+	docker build . -t stacker-dev:latest
+
+docker-images: ## Build multiplatforms Docker images with Earthly
+	earthly --ci --output +all-docker-images
+
+.PHONY: docker-image docker-images
+
+
+#################
+# Release tasks #
+#################
+
+release: ## Compile to production binary
+	crystal build $(COMPILE_OPTS_RELEASE) -o $(OUTPUT_FILE) $(SOURCE_FILE)
+	cd bin; for f in *; do shasum --algorithm 256 $$f > $$f.sha256; done
+
+deps-release: ## Install production dependencies
 	shards install --production
 
 install: ## Install stacker in $(INSTALL_DIR)
@@ -57,21 +86,12 @@ install: ## Install stacker in $(INSTALL_DIR)
 uninstall: ## Uninstall stacker from $(INSTALL_DIR)
 	rm -f $(INSTALL_DIR)/stacker
 
-docker-image: ## Build Docker image for local development
-	docker build . -t $(DOCKER_TAG)
-
-docker-release: ## Build multiplatforms Docker images with Earthly
-	earthly --ci --output +all-docker-images
-
-binary-release: ## Build static binary with Earthly
+release-static: ## Build static binary with Earthly
 	earthly --ci --output +all-binaries
 	cd packages; for f in *; do shasum --algorithm 256 $$f > $$f.sha256; done
 
-doc: ## Generate Stacker documentation
-	rm -rf docs
-	crystal doc
+.PHONY: release deps-release install uninstall release-static
 
-.PHONY: all setup stacker stacker-release stacker-static spec clean deps deps-prod install uninstall docker doc
 
 #################
 # Private tasks #
@@ -79,3 +99,5 @@ doc: ## Generate Stacker documentation
 
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+
+.PHONY: help

@@ -30,7 +30,7 @@ COPY src/ /build/src/
 RUN mkdir /build/bin
 
 # Build the binary
-RUN make stacker-static
+RUN make release
 
 
 ###########
@@ -45,7 +45,7 @@ ARG TARGETOS
 ARG TARGETARCH
 
 # Grab stacker binary from **binary-file** step and inject it in the final image
-COPY --from=binary-file /build/bin/stacker-${TARGETOS}-${TARGETARCH} /usr/bin/stacker
+COPY --from=binary-file /build/bin/stacker-${TARGETOS}-${TARGETARCH}-static /usr/bin/stacker
 
 # Set runtime environment
 USER nonroot

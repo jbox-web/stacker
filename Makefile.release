@@ -3,8 +3,8 @@
 #############
 
 SOURCE_FILE  = src/stacker.cr
-OUTPUT_FILE  = bin/stacker-${TARGETOS}-${TARGETARCH}
-COMPILE_OPTS = --threads 4 --release --progress --error-trace
+OUTPUT_FILE  = bin/stacker-${TARGETOS}-${TARGETARCH}-static
+COMPILE_OPTS = --threads 4 --release --error-trace --static
 
 #########
 # Tasks #
@@ -19,8 +19,8 @@ debug: ## Display build environment config
 	@echo "SOURCE_FILE: $(SOURCE_FILE)"
 	@echo "OUTPUT_FILE: $(OUTPUT_FILE)"
 
-deps-prod: debug ## Install production dependencies
+deps: debug ## Install production dependencies
 	shards install --production
 
-stacker-static: deps-prod ## Compile to production binary (static mode)
-	crystal build $(COMPILE_OPTS) --static -o $(OUTPUT_FILE) $(SOURCE_FILE)
+release: deps ## Compile to production binary (static mode)
+	crystal build $(COMPILE_OPTS) -o $(OUTPUT_FILE) $(SOURCE_FILE)

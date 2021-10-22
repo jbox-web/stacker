@@ -1,5 +1,5 @@
 ---
-name: Dockerhub Release
+name: Release Dockerhub
 
 on:
   push:
@@ -7,48 +7,10 @@ on:
       - '*'
 
 jobs:
-  test:
+  release_docker:
     runs-on: ubuntu-20.04
-    container:
-      image: crystallang/crystal:1.2.0
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Install dependencies
-        run: make deps
-
-      - name: Run tests
-        run: make spec
-
-  publish-binary:
-    runs-on: ubuntu-20.04
-    needs: test
     steps:
       - name: Git checkout
-        uses: actions/checkout@v2
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
-
-      - name: Setup Earthly
-        uses: earthly/actions/setup-earthly@v1
-        with:
-          version: v0.5.24
-
-      - name: Build static binary
-        run: make binary-release
-
-      - name: Publish assets
-        uses: ncipollo/release-action@v1
-        with:
-          artifacts: "packages/*"
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-  publish-docker:
-    runs-on: ubuntu-20.04
-    needs: test
-    steps:
-      - name: Checkout
         uses: actions/checkout@v2
 
       - name: Docker meta
@@ -81,7 +43,8 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          platforms: linux/amd64
+          platforms:
+            - linux/amd64
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

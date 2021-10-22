@@ -14,4 +14,4 @@ build-binary:
 
 build-docker:
   FROM DOCKERFILE --target docker-image .
-  SAVE IMAGE stacker
+  SAVE IMAGE stacker-dev-multi:latest
