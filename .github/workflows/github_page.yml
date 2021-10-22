@@ -16,7 +16,7 @@ jobs:
       - name: Setup Crystal
         uses: crystal-lang/install-crystal@v1
         with:
-          crystal: 1.2.0
+          crystal: 1.2.1
 
       - name: Install dependencies
         run: make deps
@@ -34,7 +34,7 @@ jobs:
       - name: Setup Crystal
         uses: crystal-lang/install-crystal@v1
         with:
-          crystal: 1.2.0
+          crystal: 1.2.1
 
       - name: Install dependencies
         run: make deps
