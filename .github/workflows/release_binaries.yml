@@ -22,7 +22,7 @@ jobs:
         run: make deps-release
 
       - name: Build binary
-        run: make release
+        run: make release OUTPUT_FILE=stacker-linux-amd64
 
       - name: Create release and publish assets
         uses: ncipollo/release-action@v1
@@ -70,7 +70,7 @@ jobs:
         run: make deps-release
 
       - name: Build binary
-        run: make release
+        run: make release OUTPUT_FILE=stacker-darwin-amd64
 
       - name: Create release and publish assets
         uses: ncipollo/release-action@v1

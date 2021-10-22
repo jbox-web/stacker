@@ -9,8 +9,9 @@ SHELL := /usr/bin/env bash
 PREFIX      ?= /usr/local
 INSTALL_DIR  = $(PREFIX)/bin
 
-SOURCE_FILE  = src/stacker.cr
-OUTPUT_FILE  = bin/stacker
+SOURCE_FILE = src/stacker.cr
+OUTPUT_DIR  = bin
+OUTPUT_FILE = stacker
 
 SPEC_OPTS            =
 COMPILE_OPTS_DEV     = --threads 4
@@ -37,7 +38,7 @@ setup: ## Setup local environment
 	asdf current
 
 build: ## Compile to development binary
-	crystal build $(COMPILE_OPTS_DEV) -o $(OUTPUT_FILE) $(SOURCE_FILE)
+	crystal build $(COMPILE_OPTS_DEV) -o $(OUTPUT_DIR)/$(OUTPUT_FILE) $(SOURCE_FILE)
 
 deps: ## Install development dependencies
 	shards install
@@ -74,14 +75,14 @@ docker-images: ## Build multiplatforms Docker images with Earthly
 #################
 
 release: ## Compile to production binary
-	crystal build $(COMPILE_OPTS_RELEASE) -o $(OUTPUT_FILE) $(SOURCE_FILE)
+	crystal build $(COMPILE_OPTS_RELEASE) -o $(OUTPUT_DIR)/$(OUTPUT_FILE) $(SOURCE_FILE)
 	cd bin; for f in *; do shasum --algorithm 256 $$f > $$f.sha256; done
 
 deps-release: ## Install production dependencies
 	shards install --production
 
 install: ## Install stacker in $(INSTALL_DIR)
-	cp $(OUTPUT_FILE) $(INSTALL_DIR)/stacker
+	cp $(OUTPUT_DIR)/$(OUTPUT_FILE) $(INSTALL_DIR)/stacker
 
 uninstall: ## Uninstall stacker from $(INSTALL_DIR)
 	rm -f $(INSTALL_DIR)/stacker
