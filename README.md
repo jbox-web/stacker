@@ -2,6 +2,7 @@
 
 [![GitHub license](https://img.shields.io/github/license/jbox-web/stacker.svg)](https://github.com/jbox-web/stacker/blob/master/LICENSE)
 [![Build Status](https://github.com/jbox-web/stacker/actions/workflows/ci.yml/badge.svg)](https://github.com/jbox-web/stacker/actions/workflows/ci.yml)
+[![Build Status](https://img.shields.io/docker/v/nicoladmin/stacker/latest?color=green&label=Docker%20Image&logo=docker)](https://hub.docker.com/r/nicoladmin/stacker)
 
 Stacker is [Salt PillarStack](https://docs.saltstack.com/en/master/ref/pillar/all/salt.pillar.stack.html) in [Crystal](https://crystal-lang.org/).
 
@@ -533,16 +534,6 @@ operators:
   operator[~]
 ```
 
-## Extend Stacker
-
-If you need to add filters (or functions) just drop a new class with a few lines of Crystal code in [/src/runtime](https://github.com/jbox-web/stacker/tree/master/src/runtime) and recompile Stacker with `make stacker` (dev mode) or `make stacker-release` (release mode).
-
-Your custom filters (or functions) should be available in Jinja templates. To be sure run `stacker info` and check the Crinja environment info.
-
-Then feel free to submit a PR if you think it will be useful for people.
-
-**Note:** `make stacker-static` only works on Alpine Linux because it's the only distribution where Crystal supports static linking.
-
 ## Development
 
 To compile Stacker you will need [Crystal](https://crystal-lang.org) compiler.
@@ -556,6 +547,14 @@ make deps   # Install Stacker dependencies
 make build  # Build Stacker in development mode
 make relase # Build Stacker in production mode
 ```
+
+## Extend Stacker
+
+If you need to add filters (or functions) just drop a new class with a few lines of Crystal code in [/src/runtime](https://github.com/jbox-web/stacker/tree/master/src/runtime) and recompile Stacker with `make build` (dev mode) or `make release` (release mode).
+
+Your custom filters (or functions) should be available in Jinja templates. To be sure run `stacker info` and check the Crinja environment info.
+
+Then feel free to submit a PR if you think it will be useful for people.
 
 ## Roadmap
 
