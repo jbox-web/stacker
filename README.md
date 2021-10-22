@@ -1,7 +1,7 @@
 # Stacker - A lightweight file-based CMDB
 
 [![GitHub license](https://img.shields.io/github/license/jbox-web/stacker.svg)](https://github.com/jbox-web/stacker/blob/master/LICENSE)
-[![Build Status](https://github.com/jbox-web/stacker/workflows/Stacker%20CI/badge.svg?branch=master)](https://github.com/jbox-web/stacker/actions)
+[![Build Status](https://github.com/jbox-web/stacker/actions/workflows/ci.yml/badge.svg)](https://github.com/jbox-web/stacker/actions/workflows/ci.yml)
 
 Stacker is [Salt PillarStack](https://docs.saltstack.com/en/master/ref/pillar/all/salt.pillar.stack.html) in [Crystal](https://crystal-lang.org/).
 
@@ -11,39 +11,36 @@ It is implemented using [crinja](https://github.com/straight-shoota/crinja) whic
 
 ## Installation
 
-### Manual compilation
+### Manual installation
 
-To compile under Debian Buster you will need [Crystal](https://crystal-lang.org/install/on_debian/)
+Grab the latest binary from the [releases](https://github.com/jbox-web/stacker/releases) page and run it with the [sample configuration project](https://github.com/jbox-web/stacker/tree/master/example).
 
-Then :
-
-```sh
-git clone https://github.com/jbox-web/stacker
-make stacker-release
-```
+If you use [asdf](https://github.com/asdf-vm/asdf) you can also install Stacker with [asdf-stacker](https://github.com/jbox-web/asdf-stacker).
 
 ### Docker
 
-In this case you will need... Docker.
-
-Then :
-
 ```sh
-docker pull nicoladmin/stacker:nightly
+docker pull nicoladmin/stacker:latest
 ```
 
 **Note :** The Docker mode comes with a [wrapper script](https://github.com/jbox-web/stacker/blob/master/stacker.sh) to ease interactions with the container
 
-Usage : `stacker.sh {start|stop|restart|status|kill|clean|fetch|logs}`
+```sh
+curl -sSL -o stacker.sh https://raw.githubusercontent.com/jbox-web/stacker/master/stacker.sh
+chmod +x stacker.sh
+```
+
+Usage : `stacker.sh {start|stop|restart|status|kill|clean|fetch|info|logs}`
+
 
 ## The 10 seconds test in Web mode
 
 First we need to start Stacker with sample data :
 
-### Manual compilation
+### Manual installation
 
 ```sh
-bin/stacker server --config example/stacker.yml
+stacker server --config example/stacker.yml
 ```
 
 ### Docker
@@ -64,10 +61,10 @@ You can also navigate to http://127.0.0.1:3000/server1.example.net to see the ge
 
 In this mode you don't need the webserver to be running :
 
-### Manual compilation
+### Manual installation
 
 ```sh
-bin/stacker fetch server1.example.net --config example/stacker.yml --grains example/grains/server1.json --pillar example/ext_pillar/server1.json | jq
+stacker fetch server1.example.net --config example/stacker.yml --grains example/grains/server1.json --pillar example/ext_pillar/server1.json | jq
 ```
 
 ### Docker
@@ -80,7 +77,7 @@ bin/stacker fetch server1.example.net --config example/stacker.yml --grains exam
 
 ```sh
 Usage:
-  bin/stacker [flags...] [arg...]
+  stacker [flags...] [arg...]
 
 Stacker is Salt PillarStack in Crystal
 
@@ -545,6 +542,20 @@ Your custom filters (or functions) should be available in Jinja templates. To be
 Then feel free to submit a PR if you think it will be useful for people.
 
 **Note:** `make stacker-static` only works on Alpine Linux because it's the only distribution where Crystal supports static linking.
+
+## Development
+
+To compile Stacker you will need [Crystal](https://crystal-lang.org) compiler.
+
+You can easily setup your development environment with [asdf](https://github.com/asdf-vm/asdf) :
+
+```sh
+git clone https://github.com/jbox-web/stacker
+make setup  # Install asdf Crystal plugin and install Crystal compiler
+make deps   # Install Stacker dependencies
+make build  # Build Stacker in development mode
+make relase # Build Stacker in production mode
+```
 
 ## Roadmap
 
