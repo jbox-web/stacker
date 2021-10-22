@@ -693,15 +693,6 @@ operators:
   operator[not]
   operator[or]
   operator[~]</code></pre>
-<h2><a id="extend-stacker" class="anchor" href="#extend-stacker">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>Extend Stacker</h2>
-<p>If you need to add filters (or functions) just drop a new class with a few lines of Crystal code in <a href="https://github.com/jbox-web/stacker/tree/master/src/runtime">/src/runtime</a> and recompile Stacker with <code>make stacker</code> (dev mode) or <code>make stacker-release</code> (release mode).</p>
-<p>Your custom filters (or functions) should be available in Jinja templates. To be sure run <code>stacker info</code> and check the Crinja environment info.</p>
-<p>Then feel free to submit a PR if you think it will be useful for people.</p>
-<p><strong>Note:</strong> <code>make stacker-static</code> only works on Alpine Linux because it's the only distribution where Crystal supports static linking.</p>
 <h2><a id="development" class="anchor" href="#development">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
@@ -714,6 +705,14 @@ make setup  # Install asdf Crystal plugin and install Crystal compiler
 make deps   # Install Stacker dependencies
 make build  # Build Stacker in development mode
 make relase # Build Stacker in production mode</code></pre>
+<h2><a id="extend-stacker" class="anchor" href="#extend-stacker">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Extend Stacker</h2>
+<p>If you need to add filters (or functions) just drop a new class with a few lines of Crystal code in <a href="https://github.com/jbox-web/stacker/tree/master/src/runtime">/src/runtime</a> and recompile Stacker with <code>make build</code> (dev mode) or <code>make release</code> (release mode).</p>
+<p>Your custom filters (or functions) should be available in Jinja templates. To be sure run <code>stacker info</code> and check the Crinja environment info.</p>
+<p>Then feel free to submit a PR if you think it will be useful for people.</p>
 <h2><a id="roadmap" class="anchor" href="#roadmap">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
