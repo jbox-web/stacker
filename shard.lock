@@ -10,23 +10,19 @@ shards:
 
   crinja:
     git: https://github.com/straight-shoota/crinja.git
-    version: 0.8.0+git.commit.ca17c3d698b2d1d7ccc702079e93e31788caabb2
+    version: 0.8.0+git.commit.c7d271600929d83f690bdd5f9a3d32d5037106ba
 
   crystal-env:
     git: https://github.com/crystal-lang/crystal-env.git
-    version: 0.1.0+git.commit.172cf5709b56831b8a2581d826f0262ac4f7cffd
+    version: 0.1.0+git.commit.05a1d92cfbb11a75a0077323b9631a467b7a6b91
 
   exception_page:
     git: https://github.com/crystal-loot/exception_page.git
-    version: 0.2.0
+    version: 0.2.1
 
   kemal:
     git: https://github.com/kemalcr/kemal.git
-    version: 1.1.0+git.commit.a251ede5bdbf9ce41c238530839cce5a7206930c
-
-  kilt:
-    git: https://github.com/jeromegn/kilt.git
-    version: 0.6.1
+    version: 1.1.0+git.commit.5e2efec0503622267b57d03fe7d5151000d3bf47
 
   radix:
     git: https://github.com/luislavena/radix.git
