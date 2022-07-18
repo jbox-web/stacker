@@ -10,7 +10,7 @@ shards:
 
   crinja:
     git: https://github.com/straight-shoota/crinja.git
-    version: 0.8.0+git.commit.c7d271600929d83f690bdd5f9a3d32d5037106ba
+    version: 0.8.0+git.commit.0160fa392b2bf12b475130af127f63bf389eba7a
 
   crystal-env:
     git: https://github.com/crystal-lang/crystal-env.git
