@@ -18,11 +18,11 @@ shards:
 
   exception_page:
     git: https://github.com/crystal-loot/exception_page.git
-    version: 0.2.1
+    version: 0.2.2
 
   kemal:
     git: https://github.com/kemalcr/kemal.git
-    version: 1.1.0+git.commit.5e2efec0503622267b57d03fe7d5151000d3bf47
+    version: 1.1.2+git.commit.1a45f54c6c42159d266e278545c2969dc79f5243
 
   radix:
     git: https://github.com/luislavena/radix.git
