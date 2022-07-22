@@ -85,7 +85,7 @@ module Stacker
 
         this_value = hash[current_key]?
 
-        hash[current_key] =
+        new_value =
           if this_value.is_a?(Stacker::Value) && other_value.is_a?(Stacker::Value)
             if strategy == "merge-first"
               deep_merge!(other_value, this_value)
@@ -97,6 +97,8 @@ module Stacker
           else
             other_value
           end
+
+        hash[current_key] = new_value
       end
 
       hash
@@ -112,7 +114,7 @@ module Stacker
         end
       elsif object.is_a?(Array)
         hash = object[0]?
-        if hash.is_a?(Stacker::Value) && (strat = hash["__"]?)
+        if hash.is_a?(Stacker::Value)
           object.delete_at(0)
         end
       end
@@ -129,15 +131,20 @@ module Stacker
         other_list.delete_at(0)
       end
 
-      if strategy == "overwrite"
-        other_list
-      elsif strategy == "remove"
-        list.select { |i| !other_list.includes?(i) }
-      elsif strategy == "merge-first"
-        other_list.concat(list)
-      else
-        list.concat(other_list)
-      end
+      retval =
+        case strategy
+        when "overwrite"
+          other_list
+        when "remove"
+          list.select { |i| !other_list.includes?(i) }
+        when "merge-first"
+          other_list.concat(list)
+        else
+          # merge-last (default)
+          list.concat(other_list)
+        end
+
+      retval
     end
 
     def [](key : String)
