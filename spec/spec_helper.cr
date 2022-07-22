@@ -8,7 +8,7 @@ def load_yaml(file)
   Stacker::Value.convert_hash(yaml.as_h)
 end
 
-def create_renderer
-  context = Stacker::Context.new("spec/fixtures")
-  Stacker::Renderer.new(context, "spec/fixtures")
+def create_renderer(doc_root = "spec/fixtures", entrypoint = "spec/fixtures")
+  context = Stacker::Context.new(doc_root)
+  Stacker::Renderer.new(context, entrypoint)
 end

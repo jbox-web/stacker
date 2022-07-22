@@ -1,0 +1,6 @@
+---
+my_server:
+  network:
+    ipv6: true
+    firewall: true
+  hostname: server1

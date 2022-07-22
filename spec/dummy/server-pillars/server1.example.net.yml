@@ -1,0 +1,4 @@
+---
+my_server:
+  # Network
+  hostname: server1

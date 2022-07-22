@@ -1,0 +1,6 @@
+---
+my_server:
+  # Network
+  network:
+    ipv6: true
+    firewall: true
