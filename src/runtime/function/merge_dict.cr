@@ -21,18 +21,21 @@ module Stacker::Runtime::Function
       return unless hash.is_a?(Hash) && other_hash.is_a?(Hash)
 
       other_hash.each do |current_key, other_value|
-        this_value = hash[current_key.to_s]?
+        new_key = current_key.to_s
+        this_value = hash[new_key]?
 
-        hash[Crinja::Value.new(current_key.to_s)] =
+        new_value =
           if this_value.nil?
-            to_crinja_value(other_value)
+            other_value
           elsif this_value.raw.is_a?(Hash) && other_value.raw.is_a?(Hash)
-            to_crinja_value deep_merge_crinja!(this_value, other_value)
+            deep_merge_crinja!(this_value, other_value)
           elsif this_value.raw.is_a?(Array) && other_value.raw.is_a?(Array)
-            to_crinja_value(this_value.concat(other_value))
+            this_value.concat(other_value)
           else
-            to_crinja_value(other_value)
+            other_value
           end
+
+        hash[Crinja::Value.new(new_key)] = to_crinja_value(new_value)
       end
 
       hash

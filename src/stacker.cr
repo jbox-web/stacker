@@ -43,7 +43,7 @@ module Stacker
 
   def self.load_config(config_path)
     config_file = File.read(config_path)
-    self.config = Stacker::Config.from_yaml(config_file)
+    self.config = Config.from_yaml(config_file)
   end
 
   def self.setup_log

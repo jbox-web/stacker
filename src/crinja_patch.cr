@@ -56,7 +56,7 @@ class Crinja
         object.to_yaml(yaml)
       when .is_a?(Time)
         object.to_yaml(yaml)
-      when .is_a?(Nil)
+      when .nil?
         object.to_yaml(yaml)
       else
         nil

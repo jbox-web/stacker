@@ -4,11 +4,13 @@ module Stacker
 
     VALID_STEPS = ["compile", "yaml-load", "before-merge", "after-merge", "final"]
 
-    # :nodoc:
-    property grains : Hash(String, String) | Hash(String, JSON::Any) | JSON::Any
+    alias Input = Hash(String, String) | Hash(String, JSON::Any) | JSON::Any
 
     # :nodoc:
-    property pillar : Hash(String, String) | Hash(String, JSON::Any) | JSON::Any
+    property grains : Input
+
+    # :nodoc:
+    property pillar : Input
 
     # :nodoc:
     def self.valid_steps
@@ -58,8 +60,8 @@ module Stacker
 
         result = string_to_array(result)
 
-        result.each do |file|
-          load_pillars_from_stack(stack, file)
+        result.each do |stack_file|
+          load_pillars_from_stack(stack, stack_file)
         end
       end
 
@@ -72,9 +74,9 @@ module Stacker
       string.split("\n").reject(&.empty?)
     end
 
-    private def load_pillars_from_stack(stack, file)
+    private def load_pillars_from_stack(stack, stack_file)
       dirname = File.dirname(stack)
-      files = Dir["#{dirname}/#{file}"].sort
+      files = Dir["#{dirname}/#{stack_file}"].sort
 
       files.each do |file|
         @current_path = file.to_s
