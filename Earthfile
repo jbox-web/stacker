@@ -1,3 +1,5 @@
+VERSION 0.6
+
 all-binaries:
   BUILD \
     --platform=linux/amd64 \

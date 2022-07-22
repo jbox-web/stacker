@@ -13,37 +13,13 @@ jobs:
       - name: Git checkout
         uses: actions/checkout@v2
 
-      - name: Setup Crystal
-        uses: crystal-lang/install-crystal@v1
-        with:
-          crystal: 1.5.0
-
-      - name: Install dependencies
-        run: make deps-release
-
-      - name: Build binary
-        run: make release OUTPUT_FILE=stacker-linux-amd64
-
-      - name: Create release and publish assets
-        uses: ncipollo/release-action@v1
-        with:
-          artifacts: "bin/*"
-          token: ${{ secrets.GITHUB_TOKEN }}
-          allowUpdates: true
-
-  release_linux_static:
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Git checkout
-        uses: actions/checkout@v2
-
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
 
       - name: Setup Earthly
         uses: earthly/actions/setup-earthly@v1
         with:
-          version: v0.5.24
+          version: v0.6.14
 
       - name: Build static binaries
         run: make release-static
