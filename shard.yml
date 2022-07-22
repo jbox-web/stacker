@@ -28,3 +28,8 @@ dependencies:
   systemd_notify:
     github: serge-name/systemd_notify.cr
     branch: master
+
+development_dependencies:
+  ameba:
+    github: crystal-ameba/ameba
+    version: ~> 1.0.0
