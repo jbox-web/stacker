@@ -6,15 +6,15 @@ shards:
 
   ameba:
     git: https://github.com/crystal-ameba/ameba.git
-    version: 1.0.0
+    version: 1.4.3
 
   backtracer:
     git: https://github.com/sija/backtracer.cr.git
-    version: 1.2.1
+    version: 1.2.2
 
   crinja:
     git: https://github.com/straight-shoota/crinja.git
-    version: 0.8.0+git.commit.0160fa392b2bf12b475130af127f63bf389eba7a
+    version: 0.8.1+git.commit.4e65b546263d407c69fb78f125d6a3e30b3cc3b1
 
   crystal-env:
     git: https://github.com/crystal-lang/crystal-env.git
@@ -22,11 +22,11 @@ shards:
 
   exception_page:
     git: https://github.com/crystal-loot/exception_page.git
-    version: 0.2.2
+    version: 0.3.0
 
   kemal:
     git: https://github.com/kemalcr/kemal.git
-    version: 1.1.2+git.commit.1a45f54c6c42159d266e278545c2969dc79f5243
+    version: 1.4.0+git.commit.c995a2a9711d72d90b347683007b45bbaf495317
 
   radix:
     git: https://github.com/luislavena/radix.git
