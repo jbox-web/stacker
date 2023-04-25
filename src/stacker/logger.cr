@@ -9,7 +9,7 @@ module Stacker
       "fatal" => ::Log::Severity::Fatal,
     }
 
-    def self.with_log_level(level, &block)
+    def self.with_log_level(level, &)
       new_level = SEVERITY_MAP[level]? || SEVERITY_MAP["info"]
       old_level = Stacker::Processor::Log.level
 

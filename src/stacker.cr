@@ -93,7 +93,7 @@ module Stacker
       kemal_config.env = config.server_environment
 
       # Start server
-      server = kemal_config.server.not_nil!
+      server = kemal_config.server.not_nil! # ameba:disable Lint/NotNil
       server.bind_tcp config.server_host, config.server_port
     end
   end
@@ -113,7 +113,7 @@ module Stacker
 
   private def self.delete_flag_from_args(args, flags)
     flags.each do |flag|
-      while (index = args.index(flag))
+      while index = args.index(flag)
         args.delete_at(index + 1)
         args.delete_at(index)
       end

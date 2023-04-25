@@ -129,13 +129,13 @@ module Stacker
       {"minion_id" => @host_name, "grains" => @grains, "pillar" => @pillar, "stack" => @stack}
     end
 
-    private def with_debug_run(&block)
+    private def with_debug_run(&)
       Log.info { "Building stack for: #{@host_name} (namespace: #{@namespace})" }
       yield
       Log.info { "End of stack build for: #{@host_name} (namespace: #{@namespace})" }
     end
 
-    private def with_debug_stack(&block)
+    private def with_debug_stack(&)
       with_targeted_trace(step: "before-merge") do
         Log.trace { "Stack before:\n#{YAML.dump(@stack)}" }
       end
@@ -147,7 +147,7 @@ module Stacker
       end
     end
 
-    private def with_targeted_trace(step, &block)
+    private def with_targeted_trace(step, &)
       if targeted_path? && targeted_step?(step)
         yield
       end
