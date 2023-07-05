@@ -14,7 +14,7 @@ shards:
 
   crinja:
     git: https://github.com/straight-shoota/crinja.git
-    version: 0.8.1+git.commit.4e65b546263d407c69fb78f125d6a3e30b3cc3b1
+    version: 0.8.1+git.commit.1a13bcfe2fb7b21480f0ea075084ef369c6eaaa0
 
   crystal-env:
     git: https://github.com/crystal-lang/crystal-env.git
@@ -22,7 +22,7 @@ shards:
 
   exception_page:
     git: https://github.com/crystal-loot/exception_page.git
-    version: 0.3.0
+    version: 0.3.1
 
   kemal:
     git: https://github.com/kemalcr/kemal.git
