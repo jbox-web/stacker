@@ -34,6 +34,7 @@ all: help
 
 setup: ## Setup local environment
 	asdf plugin add crystal || true
+	asdf plugin add earthly https://github.com/YR-ZR0/asdf-earthly.git || true
 	asdf install
 	asdf current
 
