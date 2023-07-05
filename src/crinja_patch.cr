@@ -68,4 +68,9 @@ class Crinja
   def self.value(any : Stacker::Value) : Crinja::Value
     value any.raw
   end
+
+  # :nodoc:
+  def self.value(any : JSON::Any) : Crinja::Value
+    value any.raw
+  end
 end
