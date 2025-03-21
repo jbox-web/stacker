@@ -4,7 +4,7 @@
 
 # Build stacker with Crystal upstream image
 # Use alpine variant to build static binary
-FROM crystallang/crystal:1.15.1-alpine AS binary-file
+FROM crystallang/crystal:1.15.1-alpine AS build-binary-file
 
 # Fetch platforms variables from ARGS
 ARG TARGETPLATFORM
@@ -32,6 +32,11 @@ RUN mkdir /build/bin
 # Build the binary
 RUN make release
 
+# Extract binary from Docker image
+FROM scratch AS binary-file
+ARG TARGETOS
+ARG TARGETARCH
+COPY --from=build-binary-file /build/bin/stacker-${TARGETOS}-${TARGETARCH} /
 
 ###########
 # RUNTIME #
@@ -44,8 +49,8 @@ FROM gcr.io/distroless/static-debian11 AS docker-image
 ARG TARGETOS
 ARG TARGETARCH
 
-# Grab stacker binary from **binary-file** step and inject it in the final image
-COPY --from=binary-file /build/bin/stacker-${TARGETOS}-${TARGETARCH} /usr/bin/stacker
+# Grab stacker binary from **build-binary-file** step and inject it in the final image
+COPY --from=build-binary-file /build/bin/stacker-${TARGETOS}-${TARGETARCH} /usr/bin/stacker
 
 # Set runtime environment
 USER nonroot
