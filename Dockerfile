@@ -49,7 +49,7 @@ COPY --from=binary-file /build/bin/stacker-${TARGETOS}-${TARGETARCH} /usr/bin/st
 
 # Set runtime environment
 USER nonroot
-ENV USER nonroot
-ENV HOME /home/nonroot
+ENV USER=nonroot
+ENV HOME=/home/nonroot
 WORKDIR /home/nonroot
 ENTRYPOINT ["stacker"]
