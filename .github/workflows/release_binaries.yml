@@ -40,7 +40,7 @@ jobs:
       - name: Setup Crystal
         uses: crystal-lang/install-crystal@v1
         with:
-          crystal: 1.10.1
+          crystal: 1.15.1
 
       - name: Install dependencies
         run: make deps-release

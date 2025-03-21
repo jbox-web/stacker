@@ -10,11 +10,11 @@ shards:
 
   backtracer:
     git: https://github.com/sija/backtracer.cr.git
-    version: 1.2.2
+    version: 1.2.4
 
   crinja:
     git: https://github.com/straight-shoota/crinja.git
-    version: 0.8.1+git.commit.5d5c190adc9693b9481e5d7a144aebec0f544bad
+    version: 0.8.1+git.commit.ebb5f89dd64a1c3b511ad6645c38e733a5ac54fa
 
   crystal-env:
     git: https://github.com/crystal-lang/crystal-env.git
@@ -22,11 +22,11 @@ shards:
 
   exception_page:
     git: https://github.com/crystal-loot/exception_page.git
-    version: 0.3.1
+    version: 0.5.0
 
   kemal:
     git: https://github.com/kemalcr/kemal.git
-    version: 1.4.0+git.commit.13fd4f8b2f5d3003d0ad0c43e0b3a0f324abefb0
+    version: 1.6.0+git.commit.d4af7e216daa22111a6f906cbcdde280646ba9bf
 
   radix:
     git: https://github.com/luislavena/radix.git
