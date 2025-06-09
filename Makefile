@@ -55,7 +55,13 @@ doc: ## Generate Stacker documentation
 	rm -rf docs
 	crystal doc
 
-.PHONY: setup build deps clean spec doc
+ameba: ## Run static code analysis
+	bin/ameba
+
+format: ## Format code
+	crystal tool format src/
+
+.PHONY: setup build deps clean spec doc ameba format
 
 
 ############################
