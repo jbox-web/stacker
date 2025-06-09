@@ -48,6 +48,5 @@ jobs:
       - name: Publish to Github Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          token: ${{ secrets.GH_PAGES_TOKEN }}
           branch: gh-pages
           folder: docs
