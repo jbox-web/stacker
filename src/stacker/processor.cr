@@ -19,7 +19,7 @@ module Stacker
 
     # :nodoc:
     def self.sanitize_steps_params(steps)
-      steps.reject { |s| !valid_steps.includes?(s) }
+      steps.reject { |step| !valid_steps.includes?(step) }
     end
 
     def initialize(@renderer : Renderer, @stacks : Array(String))

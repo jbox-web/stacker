@@ -4,6 +4,7 @@ module Stacker
     class Server < Admiral::Command
       define_help description: "Run Stacker webserver"
 
+      # ameba:disable Lint/UselessAssign
       define_flag config : String,
         description: "Path to config file",
         long: "config",
@@ -21,52 +22,61 @@ module Stacker
     class Fetch < Admiral::Command
       define_help description: "Fetch host pillars"
 
+      # ameba:disable Lint/UselessAssign
       define_argument host_name : String,
         description: "Fetch data for HOSTNAME",
         required: true
 
+      # ameba:disable Lint/UselessAssign
       define_flag config : String,
         description: "Path to config file",
         long: "config",
         short: "c",
         default: "stacker.yml"
 
+      # ameba:disable Lint/UselessAssign
       define_flag namespace : String,
         description: "Stack namespace to use",
         long: "namespace",
         short: "n",
         default: "default"
 
+      # ameba:disable Lint/UselessAssign
       define_flag grains : String,
         description: "Path to JSON grains file",
         long: "grains",
         short: "g",
         default: ""
 
+      # ameba:disable Lint/UselessAssign
       define_flag pillar : String,
         description: "Path to JSON pillar file",
         long: "pillar",
         short: "p",
         default: ""
 
+      # ameba:disable Lint/UselessAssign
       define_flag log_level : String,
         description: "Log level",
         long: "log-level",
         short: "l",
         default: "info"
 
+      # ameba:disable Lint/UselessAssign
       define_flag path : String,
         description: "Path to YAML file to debug",
         long: "path",
         short: "P",
         default: ""
 
+      # ameba:disable Lint/UselessAssign
       define_flag steps : Array(String),
         description: "Steps to debug",
         long: "step",
         short: "s",
         default: [] of String
 
+      # ameba:disable Lint/UselessAssign
       define_flag output_format : String,
         description: "Output format",
         long: "output-format",

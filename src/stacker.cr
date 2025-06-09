@@ -47,8 +47,8 @@ module Stacker
   end
 
   def self.setup_log
-    ::Log.setup do |c|
-      c.bind "*", :debug, logger
+    ::Log.setup do |builder|
+      builder.bind "*", :debug, logger
     end
   end
 
