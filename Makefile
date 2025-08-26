@@ -99,6 +99,10 @@ uninstall: ## Uninstall stacker from $(INSTALL_DIR)
 
 release-static: ## Build static binary with Earthly
 	docker buildx bake binary
+	mv packages/linux_arm64/stacker-linux-arm64 packages/
+	mv packages/linux_amd64/stacker-linux-amd64 packages/
+	rmdir packages/linux_arm64/ packages/linux_amd64/
+	rm -f packages/*.sha256
 	cd packages; for f in *; do shasum --algorithm 256 $$f > $$f.sha256; done
 
 .PHONY: release deps-release install uninstall release-static
