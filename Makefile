@@ -17,6 +17,13 @@ SPEC_OPTS            =
 COMPILE_OPTS_DEV     = --threads 4
 COMPILE_OPTS_RELEASE = --threads 4 --release --error-trace
 
+# Use sudo if current user is not root
+ifneq ($(UID), 0)
+	sudo = sudo
+else
+	sudo =
+endif
+
 ifeq ($(shell tty -s && echo true),true)
   SPEC_OPTS += --verbose
   COMPILE_OPTS_DEV += --progress
@@ -85,10 +92,10 @@ deps-release: ## Install production dependencies
 	shards install --production
 
 install: ## Install stacker in $(INSTALL_DIR)
-	cp $(OUTPUT_DIR)/$(OUTPUT_FILE) $(INSTALL_DIR)/stacker
+	$(sudo) cp $(OUTPUT_DIR)/$(OUTPUT_FILE) $(INSTALL_DIR)/stacker
 
 uninstall: ## Uninstall stacker from $(INSTALL_DIR)
-	rm -f $(INSTALL_DIR)/stacker
+	$(sudo) rm -f $(INSTALL_DIR)/stacker
 
 release-static: ## Build static binary with Earthly
 	docker buildx bake binary
