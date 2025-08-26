@@ -14,7 +14,7 @@ shards:
 
   crinja:
     git: https://github.com/straight-shoota/crinja.git
-    version: 0.8.1+git.commit.a98b32315873252e6a8adec166c47063378bdae0
+    version: 0.8.1+git.commit.db7eb9ea2f2d8a5601cfcea672f7670f8d01e8f1
 
   crystal-env:
     git: https://github.com/crystal-lang/crystal-env.git
@@ -26,7 +26,7 @@ shards:
 
   kemal:
     git: https://github.com/kemalcr/kemal.git
-    version: 1.7.1+git.commit.6eb9b6bafc8954b9604f0c472ce70dfd39723dea
+    version: 1.7.2+git.commit.e684d2ec9fac727bf63865c738d6db7529a6924c
 
   radix:
     git: https://github.com/luislavena/radix.git
