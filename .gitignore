@@ -12,3 +12,6 @@
 !/log/.keep
 /example/log/*
 !/example/log/.keep
+
+# Ignore MacOS files
+.DS_Store

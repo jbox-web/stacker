@@ -25,12 +25,13 @@ require "./runtime/filter/*"
 require "./runtime/function/*"
 
 module Stacker
-  VERSION = "1.1.1"
+  VERSION = {{ `shards version #{__DIR__}`.chomp.stringify }}
+  GIT_REF = {{ `git log -n 1 --format="%H" | head -c 8`.chomp.stringify }}
 
   @@log_file : File? | IO::FileDescriptor?
 
   def self.version
-    VERSION
+    "#{VERSION} (#{GIT_REF})"
   end
 
   def self.config=(config : Config)

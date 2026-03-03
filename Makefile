@@ -9,15 +9,18 @@ SHELL := /usr/bin/env bash
 PREFIX      ?= /usr/local
 INSTALL_DIR  = $(PREFIX)/bin
 
-SOURCE_FILE = src/stacker.cr
+APP_NAME    = stacker
+SOURCE_FILE = src/$(APP_NAME).cr
 OUTPUT_DIR  = bin
-OUTPUT_FILE = stacker
+OUTPUT_FILE = $(APP_NAME)
 
 SPEC_OPTS            =
 COMPILE_OPTS_DEV     = --threads 4
 COMPILE_OPTS_RELEASE = --threads 4 --release --error-trace
 
 # Use sudo if current user is not root
+UID := $(shell id -u)
+
 ifneq ($(UID), 0)
 	sudo = sudo
 else
@@ -92,15 +95,15 @@ deps-release: ## Install production dependencies
 	shards install --production
 
 install: ## Install stacker in $(INSTALL_DIR)
-	$(sudo) cp $(OUTPUT_DIR)/$(OUTPUT_FILE) $(INSTALL_DIR)/stacker
+	$(sudo) cp $(OUTPUT_DIR)/$(OUTPUT_FILE) $(INSTALL_DIR)/$(OUTPUT_FILE)
 
 uninstall: ## Uninstall stacker from $(INSTALL_DIR)
-	$(sudo) rm -f $(INSTALL_DIR)/stacker
+	$(sudo) rm -f $(INSTALL_DIR)/$(OUTPUT_FILE)
 
 release-static: ## Build static binary with Earthly
 	docker buildx bake binary
-	mv packages/linux_arm64/stacker-linux-arm64 packages/
-	mv packages/linux_amd64/stacker-linux-amd64 packages/
+	mv packages/linux_arm64/$(OUTPUT_FILE)-linux-arm64 packages/
+	mv packages/linux_amd64/$(OUTPUT_FILE)-linux-amd64 packages/
 	rmdir packages/linux_arm64/ packages/linux_amd64/
 	rm -f packages/*.sha256
 	cd packages; for f in *; do shasum --algorithm 256 $$f > $$f.sha256; done

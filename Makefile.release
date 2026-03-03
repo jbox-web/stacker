@@ -2,8 +2,9 @@
 # Constants #
 #############
 
-SOURCE_FILE  = src/stacker.cr
-OUTPUT_FILE  = bin/stacker-${TARGETOS}-${TARGETARCH}
+PROGRAM_NAME = stacker
+SOURCE_FILE  = src/$(PROGRAM_NAME).cr
+OUTPUT_FILE  = bin/$(PROGRAM_NAME)-${TARGETOS}-${TARGETARCH}
 COMPILE_OPTS = --threads 4 --release --error-trace --static
 
 #########
