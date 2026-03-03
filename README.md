@@ -1,6 +1,6 @@
 # Stacker - A lightweight file-based CMDB
 
-[![GitHub license](https://img.shields.io/github/license/jbox-web/stacker.svg)](https://github.com/jbox-web/stacker/blob/master/LICENSE)
+[![GitHub License](https://img.shields.io/github/license/jbox-web/stacker)](https://github.com/jbox-web/stacker/blob/master/LICENSE)
 [![Build Status](https://github.com/jbox-web/stacker/actions/workflows/ci.yml/badge.svg)](https://github.com/jbox-web/stacker/actions/workflows/ci.yml)
 [![Build Status](https://img.shields.io/docker/v/nicoladmin/stacker/latest?color=green&label=Docker%20Image&logo=docker)](https://hub.docker.com/r/nicoladmin/stacker)
 
