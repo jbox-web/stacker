@@ -100,7 +100,7 @@ install: ## Install stacker in $(INSTALL_DIR)
 uninstall: ## Uninstall stacker from $(INSTALL_DIR)
 	$(sudo) rm -f $(INSTALL_DIR)/$(OUTPUT_FILE)
 
-release-static: ## Build static binary with Earthly
+release-static: ## Build static binary with Docker Bake
 	docker buildx bake binary
 	mv packages/linux_arm64/$(OUTPUT_FILE)-linux-arm64 packages/
 	mv packages/linux_amd64/$(OUTPUT_FILE)-linux-amd64 packages/
