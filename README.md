@@ -2,7 +2,8 @@
 
 [![GitHub License](https://img.shields.io/github/license/jbox-web/stacker)](https://github.com/jbox-web/stacker/blob/master/LICENSE)
 [![Build Status](https://github.com/jbox-web/stacker/actions/workflows/ci.yml/badge.svg)](https://github.com/jbox-web/stacker/actions/workflows/ci.yml)
-[![Build Status](https://img.shields.io/docker/v/nicoladmin/stacker/latest?color=green&label=Docker%20Image&logo=docker)](https://hub.docker.com/r/nicoladmin/stacker)
+[![GitHub Release](https://img.shields.io/github/v/release/jbox-web/stacker)](https://github.com/jbox-web/stacker/releases/latest)
+[![Docker Image](https://img.shields.io/docker/v/nicoladmin/stacker/latest?color=green&label=Docker%20Image&logo=docker)](https://hub.docker.com/r/nicoladmin/stacker)
 
 Stacker is [Salt PillarStack](https://docs.saltstack.com/en/master/ref/pillar/all/salt.pillar.stack.html) in [Crystal](https://crystal-lang.org/).
 
