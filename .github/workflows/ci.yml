@@ -28,16 +28,14 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Setup Crystal
-        uses: crystal-lang/install-crystal@v1
-        with:
-          crystal: 1.18.2
+      - name: Setup mise
+        uses: jdx/mise-action@v3
 
       - name: Install dependencies
-        run: make deps
+        run: mise dev:deps
 
-      - name: Run tests
-        run: make ameba
+      - name: Run static code analysis
+        run: mise dev:ameba
 
   test_linux:
     runs-on: ubuntu-latest
@@ -47,16 +45,14 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Setup Crystal
-        uses: crystal-lang/install-crystal@v1
-        with:
-          crystal: 1.18.2
+      - name: Setup mise
+        uses: jdx/mise-action@v3
 
       - name: Install dependencies
-        run: make deps
+        run: mise dev:deps
 
       - name: Run tests
-        run: make spec
+        run: mise dev:spec
 
   test_macos_arm64:
     runs-on: macos-26
@@ -66,16 +62,18 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Setup Crystal
-        uses: crystal-lang/install-crystal@v1
-        with:
-          crystal: 1.18.2
+      - name: Setup mise
+        uses: jdx/mise-action@v3
+
+      # TODO: remove me when https://github.com/crystal-lang/crystal/issues/16746 is fixed
+      - name: Fix Crystal shards
+        run: mise dev:fix-shards-command
 
       - name: Install dependencies
-        run: make deps
+        run: mise dev:deps
 
       - name: Run tests
-        run: make spec
+        run: mise dev:spec
 
   test_macos_amd64:
     runs-on: macos-26-intel
@@ -85,13 +83,15 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Setup Crystal
-        uses: crystal-lang/install-crystal@v1
-        with:
-          crystal: 1.18.2
+      - name: Setup mise
+        uses: jdx/mise-action@v3
+
+      # TODO: remove me when https://github.com/crystal-lang/crystal/issues/16746 is fixed
+      - name: Fix Crystal shards
+        run: mise dev:fix-shards-command
 
       - name: Install dependencies
-        run: make deps
+        run: mise dev:deps
 
       - name: Run tests
-        run: make spec
+        run: mise dev:spec

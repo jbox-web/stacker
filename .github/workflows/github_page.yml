@@ -14,36 +14,36 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Git checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Crystal
-        uses: crystal-lang/install-crystal@v1
+        uses: actions/checkout@v6
         with:
-          crystal: 1.18.2
+          persist-credentials: false
+
+      - name: Setup mise
+        uses: jdx/mise-action@v3
 
       - name: Install dependencies
-        run: make deps
+        run: mise dev:deps
 
       - name: Run tests
-        run: make spec
+        run: mise dev:spec
 
   publish:
     runs-on: ubuntu-latest
     needs: test
     steps:
       - name: Git checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Crystal
-        uses: crystal-lang/install-crystal@v1
+        uses: actions/checkout@v6
         with:
-          crystal: 1.18.2
+          persist-credentials: false
+
+      - name: Setup mise
+        uses: jdx/mise-action@v3
 
       - name: Install dependencies
-        run: make deps
+        run: mise dev:deps
 
       - name: Generate documentation
-        run: make doc
+        run: mise dev:doc
 
       - name: Publish to Github Pages
         uses: JamesIves/github-pages-deploy-action@v4

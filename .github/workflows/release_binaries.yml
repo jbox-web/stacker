@@ -12,6 +12,8 @@ jobs:
     steps:
       - name: Git checkout
         uses: actions/checkout@v6
+        with:
+          persist-credentials: false
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -19,8 +21,11 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      - name: Setup mise
+        uses: jdx/mise-action@v3
+
       - name: Build static binaries
-        run: make release-static
+        run: mise release:static
 
       - name: Create release and publish assets
         uses: ncipollo/release-action@v1
@@ -34,17 +39,26 @@ jobs:
     steps:
       - name: Git checkout
         uses: actions/checkout@v6
-
-      - name: Setup Crystal
-        uses: crystal-lang/install-crystal@v1
         with:
-          crystal: 1.18.2
+          persist-credentials: false
+
+      - name: Install bdw-gc
+        run: brew install bdw-gc
+
+      - name: Setup mise
+        uses: jdx/mise-action@v3
+
+      # TODO: remove me when https://github.com/crystal-lang/crystal/issues/16746 is fixed
+      - name: Fix Crystal shards
+        run: mise dev:fix-shards-command
 
       - name: Install dependencies
-        run: make deps-release
+        run: mise release:deps
 
       - name: Build binary
-        run: make release OUTPUT_FILE=stacker-darwin-arm64
+        run: mise release:build
+        env:
+          OUTPUT_FILE: bin/stacker-darwin-arm64
 
       - name: Create release and publish assets
         uses: ncipollo/release-action@v1
@@ -58,17 +72,26 @@ jobs:
     steps:
       - name: Git checkout
         uses: actions/checkout@v6
-
-      - name: Setup Crystal
-        uses: crystal-lang/install-crystal@v1
         with:
-          crystal: 1.18.2
+          persist-credentials: false
+
+      - name: Install bdw-gc
+        run: brew install bdw-gc
+
+      - name: Setup mise
+        uses: jdx/mise-action@v3
+
+      # TODO: remove me when https://github.com/crystal-lang/crystal/issues/16746 is fixed
+      - name: Fix Crystal shards
+        run: mise dev:fix-shards-command
 
       - name: Install dependencies
-        run: make deps-release
+        run: mise release:deps
 
       - name: Build binary
-        run: make release OUTPUT_FILE=stacker-darwin-amd64
+        run: mise release:build
+        env:
+          OUTPUT_FILE: bin/stacker-darwin-amd64
 
       - name: Create release and publish assets
         uses: ncipollo/release-action@v1

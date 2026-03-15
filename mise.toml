@@ -1,0 +1,83 @@
+[tools]
+crystal = "1.18.2"
+
+[vars]
+APP_NAME    = "stacker"
+SOURCE_FILE = "src/{{vars.APP_NAME}}.cr"
+OUTPUT_FILE = "{% if get_env(name='OUTPUT_FILE', default='false') == 'false' %}bin/{{vars.APP_NAME}}{% else %}{{ get_env(name='OUTPUT_FILE') }}{% endif %}"
+
+DEFAULT_COMPILE_OPTS_DEV     = "--threads 4"
+DEFAULT_COMPILE_OPTS_RELEASE = "--threads 4 --release --error-trace"
+
+SPEC_OPTS            = "{% if exec(command='(tty -s && echo true) || echo false') == 'true' %}--verbose{% endif %}"
+COMPILE_OPTS_DEV     = "{% if exec(command='(tty -s && echo true) || echo false') == 'true' %}{{vars.DEFAULT_COMPILE_OPTS_DEV}} --progress{% else %}{{vars.DEFAULT_COMPILE_OPTS_DEV}}{% endif %}"
+COMPILE_OPTS_RELEASE = "{% if exec(command='(tty -s && echo true) || echo false') == 'true' %}{{vars.DEFAULT_COMPILE_OPTS_RELEASE}} --progress{% else %}{{vars.DEFAULT_COMPILE_OPTS_RELEASE}}{% endif %}"
+
+
+#####################
+# Development tasks #
+#####################
+
+[tasks."dev:build"]
+description = "Compile to development binary"
+run = "crystal build {{vars.COMPILE_OPTS_DEV}} -o {{vars.OUTPUT_FILE}} {{vars.SOURCE_FILE}}"
+
+[tasks."dev:deps"]
+description = "Install development dependencies"
+run = "shards install"
+
+[tasks."dev:clean"]
+description = "Cleanup environment"
+run = "rm -rf bin/* lib/"
+
+[tasks."dev:spec"]
+description = "Run Crystal spec"
+run = "crystal spec {{vars.SPEC_OPTS}}"
+
+[tasks."dev:doc"]
+description = "Generate project documentation"
+run = "rm -rf docs && crystal doc"
+
+[tasks."dev:ameba"]
+description = "Run static code analysis"
+run = "bin/ameba"
+
+[tasks."dev:format"]
+description = "Format code"
+run = "crystal tool format src/"
+
+[tasks."dev:docker-image"]
+description = "Build local multiplatforms Docker image for local development"
+run = "docker buildx bake docker-image"
+
+# TODO: remove me when https://github.com/crystal-lang/crystal/issues/16746 is fixed
+[tasks."dev:fix-shards-command"]
+description = "Fix missing shards command"
+run = "cp $HOME/.local/share/mise/installs/crystal/{{tools.crystal.version}}/embedded/bin/shards $HOME/.local/share/mise/installs/crystal/{{tools.crystal.version}}/bin/"
+
+
+#################
+# Release tasks #
+#################
+
+[tasks."release:build"]
+description = "Compile to production binary"
+run = '''
+crystal build {{vars.COMPILE_OPTS_RELEASE}} -o {{vars.OUTPUT_FILE}} {{vars.SOURCE_FILE}}
+cd bin; for f in *; do shasum --algorithm 256 $f > $f.sha256; done
+'''
+
+[tasks."release:deps"]
+description = "Install production dependencies"
+run = "shards install --production"
+
+[tasks."release:static"]
+description = "Build static binary with Docker"
+run = '''
+docker buildx bake binary
+mv packages/linux_arm64/{{vars.APP_NAME}}-linux-arm64 packages/
+mv packages/linux_amd64/{{vars.APP_NAME}}-linux-amd64 packages/
+rmdir packages/linux_arm64/ packages/linux_amd64/
+rm -f packages/*.sha256
+cd packages; for f in *; do shasum --algorithm 256 $f > $f.sha256; done
+'''

@@ -17,7 +17,7 @@ It is implemented using [crinja](https://github.com/straight-shoota/crinja) whic
 
 Grab the latest binary from the [releases](https://github.com/jbox-web/stacker/releases) page and run it with the [sample configuration project](https://github.com/jbox-web/stacker/tree/master/example).
 
-If you use [asdf](https://github.com/asdf-vm/asdf) you can also install Stacker with [asdf-stacker](https://github.com/jbox-web/asdf-stacker).
+If you use [mise](https://github.com/jdx/mise) you can also install Stacker with [vfox-stacker](https://github.com/jbox-web/vfox-stacker).
 
 ### Docker
 
