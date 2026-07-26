@@ -2,11 +2,11 @@
 # CRYSTAL #
 ###########
 
-FROM alpine:3.23 AS crystal
+FROM alpine:3.24 AS crystal
 
 RUN apk add --update --no-cache \
   make \
-  crystal=~1.18 \
+  crystal=~1.20 \
   shards \
   gc-dev \
   gc-static \
@@ -48,6 +48,8 @@ ENV \
 
 # Set build environment
 WORKDIR /build
+# The whole history is needed here: `Stacker::VERSION` and `Stacker::GIT_REF` are
+# stamped at compile time by `shards version` and `git log`.
 COPY .git/ /build/.git/
 COPY shard.yml shard.lock /build/
 COPY Makefile.release /build/Makefile

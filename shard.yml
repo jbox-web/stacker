@@ -2,7 +2,7 @@ name: stacker
 
 version: 1.2.0
 
-crystal: '>= 1.18.0'
+crystal: ">= 1.20.0"
 
 license: MIT
 

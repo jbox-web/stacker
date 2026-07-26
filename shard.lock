@@ -26,7 +26,7 @@ shards:
 
   kemal:
     git: https://github.com/kemalcr/kemal.git
-    version: 1.9.0+git.commit.7a1a07f7332ec13ff1db9427b7267fe97c0e0555
+    version: 1.12.0+git.commit.b6b1083a9bcf2429c016dc4cebea42292aea520c
 
   radix:
     git: https://github.com/luislavena/radix.git

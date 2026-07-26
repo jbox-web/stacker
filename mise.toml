@@ -1,5 +1,9 @@
+[settings]
+aqua.registries = ["https://github.com/jbox-web/aqua-registry"]
+
 [tools]
-crystal = "1.18.2"
+crystal = "1.20.3"
+"aqua:elbywan/crystalline" = "0.18.0"
 
 [vars]
 APP_NAME    = "stacker"
@@ -40,11 +44,15 @@ run = "rm -rf docs && crystal doc"
 
 [tasks."dev:ameba"]
 description = "Run static code analysis"
-run = "bin/ameba"
+run = "timeout 180 bin/ameba"
 
 [tasks."dev:format"]
 description = "Format code"
-run = "crystal tool format src/"
+run = "crystal tool format src/ spec/"
+
+[tasks."dev:format-check"]
+description = "Check code formatting"
+run = "crystal tool format --check src/ spec/"
 
 [tasks."dev:docker-image"]
 description = "Build local multiplatforms Docker image for local development"
