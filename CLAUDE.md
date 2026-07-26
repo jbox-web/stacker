@@ -72,3 +72,10 @@ Specs are fixture-driven rather than assertion-heavy: a template or input YAML u
 `spec_helper.cr` provides `create_renderer(doc_root:, entrypoint:)`, `load_yaml(file)`, `with_doc_root(files) { |root| }` and `build_stack(root, host)` for throwaway trees, `with_config(yaml) { }`, and `call_request(request)` for HTTP specs.
 
 `call_request` runs the request through Kemal's **exception handler chained to the route handler**, not the route handler alone. That matters: Kemal turns a response status having a registered `error` handler into a `CustomException`, so a route exercised through `RouteHandler` alone returns a body no real client ever receives. An HTTP spec that skips the exception handler will pass while production answers an HTML error page.
+
+## Deliberately not done
+
+Two things a reader may expect to find, and the reason they are absent:
+
+- **No cache of the `Dir[]` glob results in `Processor`.** Invalidating it would need a directory mtime, which is not a sound key for the nested globs the stack config files use (`{{ minion_id }}/*.yml`). A stale file list after a deploy means a silently truncated pillar — the exact failure mode the error handling above exists to prevent. The template cache in `Context` already captures the measured cost.
+- **The Dockerfile copies the whole `.git/`.** Trimming it to the refs breaks `Stacker::VERSION` and `Stacker::GIT_REF`, which shell out to `shards version` and `git log` at compile time and need the objects. Shrinking the build context is not worth breaking the release build.
