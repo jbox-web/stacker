@@ -589,7 +589,7 @@ Other available tasks (`mise tasks` to list them all) :
 mise dev:spec           # Run the test suite
 mise dev:ameba          # Run static code analysis
 mise dev:format         # Format code
-mise dev:doc            # Generate project documentation
+mise dev:docs           # Generate project documentation
 mise dev:clean          # Cleanup environment
 mise release:static     # Build static binaries with Docker
 ```

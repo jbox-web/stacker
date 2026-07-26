@@ -16,7 +16,7 @@ mise dev:build         # dev binary -> bin/stacker
 mise dev:spec          # crystal spec
 mise dev:ameba         # bin/ameba, wrapped in `timeout 180` (ameba can spin forever)
 mise dev:format        # crystal tool format src/   (note: src/ only, not spec/)
-mise dev:doc           # rm -rf docs && crystal doc
+mise dev:docs          # rm -rf docs && crystal doc
 mise dev:clean         # rm -rf bin/* lib/
 mise release:build     # --release binary + .sha256
 mise release:static    # static linux amd64/arm64 binaries via docker buildx bake

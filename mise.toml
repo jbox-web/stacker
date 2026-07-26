@@ -38,7 +38,12 @@ run = "rm -rf bin/* lib/"
 description = "Run Crystal spec"
 run = "crystal spec {{vars.SPEC_OPTS}}"
 
-[tasks."dev:doc"]
+[tasks."dev:spec-mt"]
+description = "Run Crystal spec (multi-threaded)"
+env = { CRYSTAL_WORKERS = "4" }
+run = "crystal spec {{vars.SPEC_OPTS}} --error-trace -Dpreview_mt"
+
+[tasks."dev:docs"]
 description = "Generate project documentation"
 run = "rm -rf docs && crystal doc"
 

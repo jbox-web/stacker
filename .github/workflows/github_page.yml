@@ -1,6 +1,11 @@
 ---
 name: Github Pages
 
+# crystalline is the Crystal LSP server, only needed in an editor: never install
+# it on the runners. See .github/workflows/ci.yml for the full rationale.
+env:
+  MISE_DISABLE_TOOLS: aqua:elbywan/crystalline
+
 on:
   push:
     branches:
@@ -13,12 +18,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Git checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           persist-credentials: false
 
       - name: Setup mise
-        uses: jdx/mise-action@v3
+        uses: jdx/mise-action@v4
 
       - name: Install dependencies
         run: mise dev:deps
@@ -33,18 +38,18 @@ jobs:
       contents: write
     steps:
       - name: Git checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           persist-credentials: false
 
       - name: Setup mise
-        uses: jdx/mise-action@v3
+        uses: jdx/mise-action@v4
 
       - name: Install dependencies
         run: mise dev:deps
 
       - name: Generate documentation
-        run: mise dev:doc
+        run: mise dev:docs
 
       - name: Publish to Github Pages
         uses: JamesIves/github-pages-deploy-action@v4
