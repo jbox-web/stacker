@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Crystal Docs 1.17.1">
+<meta name="generator" content="Crystal Docs 1.19.1">
 <meta name="crystal_docs.project_version" content="master">
 <meta name="crystal_docs.project_name" content="stacker">
 
@@ -97,8 +97,38 @@
       
     </li>
   
+  <li class=" " data-id="stacker/Stacker/Error" data-name="stacker::error">
+      <a href="../Stacker/Error.html">Error</a>
+      
+    </li>
+  
+  <li class=" " data-id="stacker/Stacker/HostNotFound" data-name="stacker::hostnotfound">
+      <a href="../Stacker/HostNotFound.html">HostNotFound</a>
+      
+    </li>
+  
+  <li class=" " data-id="stacker/Stacker/InvalidHostName" data-name="stacker::invalidhostname">
+      <a href="../Stacker/InvalidHostName.html">InvalidHostName</a>
+      
+    </li>
+  
+  <li class=" " data-id="stacker/Stacker/InvalidRequest" data-name="stacker::invalidrequest">
+      <a href="../Stacker/InvalidRequest.html">InvalidRequest</a>
+      
+    </li>
+  
   <li class=" " data-id="stacker/Stacker/Logger" data-name="stacker::logger">
       <a href="../Stacker/Logger.html">Logger</a>
+      
+    </li>
+  
+  <li class=" " data-id="stacker/Stacker/NamespaceNotFound" data-name="stacker::namespacenotfound">
+      <a href="../Stacker/NamespaceNotFound.html">NamespaceNotFound</a>
+      
+    </li>
+  
+  <li class=" " data-id="stacker/Stacker/PillarError" data-name="stacker::pillarerror">
+      <a href="../Stacker/PillarError.html">PillarError</a>
       
     </li>
   
@@ -119,6 +149,11 @@
   
   <li class=" current" data-id="stacker/Stacker/Renderer" data-name="stacker::renderer">
       <a href="../Stacker/Renderer.html">Renderer</a>
+      
+    </li>
+  
+  <li class=" " data-id="stacker/Stacker/RenderError" data-name="stacker::rendererror">
+      <a href="../Stacker/RenderError.html">RenderError</a>
       
     </li>
   
@@ -258,7 +293,7 @@
   </h2>
   
     
-      <a href="https://github.com/jbox-web/stacker/blob/29d6c4698994427396c1de7de040b894b322a79c/src/stacker/renderer.cr#L2" target="_blank">
+      <a href="https://github.com/jbox-web/stacker/blob/b0bebf270e38dc9c06290e795524b356005f7795/src/stacker/renderer.cr#L2" target="_blank">
         stacker/renderer.cr
       </a>
     
@@ -283,6 +318,11 @@
         <strong>Log</strong> = <code><span class="t">::</span><span class="t">Log</span>.<span class="k">for</span>(<span class="s">&quot;renderer&quot;</span>, <span class="t">::</span><span class="t">Log</span><span class="t">::</span><span class="t">Severity</span><span class="t">::</span><span class="t">Info</span>)</code>
       </dt>
       
+      <dd class="entry-const-doc">
+        <p>Log instance used by the <code>log</code> and <code>dump</code> template functions, which are explicit
+user calls and are therefore never filtered by the per-request verbosity.</p>
+      </dd>
+      
     
   </dl>
 
@@ -300,7 +340,7 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#new%28context%3AContext%2Centrypoint%3AString%29-class-method" class="signature"><strong>.new</strong>(context : Context, entrypoint : String)</a>
+        <a href="#new%28context%3AContext%2Centrypoint%3AString%2Clog%3A%3A%3ALog%3DLog%29-class-method" class="signature"><strong>.new</strong>(context : Context, entrypoint : String, log : ::Log = <span class="t">Log</span>)</a>
         
       </li>
     
@@ -329,6 +369,8 @@
     
       <li class="entry-summary">
         <a href="#file_exist%3F%28file%29-instance-method" class="signature"><strong>#file_exist?</strong>(file)</a>
+        
+          <div class="summary"><p>Check that <strong>file</strong> designates a pillar entrypoint inside the configured entrypoint directory.</p></div>
         
       </li>
     
@@ -376,18 +418,18 @@
     Constructor Detail
   </h2>
   
-    <div class="entry-detail" id="new(context:Context,entrypoint:String)-class-method">
+    <div class="entry-detail" id="new(context:Context,entrypoint:String,log:::Log=Log)-class-method">
       <div class="signature">
         
-        def self.<strong>new</strong>(context : <a href="../Stacker/Context.html">Context</a>, entrypoint : String)
+        def self.<strong>new</strong>(context : <a href="../Stacker/Context.html">Context</a>, entrypoint : String, log : ::Log = <span class="t">Log</span>)
 
-        <a class="method-permalink" href="#new%28context%3AContext%2Centrypoint%3AString%29-class-method">#</a>
+        <a class="method-permalink" href="#new%28context%3AContext%2Centrypoint%3AString%2Clog%3A%3A%3ALog%3DLog%29-class-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/jbox-web/stacker/blob/29d6c4698994427396c1de7de040b894b322a79c/src/stacker/renderer.cr#L5" target="_blank">View source</a>]
+          [<a href="https://github.com/jbox-web/stacker/blob/b0bebf270e38dc9c06290e795524b356005f7795/src/stacker/renderer.cr#L7" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -419,7 +461,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/jbox-web/stacker/blob/29d6c4698994427396c1de7de040b894b322a79c/src/stacker/renderer.cr#L13" target="_blank">View source</a>]
+          [<a href="https://github.com/jbox-web/stacker/blob/b0bebf270e38dc9c06290e795524b356005f7795/src/stacker/renderer.cr#L24" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -432,10 +474,18 @@
         <a class="method-permalink" href="#file_exist%3F%28file%29-instance-method">#</a>
       </div>
       
+        <div class="doc">
+          
+          <p>Check that <strong>file</strong> designates a pillar entrypoint inside the configured
+entrypoint directory.</p>
+<p>The resolved path is compared to the entrypoint directory so a host name
+carrying <code>..</code> cannot reach a file outside of it.</p>
+        </div>
+      
       <br/>
       <div>
         
-          [<a href="https://github.com/jbox-web/stacker/blob/29d6c4698994427396c1de7de040b894b322a79c/src/stacker/renderer.cr#L8" target="_blank">View source</a>]
+          [<a href="https://github.com/jbox-web/stacker/blob/b0bebf270e38dc9c06290e795524b356005f7795/src/stacker/renderer.cr#L15" target="_blank">View source</a>]
         
       </div>
     </div>

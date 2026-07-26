@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Crystal Docs 1.17.1">
+<meta name="generator" content="Crystal Docs 1.19.1">
 <meta name="crystal_docs.project_version" content="master">
 <meta name="crystal_docs.project_name" content="stacker">
 
@@ -97,8 +97,38 @@
       
     </li>
   
+  <li class=" " data-id="stacker/Stacker/Error" data-name="stacker::error">
+      <a href="../../../Stacker/Error.html">Error</a>
+      
+    </li>
+  
+  <li class=" " data-id="stacker/Stacker/HostNotFound" data-name="stacker::hostnotfound">
+      <a href="../../../Stacker/HostNotFound.html">HostNotFound</a>
+      
+    </li>
+  
+  <li class=" " data-id="stacker/Stacker/InvalidHostName" data-name="stacker::invalidhostname">
+      <a href="../../../Stacker/InvalidHostName.html">InvalidHostName</a>
+      
+    </li>
+  
+  <li class=" " data-id="stacker/Stacker/InvalidRequest" data-name="stacker::invalidrequest">
+      <a href="../../../Stacker/InvalidRequest.html">InvalidRequest</a>
+      
+    </li>
+  
   <li class=" " data-id="stacker/Stacker/Logger" data-name="stacker::logger">
       <a href="../../../Stacker/Logger.html">Logger</a>
+      
+    </li>
+  
+  <li class=" " data-id="stacker/Stacker/NamespaceNotFound" data-name="stacker::namespacenotfound">
+      <a href="../../../Stacker/NamespaceNotFound.html">NamespaceNotFound</a>
+      
+    </li>
+  
+  <li class=" " data-id="stacker/Stacker/PillarError" data-name="stacker::pillarerror">
+      <a href="../../../Stacker/PillarError.html">PillarError</a>
       
     </li>
   
@@ -119,6 +149,11 @@
   
   <li class=" " data-id="stacker/Stacker/Renderer" data-name="stacker::renderer">
       <a href="../../../Stacker/Renderer.html">Renderer</a>
+      
+    </li>
+  
+  <li class=" " data-id="stacker/Stacker/RenderError" data-name="stacker::rendererror">
+      <a href="../../../Stacker/RenderError.html">RenderError</a>
       
     </li>
   
@@ -242,7 +277,11 @@
     Overview
   </h2>
 
-  <pre><code class="language-crystal"><span class="o">{%</span> set json <span class="o">=</span> {<span class="s">&quot;foo&quot;</span>: <span class="s">&quot;bar&quot;</span>} <span class="o">|</span> json <span class="o">%}</span> <span class="c"># =&gt; {&quot;foo&quot;: &quot;bar&quot;}</span></code></pre>
+  <p>Dump an object to JSON, without character escaping.</p>
+<pre><code class="language-crystal"><span class="o">{%</span> set json <span class="o">=</span> {<span class="s">&quot;foo&quot;</span>: <span class="s">&quot;bar&quot;</span>} <span class="o">|</span> json <span class="o">%}</span></code></pre>
+<p>The output is pretty printed, indented with 2 spaces unless another <strong>indent</strong>
+width is given: <code>{&quot;foo&quot;: &quot;bar&quot;} | json</code> renders as <code>{</code>, <code>  &quot;foo&quot;: &quot;bar&quot;</code>, <code>}</code>
+on three lines.</p>
 
 
 
@@ -269,7 +308,7 @@
   </h2>
   
     
-      <a href="https://github.com/jbox-web/stacker/blob/29d6c4698994427396c1de7de040b894b322a79c/src/runtime/filter/json.cr#L5" target="_blank">
+      <a href="https://github.com/jbox-web/stacker/blob/b0bebf270e38dc9c06290e795524b356005f7795/src/runtime/filter/json.cr#L11" target="_blank">
         runtime/filter/json.cr
       </a>
     

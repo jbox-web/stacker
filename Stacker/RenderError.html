@@ -14,7 +14,7 @@
 <script type="text/javascript" src="../js/doc.js"></script>
 
   <meta name="repository-name" content="stacker">
-  <title>Stacker::Runner - stacker master</title>
+  <title>Stacker::RenderError - stacker master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../";
   </script>
@@ -152,12 +152,12 @@
       
     </li>
   
-  <li class=" " data-id="stacker/Stacker/RenderError" data-name="stacker::rendererror">
+  <li class=" current" data-id="stacker/Stacker/RenderError" data-name="stacker::rendererror">
       <a href="../Stacker/RenderError.html">RenderError</a>
       
     </li>
   
-  <li class=" current" data-id="stacker/Stacker/Runner" data-name="stacker::runner">
+  <li class=" " data-id="stacker/Stacker/Runner" data-name="stacker::runner">
       <a href="../Stacker/Runner.html">Runner</a>
       
     </li>
@@ -257,14 +257,32 @@
 <h1 class="type-name">
 
   <span class="kind">
-    module
-  </span> Stacker::<wbr>Runner
+    class
+  </span> Stacker::<wbr>RenderError
 
 </h1>
 
 
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../Stacker/RenderError.html">Stacker::RenderError</a></li><li class="superclass"><a href="../Stacker/Error.html">Stacker::Error</a></li><li class="superclass">Exception</li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
+
+
+  <h2>
+    <a id="overview" class="anchor" href="#overview">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Overview
+  </h2>
+
+  <p>A template could not be rendered.</p>
+<p>This is always fatal for the whole build: rendering it as an empty string would
+deliver a truncated stack that is indistinguishable from a complete one.</p>
+<p>The response stays generic on purpose. The offending file name, the template
+source and the underlying error are written to the log, not handed to a client
+that may not be entitled to them.</p>
 
 
 
@@ -291,8 +309,8 @@
   </h2>
   
     
-      <a href="https://github.com/jbox-web/stacker/blob/b0bebf270e38dc9c06290e795524b356005f7795/src/stacker/runner.cr#L2" target="_blank">
-        stacker/runner.cr
+      <a href="https://github.com/jbox-web/stacker/blob/b0bebf270e38dc9c06290e795524b356005f7795/src/stacker/errors.cr#L73" target="_blank">
+        stacker/errors.cr
       </a>
     
     <br/>
@@ -300,130 +318,142 @@
 
 
 
-  
-    <h2>
-      <a id="constant-summary" class="anchor" href="#constant-summary">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-      Constant Summary
-    </h2>
-  
-  <dl>
-    
-      <dt class="entry-const" id="Log">
-        <strong>Log</strong> = <code><span class="t">::</span><span class="t">Log</span>.<span class="k">for</span>(<span class="s">&quot;runner&quot;</span>, <span class="t">::</span><span class="t">Log</span><span class="t">::</span><span class="t">Severity</span><span class="t">::</span><span class="t">Info</span>)</code>
-      </dt>
-      
-    
-      <dt class="entry-const" id="VALID_HOST_NAME">
-        <strong>VALID_HOST_NAME</strong> = <code><span class="s">/\A[a-zA-Z0-9][a-zA-Z0-9._-]*\z/</span></code>
-      </dt>
-      
-      <dd class="entry-const-doc">
-        <p>A host name resolves a file under the entrypoint directory and is interpolated
-in the stack config templates (<code>{{ minion_id }}.yml</code>). Anything that could walk
-out of that directory, or expand as a glob, is rejected up front.</p>
-      </dd>
-      
-    
-  </dl>
 
 
+  
+
+  
 
   
 
   
   <h2>
-    <a id="class-method-summary" class="anchor" href="#class-method-summary">
+    <a id="instance-method-summary" class="anchor" href="#instance-method-summary">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>
-    Class Method Summary
+    Instance Method Summary
   </h2>
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#process%28host_name%2Cnamespace%2Cgrains%2Cpillar%2Clevel%2Cpath%2Csteps%29-class-method" class="signature"><strong>.process</strong>(host_name, namespace, grains, pillar, level, path, steps)</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#warmup-class-method" class="signature"><strong>.warmup</strong></a>
-        
-          <div class="summary"><p>Build the shared <code><a href="../Stacker/Context.html">Context</a></code> up front, so the first requests do not race to initialize it.</p></div>
+        <a href="#response_message%3AString-instance-method" class="signature"><strong>#response_message</strong> : String</a>
         
       </li>
     
   </ul>
 
 
-  
-
-  
-
 
   <div class="methods-inherited">
+    
+      
+
+  <h3>Instance methods inherited from class <code><a href="../Stacker/Error.html">Stacker::Error</a></code></h3>
+  
+  
+    <a href="../Stacker/Error.html#response%3AHash%28String%2CString%29-instance-method" class="tooltip">
+      <span>response : Hash(String, String)</span>
+    response</a>, 
+    
+  
+    <a href="../Stacker/Error.html#response_message%3AString-instance-method" class="tooltip">
+      <span>response_message : String</span>
+    response_message</a>, 
+    
+  
+    <a href="../Stacker/Error.html#status_code%3AInt32-instance-method" class="tooltip">
+      <span>status_code : Int32</span>
+    status_code</a>
+    
+  
+
+
+      
+
+
+      
+
+
+      
+
+
+    
+      
+
+
+      
+
+
+      
+
+
+      
+
+
+    
+      
+
+
+      
+
+
+      
+
+
+      
+
+
+    
+      
+
+
+      
+
+
+      
+
+
+      
+
+
     
   </div>
 
   
 
   
+
+  
+
+  
   <h2>
-    <a id="class-method-detail" class="anchor" href="#class-method-detail">
+    <a id="instance-method-detail" class="anchor" href="#instance-method-detail">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>
-    Class Method Detail
+    Instance Method Detail
   </h2>
   
-    <div class="entry-detail" id="process(host_name,namespace,grains,pillar,level,path,steps)-class-method">
+    <div class="entry-detail" id="response_message:String-instance-method">
       <div class="signature">
         
-        def self.<strong>process</strong>(host_name, namespace, grains, pillar, level, path, steps)
+        def <strong>response_message</strong> : String
 
-        <a class="method-permalink" href="#process%28host_name%2Cnamespace%2Cgrains%2Cpillar%2Clevel%2Cpath%2Csteps%29-class-method">#</a>
+        <a class="method-permalink" href="#response_message%3AString-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/jbox-web/stacker/blob/b0bebf270e38dc9c06290e795524b356005f7795/src/stacker/runner.cr#L10" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="warmup-class-method">
-      <div class="signature">
-        
-        def self.<strong>warmup</strong>
-
-        <a class="method-permalink" href="#warmup-class-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Build the shared <code><a href="../Stacker/Context.html">Context</a></code> up front, so the first requests do not race to
-initialize it.</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/jbox-web/stacker/blob/b0bebf270e38dc9c06290e795524b356005f7795/src/stacker/runner.cr#L33" target="_blank">View source</a>]
+          [<a href="https://github.com/jbox-web/stacker/blob/b0bebf270e38dc9c06290e795524b356005f7795/src/stacker/errors.cr#L74" target="_blank">View source</a>]
         
       </div>
     </div>
   
 
-
-  
-
-  
 
 
 </div>

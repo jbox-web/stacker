@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Crystal Docs 1.17.1">
+<meta name="generator" content="Crystal Docs 1.19.1">
 <meta name="crystal_docs.project_version" content="master">
 <meta name="crystal_docs.project_name" content="stacker">
 
@@ -97,8 +97,38 @@
       
     </li>
   
+  <li class=" " data-id="stacker/Stacker/Error" data-name="stacker::error">
+      <a href="Stacker/Error.html">Error</a>
+      
+    </li>
+  
+  <li class=" " data-id="stacker/Stacker/HostNotFound" data-name="stacker::hostnotfound">
+      <a href="Stacker/HostNotFound.html">HostNotFound</a>
+      
+    </li>
+  
+  <li class=" " data-id="stacker/Stacker/InvalidHostName" data-name="stacker::invalidhostname">
+      <a href="Stacker/InvalidHostName.html">InvalidHostName</a>
+      
+    </li>
+  
+  <li class=" " data-id="stacker/Stacker/InvalidRequest" data-name="stacker::invalidrequest">
+      <a href="Stacker/InvalidRequest.html">InvalidRequest</a>
+      
+    </li>
+  
   <li class=" " data-id="stacker/Stacker/Logger" data-name="stacker::logger">
       <a href="Stacker/Logger.html">Logger</a>
+      
+    </li>
+  
+  <li class=" " data-id="stacker/Stacker/NamespaceNotFound" data-name="stacker::namespacenotfound">
+      <a href="Stacker/NamespaceNotFound.html">NamespaceNotFound</a>
+      
+    </li>
+  
+  <li class=" " data-id="stacker/Stacker/PillarError" data-name="stacker::pillarerror">
+      <a href="Stacker/PillarError.html">PillarError</a>
       
     </li>
   
@@ -119,6 +149,11 @@
   
   <li class=" " data-id="stacker/Stacker/Renderer" data-name="stacker::renderer">
       <a href="Stacker/Renderer.html">Renderer</a>
+      
+    </li>
+  
+  <li class=" " data-id="stacker/Stacker/RenderError" data-name="stacker::rendererror">
+      <a href="Stacker/RenderError.html">RenderError</a>
       
     </li>
   
@@ -346,6 +381,36 @@ server_environment: development</code></pre>
 <code>server_host</code>        | ip address to bind to (default <code>127.0.0.1</code>)
 <code>server_port</code>        | port to bind to (default <code>3000</code>)
 <code>server_environment</code> | <code>development</code> or <code>production</code> (default <code>production</code>)</p>
+<p><strong>Note :</strong> keep <code>server_environment</code> set to <code>production</code> on any host others can reach. In <code>development</code> mode Kemal renders an exception page exposing source file paths and code excerpts.</p>
+<h2><a id="security" class="anchor" href="#security">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Security</h2>
+<p>Stacker has <strong>no authentication</strong>. Anyone able to reach the port can read the full pillar of any host, secrets included, and can raise the log verbosity with <code>l=trace</code> — which writes those pillars to the log file.</p>
+<p>Deploy it accordingly :</p>
+<ul>
+<li>bind it to the loopback interface (the default <code>server_host</code>) or to an administration network, never to a public interface,</li>
+<li>put it behind a reverse proxy enforcing authentication if it must be reachable remotely,</li>
+<li>restrict access to the log file, it contains pillar data at <code>debug</code> and <code>trace</code> levels.</li>
+</ul>
+<p>Host names are validated against <code>[a-zA-Z0-9][a-zA-Z0-9._-]*</code> : anything carrying a path separator or <code>..</code> is rejected with <code>400</code>, since the host name resolves a file path and is interpolated in the stack config templates.</p>
+<h2><a id="errors" class="anchor" href="#errors">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Errors</h2>
+<p>Failures are reported the same way by the web server and the CLI :</p>
+<p>Status | Body                                        | Cause
+-------|---------------------------------------------|------
+<code>400</code>  | <code>{&quot;400&quot;:&quot;<a href="Stacker.html">Stacker</a>: invalid host name&quot;}</code>      | the host name is not a valid host name
+<code>400</code>  | <code>{&quot;400&quot;:&quot;<a href="Stacker.html">Stacker</a>: invalid request body&quot;}</code>   | the POST body is not a JSON object, or <code>grains</code>/<code>pillar</code> is not an object
+<code>404</code>  | <code>{&quot;404&quot;:&quot;<a href="Stacker.html">Stacker</a>: host not found&quot;}</code>         | no <code>&lt;host_name&gt;.yml</code> under the entrypoint
+<code>404</code>  | <code>{&quot;404&quot;:&quot;<a href="Stacker.html">Stacker</a>: namespace not found&quot;}</code>    | the namespace is not declared in <code>stacks</code>
+<code>500</code>  | <code>{&quot;500&quot;:&quot;<a href="Stacker.html">Stacker</a>: template error&quot;}</code>         | a template failed to render
+<code>500</code>  | <code>{&quot;500&quot;:&quot;<a href="Stacker.html">Stacker</a>: pillar error&quot;}</code>           | a rendered pillar file is not a YAML mapping</p>
+<p>A template or pillar error aborts the whole build : delivering a partially rendered stack would be indistinguishable from a complete one, and Salt would apply it. The details (file name, template excerpt) are written to the log, not to the response.</p>
+<p><code>stacker fetch</code> prints the same body on stdout, writes the detail on stderr and <strong>exits 1</strong>, so scripts can tell a failed build from an empty pillar.</p>
 <h2><a id="salt-integration" class="anchor" href="#salt-integration">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
@@ -405,6 +470,7 @@ curl http://127.0.0.1:3000/server1.example.net?f=yaml</code></pre>
 <li>log level</li>
 </ul>
 <p>The log level is dynamic. No need to restart the web server :)</p>
+<p>It is also per request : two concurrent requests asking for different levels no longer affect each other.</p>
 <p>Set log level by using optional <code>l=</code> query parameter :</p>
 <pre><code class="language-sh">curl http://127.0.0.1:3000/server1.example.net?l=debug
 curl http://127.0.0.1:3000/server1.example.net?l=trace</code></pre>
@@ -716,18 +782,27 @@ operators:
   </svg>
 </a>Development</h2>
 <p>To compile Stacker you will need <a href="https://crystal-lang.org">Crystal</a> compiler.</p>
-<p>You can easily setup your development environment with <a href="https://github.com/asdf-vm/asdf">asdf</a> :</p>
+<p>You can easily setup your development environment with <a href="https://github.com/jdx/mise">mise</a> :</p>
 <pre><code class="language-sh">git clone https://github.com/jbox-web/stacker
-make setup  # Install asdf Crystal plugin and install Crystal compiler
-make deps   # Install Stacker dependencies
-make build  # Build Stacker in development mode
-make relase # Build Stacker in production mode</code></pre>
+cd stacker
+mise install            # Install Crystal compiler
+mise dev:deps           # Install Stacker dependencies
+mise dev:build          # Build Stacker in development mode
+mise release:build      # Build Stacker in production mode</code></pre>
+<p>Other available tasks (<code>mise tasks</code> to list them all) :</p>
+<pre><code class="language-sh">mise dev:spec           # Run the test suite
+mise dev:ameba          # Run static code analysis
+mise dev:format         # Format code
+mise dev:docs           # Generate project documentation
+mise dev:clean          # Cleanup environment
+mise release:static     # Build static binaries with Docker</code></pre>
+<p><strong>Note :</strong> on macOS, run <code>mise dev:fix-shards-command</code> once before <code>mise dev:deps</code> (workaround for <a href="https://github.com/crystal-lang/crystal/issues/16746">crystal-lang/crystal#16746</a>).</p>
 <h2><a id="extend-stacker" class="anchor" href="#extend-stacker">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>Extend Stacker</h2>
-<p>If you need to add filters (or functions) just drop a new class with a few lines of Crystal code in <a href="https://github.com/jbox-web/stacker/tree/master/src/runtime">/src/runtime</a> and recompile Stacker with <code>make build</code> (dev mode) or <code>make release</code> (release mode).</p>
+<p>If you need to add filters (or functions) just drop a new class with a few lines of Crystal code in <a href="https://github.com/jbox-web/stacker/tree/master/src/runtime">/src/runtime</a> and recompile Stacker with <code>mise dev:build</code> (dev mode) or <code>mise release:build</code> (release mode).</p>
 <p>Your custom filters (or functions) should be available in Jinja templates. To be sure run <code>stacker info</code> and check the Crinja environment info.</p>
 <p>Then feel free to submit a PR if you think it will be useful for people.</p>
 <h2><a id="roadmap" class="anchor" href="#roadmap">

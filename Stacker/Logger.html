@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Crystal Docs 1.17.1">
+<meta name="generator" content="Crystal Docs 1.19.1">
 <meta name="crystal_docs.project_version" content="master">
 <meta name="crystal_docs.project_name" content="stacker">
 
@@ -97,8 +97,38 @@
       
     </li>
   
+  <li class=" " data-id="stacker/Stacker/Error" data-name="stacker::error">
+      <a href="../Stacker/Error.html">Error</a>
+      
+    </li>
+  
+  <li class=" " data-id="stacker/Stacker/HostNotFound" data-name="stacker::hostnotfound">
+      <a href="../Stacker/HostNotFound.html">HostNotFound</a>
+      
+    </li>
+  
+  <li class=" " data-id="stacker/Stacker/InvalidHostName" data-name="stacker::invalidhostname">
+      <a href="../Stacker/InvalidHostName.html">InvalidHostName</a>
+      
+    </li>
+  
+  <li class=" " data-id="stacker/Stacker/InvalidRequest" data-name="stacker::invalidrequest">
+      <a href="../Stacker/InvalidRequest.html">InvalidRequest</a>
+      
+    </li>
+  
   <li class=" current" data-id="stacker/Stacker/Logger" data-name="stacker::logger">
       <a href="../Stacker/Logger.html">Logger</a>
+      
+    </li>
+  
+  <li class=" " data-id="stacker/Stacker/NamespaceNotFound" data-name="stacker::namespacenotfound">
+      <a href="../Stacker/NamespaceNotFound.html">NamespaceNotFound</a>
+      
+    </li>
+  
+  <li class=" " data-id="stacker/Stacker/PillarError" data-name="stacker::pillarerror">
+      <a href="../Stacker/PillarError.html">PillarError</a>
       
     </li>
   
@@ -119,6 +149,11 @@
   
   <li class=" " data-id="stacker/Stacker/Renderer" data-name="stacker::renderer">
       <a href="../Stacker/Renderer.html">Renderer</a>
+      
+    </li>
+  
+  <li class=" " data-id="stacker/Stacker/RenderError" data-name="stacker::rendererror">
+      <a href="../Stacker/RenderError.html">RenderError</a>
       
     </li>
   
@@ -256,7 +291,7 @@
   </h2>
   
     
-      <a href="https://github.com/jbox-web/stacker/blob/29d6c4698994427396c1de7de040b894b322a79c/src/stacker/logger.cr#L2" target="_blank">
+      <a href="https://github.com/jbox-web/stacker/blob/b0bebf270e38dc9c06290e795524b356005f7795/src/stacker/logger.cr#L2" target="_blank">
         stacker/logger.cr
       </a>
     
@@ -300,7 +335,16 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#with_log_level%28level%2C%26%29-class-method" class="signature"><strong>.with_log_level</strong>(level, &)</a>
+        <a href="#for%28source%3AString%2Clevel%3AString%2Cbackend%3ALog%3A%3ABackend%7CNil%3Dnil%29%3ALog-class-method" class="signature"><strong>.for</strong>(source : String, level : String, backend : Log::Backend | Nil = <span class="n">nil</span>) : Log</a>
+        
+          <div class="summary"><p>Build a <code>::Log</code> instance dedicated to a single stack build.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#severity%28level%3AString%29%3ALog%3A%3ASeverity-class-method" class="signature"><strong>.severity</strong>(level : String) : Log::Severity</a>
+        
+          <div class="summary"><p>Translate a log level name into a <code>::Log::Severity</code>, defaulting to <code>Info</code>.</p></div>
         
       </li>
     
@@ -328,18 +372,47 @@
     Class Method Detail
   </h2>
   
-    <div class="entry-detail" id="with_log_level(level,&amp;)-class-method">
+    <div class="entry-detail" id="for(source:String,level:String,backend:Log::Backend|Nil=nil):Log-class-method">
       <div class="signature">
         
-        def self.<strong>with_log_level</strong>(level, &)
+        def self.<strong>for</strong>(source : String, level : String, backend : Log::Backend | Nil = <span class="n">nil</span>) : Log
 
-        <a class="method-permalink" href="#with_log_level%28level%2C%26%29-class-method">#</a>
+        <a class="method-permalink" href="#for%28source%3AString%2Clevel%3AString%2Cbackend%3ALog%3A%3ABackend%7CNil%3Dnil%29%3ALog-class-method">#</a>
       </div>
+      
+        <div class="doc">
+          
+          <p>Build a <code>::Log</code> instance dedicated to a single stack build.</p>
+<p>The severity lives on the instance, never on a shared constant: two builds
+running concurrently cannot change each other's verbosity, which used to leak
+one request's pillars into the log at the verbosity asked by another one.</p>
+        </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/jbox-web/stacker/blob/29d6c4698994427396c1de7de040b894b322a79c/src/stacker/logger.cr#L12" target="_blank">View source</a>]
+          [<a href="https://github.com/jbox-web/stacker/blob/b0bebf270e38dc9c06290e795524b356005f7795/src/stacker/logger.cr#L22" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="severity(level:String):Log::Severity-class-method">
+      <div class="signature">
+        
+        def self.<strong>severity</strong>(level : String) : Log::Severity
+
+        <a class="method-permalink" href="#severity%28level%3AString%29%3ALog%3A%3ASeverity-class-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Translate a log level name into a <code>::Log::Severity</code>, defaulting to <code>Info</code>.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/jbox-web/stacker/blob/b0bebf270e38dc9c06290e795524b356005f7795/src/stacker/logger.cr#L13" target="_blank">View source</a>]
         
       </div>
     </div>
