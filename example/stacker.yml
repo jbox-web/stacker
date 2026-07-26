@@ -16,4 +16,4 @@ stacks:
 
 server_host: 127.0.0.1
 server_port: 3000
-server_environment: development
+server_environment: production

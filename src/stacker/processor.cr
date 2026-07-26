@@ -22,7 +22,7 @@ module Stacker
       steps.reject { |step| !valid_steps.includes?(step) }
     end
 
-    def initialize(@renderer : Renderer, @stacks : Array(String))
+    def initialize(@renderer : Renderer, @stacks : Array(String), @log : ::Log = Log)
       @stack = Value.new
       @host_name = ""
       @grains = {} of String => String
@@ -55,7 +55,7 @@ module Stacker
         result = @renderer.compile(stack, compilation_data)
 
         with_targeted_trace(step: "compile") do
-          Log.trace { "\n#{result}" }
+          @log.trace { "\n#{result}" }
         end
 
         result = string_to_array(result)
@@ -66,7 +66,7 @@ module Stacker
       end
 
       with_targeted_trace(step: "final") do
-        Log.trace { "Stack final:\n#{YAML.dump(@stack)}" }
+        @log.trace { "Stack final:\n#{YAML.dump(@stack)}" }
       end
     end
 
@@ -81,11 +81,14 @@ module Stacker
       files.each do |file|
         @current_path = file.to_s
 
-        Log.debug { "Loading: #{file}" }
+        @log.debug { "Loading: #{file}" }
 
-        data = Value.new
+        # The file is merged straight into the stack: passing it through an
+        # intermediate Value would consume a root level `__` strategy before the
+        # stack ever sees it.
+        data = load_pillars_from_file(dirname, file)
 
-        load_pillars_from_file(dirname, file, data)
+        next if data.nil?
 
         with_debug_stack do
           @stack.deep_merge!(data)
@@ -93,36 +96,37 @@ module Stacker
       end
     end
 
-    private def load_pillars_from_file(dirname, file, data)
-      Log.debug { "Compiling: #{file}" }
+    private def load_pillars_from_file(dirname, file) : Value?
+      @log.debug { "Compiling: #{file}" }
 
       yaml = @renderer.compile(file, compilation_data.merge({"stack_path" => dirname}))
 
       with_targeted_trace(step: "compile") do
-        Log.trace { "\n#{yaml}" }
+        @log.trace { "\n#{yaml}" }
       end
 
+      # An empty render is a legitimate "nothing to declare"; a failed one raises.
       return if yaml.empty?
 
       hash =
         begin
           Value.from_yaml(yaml)
-        rescue e : YAML::ParseException
-          Log.error { "Error while parsing yaml #{file}" }
-          Log.error { e.message }
-          Log.error { yaml }
-          nil
+        rescue e : Exception
+          @log.error { "Error while parsing yaml #{file}" }
+          @log.error { e.message }
+          @log.error { yaml }
+          raise PillarError.new("#{file}: #{e.message}", cause: e)
         end
 
       return if hash.nil?
 
       with_targeted_trace(step: "yaml-load") do
-        Log.trace { "Loaded:\n#{YAML.dump(hash)}" }
+        @log.trace { "Loaded:\n#{YAML.dump(hash)}" }
       end
 
-      Log.debug { "Merging: #{file}" }
+      @log.debug { "Merging: #{file}" }
 
-      data.deep_merge!(hash)
+      hash
     end
 
     private def compilation_data
@@ -130,20 +134,20 @@ module Stacker
     end
 
     private def with_debug_run(&)
-      Log.info { "Building stack for: #{@host_name} (namespace: #{@namespace})" }
+      @log.info { "Building stack for: #{@host_name} (namespace: #{@namespace})" }
       yield
-      Log.info { "End of stack build for: #{@host_name} (namespace: #{@namespace})" }
+      @log.info { "End of stack build for: #{@host_name} (namespace: #{@namespace})" }
     end
 
     private def with_debug_stack(&)
       with_targeted_trace(step: "before-merge") do
-        Log.trace { "Stack before:\n#{YAML.dump(@stack)}" }
+        @log.trace { "Stack before:\n#{YAML.dump(@stack)}" }
       end
 
       yield
 
       with_targeted_trace(step: "after-merge") do
-        Log.trace { "Stack after:\n#{YAML.dump(@stack)}" }
+        @log.trace { "Stack after:\n#{YAML.dump(@stack)}" }
       end
     end
 

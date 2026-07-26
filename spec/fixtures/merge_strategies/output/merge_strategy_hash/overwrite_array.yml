@@ -1,0 +1,10 @@
+---
+firewall:
+  rules:
+  - name: allow_ssh
+    port: 22
+  - name: allow_http
+    port: 80
+  nested:
+  - sub:
+      key: value

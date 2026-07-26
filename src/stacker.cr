@@ -34,12 +34,17 @@ module Stacker
     "#{VERSION} (#{GIT_REF})"
   end
 
-  def self.config=(config : Config)
+  def self.config=(config : Config?)
     @@config = config
   end
 
+  # Return the loaded configuration, or nil when none has been loaded yet.
+  def self.config?
+    @@config
+  end
+
   def self.config
-    @@config ||= Config.from_yaml("")
+    @@config || raise Error.new("configuration not loaded")
   end
 
   def self.load_config(config_path)
@@ -55,6 +60,10 @@ module Stacker
 
   def self.logger
     @@logger ||= ::Log::IOBackend.new(log_file)
+  end
+
+  def self.logger=(backend : ::Log::Backend?)
+    @@logger = backend
   end
 
   def self.log_file
@@ -80,16 +89,22 @@ module Stacker
     log_file.close
   end
 
+  # Reopen the log file after a rotation.
+  #
+  # The backend memoizes the `File` it writes to, so it has to be dropped as well:
+  # keeping it would go on writing to the rotated (renamed) file forever.
   def self.reopen_log_file!
+    file = @@log_file
     @@log_file = nil
+    @@logger = nil
     setup_log
+    file.close if file && !file.closed? && !log_to_stdout?
   end
 
-  def self.start_server(args = ARGV.dup)
-    # Prepare args for Kemal
-    args = filter_args(args)
-
-    Kemal.run(args: args) do |kemal_config|
+  def self.start_server
+    # Kemal gets no arguments: the listening address always comes from the config
+    # file, so letting it parse `-b`/`-p` would accept flags it then ignores.
+    Kemal.run(args: nil) do |kemal_config|
       # Set environment
       kemal_config.env = config.server_environment
 
@@ -103,10 +118,15 @@ module Stacker
     Kemal.stop
   end
 
-  private def self.filter_args(args)
-    # Skip `server` subcommand
+  # Return the arguments Stacker does not act on.
+  #
+  # Anything left once the subcommand and Stacker's own flags are removed would be
+  # silently ignored, so the caller reports it instead of pretending to honour it.
+  def self.unknown_args(args = ARGV.dup)
+    args = args.dup
+
+    # Skip the subcommand
     args.shift
-    return nil if args.empty?
 
     # Remove our own flags
     delete_flag_from_args(args, ["-c", "--config"])
@@ -115,7 +135,8 @@ module Stacker
   private def self.delete_flag_from_args(args, flags)
     flags.each do |flag|
       while index = args.index(flag)
-        args.delete_at(index + 1)
+        # The flag may be the last argument: its value is then simply absent.
+        args.delete_at(index + 1) if index + 1 < args.size
         args.delete_at(index)
       end
     end
@@ -128,7 +149,9 @@ unless Crystal.env.test?
   begin
     Stacker::CLI.run
   rescue e : Exception
-    puts e.message
+    # stdout carries the machine readable result of `fetch`: diagnostics belong on
+    # stderr, with the exception class and backtrace kept.
+    STDERR.puts e.inspect_with_backtrace
     exit 1
   end
 end

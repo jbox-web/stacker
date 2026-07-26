@@ -1,6 +1,21 @@
 module Stacker
   # :nodoc:
   class Server
+    Log = ::Log.for("server", ::Log::Severity::Info)
+
+    # Key under which a route stashes the body to render for an error status.
+    ERROR_BODY = "stacker.error_body"
+
+    # Kemal renders its own HTML page for a status that has no error handler, and
+    # the Salt module parses the body as JSON. Every status Stacker answers with
+    # therefore gets a handler returning the documented JSON body.
+    {% for status_code in [400, 404, 500] %}
+      error {{ status_code }} do |env|
+        env.response.content_type = "application/json"
+        env.get?(ERROR_BODY) || {"{{ status_code.id }}" => "Stacker: error"}.to_json
+      end
+    {% end %}
+
     get "/" do
       "Stacker root"
     end
@@ -19,6 +34,13 @@ module Stacker
 
       result = Runner.process(host_name, namespace, grains, pillar, level, path, steps)
       respond_with(env, format, result)
+    rescue e : Error
+      respond_with_error(env, e)
+    rescue e : Exception
+      # An unexpected error must not reach Kemal: in development mode it would render
+      # an exception page exposing source paths and code.
+      Log.error(exception: e) { "Unexpected error while processing #{env.request.resource}" }
+      respond_with_error(env, Error.new("internal error"))
     end
 
     private def self.extract_params(env)
@@ -40,16 +62,29 @@ module Stacker
 
     # POST request
     private def self.extract_grains_and_pillar(host_name : String, env)
-      grains = env.params.json["grains"]? ? env.params.json["grains"].as(Hash) : {"id" => host_name}
-      pillar = env.params.json["pillar"]? ? env.params.json["pillar"].as(Hash) : {} of String => String
+      body =
+        begin
+          env.params.json
+        rescue e : Exception
+          raise InvalidRequest.new(e.message)
+        end
+
+      grains = extract_object(body, "grains") || {"id" => host_name}
+      pillar = extract_object(body, "pillar") || {} of String => String
       {grains, pillar}
+    end
+
+    # Read a JSON object from the request body, refusing any other JSON type.
+    private def self.extract_object(body, key)
+      value = body[key]?
+      return nil if value.nil?
+      raise InvalidRequest.new("#{key} must be an object") unless value.is_a?(Hash)
+
+      value
     end
 
     private def self.respond_with(env, format, result)
       case format
-      when "json"
-        env.response.content_type = "application/json"
-        result.to_json
       when "yaml"
         env.response.content_type = "application/x-yaml"
         result.to_yaml
@@ -57,6 +92,15 @@ module Stacker
         env.response.content_type = "application/json"
         result.to_json
       end
+    end
+
+    # Hand the body over to the matching error handler: setting the status alone
+    # would let Kemal render its own error page instead.
+    private def self.respond_with_error(env, error : Error)
+      body = error.response.to_json
+      env.set(ERROR_BODY, body)
+      env.response.status_code = error.status_code
+      body
     end
   end
 end

@@ -12,9 +12,17 @@ module Stacker
         default: "stacker.yml"
 
       def run
+        unknown = Stacker.unknown_args
+
+        unless unknown.empty?
+          STDERR.puts "Unknown arguments: #{unknown.join(' ')}"
+          exit 1
+        end
+
         Stacker.load_config(flags.config)
         Stacker.setup_log
         Stacker.setup_signals
+        Runner.warmup
         Stacker.start_server
       end
     end
@@ -41,14 +49,12 @@ module Stacker
         short: "n",
         default: "default"
 
-      # ameba:disable Lint/UselessAssign
       define_flag grains : String,
         description: "Path to JSON grains file",
         long: "grains",
         short: "g",
         default: ""
 
-      # ameba:disable Lint/UselessAssign
       define_flag pillar : String,
         description: "Path to JSON pillar file",
         long: "pillar",
@@ -69,7 +75,6 @@ module Stacker
         short: "P",
         default: ""
 
-      # ameba:disable Lint/UselessAssign
       define_flag steps : Array(String),
         description: "Steps to debug",
         long: "step",
@@ -93,6 +98,13 @@ module Stacker
 
         result = Runner.process(arguments.host_name, flags.namespace, grains, pillar, flags.log_level, flags.path, steps)
         puts respond_with(flags.output_format, result)
+      rescue e : Error
+        # The body stays on stdout for callers that already parse it, but the exit
+        # status now tells scripts that no pillar was produced. The full diagnostic,
+        # kept out of the response on purpose, goes to stderr.
+        puts respond_with(flags.output_format, e.response)
+        STDERR.puts e.message
+        exit 1
       end
 
       private def load_json_file(file)

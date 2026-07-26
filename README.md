@@ -135,6 +135,37 @@ Config               | Description
 `server_port`        | port to bind to (default `3000`)
 `server_environment` | `development` or `production` (default `production`)
 
+**Note :** keep `server_environment` set to `production` on any host others can reach. In `development` mode Kemal renders an exception page exposing source file paths and code excerpts.
+
+## Security
+
+Stacker has **no authentication**. Anyone able to reach the port can read the full pillar of any host, secrets included, and can raise the log verbosity with `l=trace` — which writes those pillars to the log file.
+
+Deploy it accordingly :
+
+* bind it to the loopback interface (the default `server_host`) or to an administration network, never to a public interface,
+* put it behind a reverse proxy enforcing authentication if it must be reachable remotely,
+* restrict access to the log file, it contains pillar data at `debug` and `trace` levels.
+
+Host names are validated against `[a-zA-Z0-9][a-zA-Z0-9._-]*` : anything carrying a path separator or `..` is rejected with `400`, since the host name resolves a file path and is interpolated in the stack config templates.
+
+## Errors
+
+Failures are reported the same way by the web server and the CLI :
+
+Status | Body                                        | Cause
+-------|---------------------------------------------|------
+`400`  | `{"400":"Stacker: invalid host name"}`      | the host name is not a valid host name
+`400`  | `{"400":"Stacker: invalid request body"}`   | the POST body is not a JSON object, or `grains`/`pillar` is not an object
+`404`  | `{"404":"Stacker: host not found"}`         | no `<host_name>.yml` under the entrypoint
+`404`  | `{"404":"Stacker: namespace not found"}`    | the namespace is not declared in `stacks`
+`500`  | `{"500":"Stacker: template error"}`         | a template failed to render
+`500`  | `{"500":"Stacker: pillar error"}`           | a rendered pillar file is not a YAML mapping
+
+A template or pillar error aborts the whole build : delivering a partially rendered stack would be indistinguishable from a complete one, and Salt would apply it. The details (file name, template excerpt) are written to the log, not to the response.
+
+`stacker fetch` prints the same body on stdout, writes the detail on stderr and **exits 1**, so scripts can tell a failed build from an empty pillar.
+
 ## Salt integration
 
 To integrate Stacker with Salt you first need to add the [stacker pillar module](/salt/stacker.py) in Salt :
@@ -204,6 +235,8 @@ Only `json` and `yaml` are supported.
 * log level
 
 The log level is dynamic. No need to restart the web server :)
+
+It is also per request : two concurrent requests asking for different levels no longer affect each other.
 
 Set log level by using optional `l=` query parameter :
 
@@ -539,19 +572,33 @@ operators:
 
 To compile Stacker you will need [Crystal](https://crystal-lang.org) compiler.
 
-You can easily setup your development environment with [asdf](https://github.com/asdf-vm/asdf) :
+You can easily setup your development environment with [mise](https://github.com/jdx/mise) :
 
 ```sh
 git clone https://github.com/jbox-web/stacker
-make setup  # Install asdf Crystal plugin and install Crystal compiler
-make deps   # Install Stacker dependencies
-make build  # Build Stacker in development mode
-make relase # Build Stacker in production mode
+cd stacker
+mise install            # Install Crystal compiler
+mise dev:deps           # Install Stacker dependencies
+mise dev:build          # Build Stacker in development mode
+mise release:build      # Build Stacker in production mode
 ```
+
+Other available tasks (`mise tasks` to list them all) :
+
+```sh
+mise dev:spec           # Run the test suite
+mise dev:ameba          # Run static code analysis
+mise dev:format         # Format code
+mise dev:doc            # Generate project documentation
+mise dev:clean          # Cleanup environment
+mise release:static     # Build static binaries with Docker
+```
+
+**Note :** on macOS, run `mise dev:fix-shards-command` once before `mise dev:deps` (workaround for [crystal-lang/crystal#16746](https://github.com/crystal-lang/crystal/issues/16746)).
 
 ## Extend Stacker
 
-If you need to add filters (or functions) just drop a new class with a few lines of Crystal code in [/src/runtime](https://github.com/jbox-web/stacker/tree/master/src/runtime) and recompile Stacker with `make build` (dev mode) or `make release` (release mode).
+If you need to add filters (or functions) just drop a new class with a few lines of Crystal code in [/src/runtime](https://github.com/jbox-web/stacker/tree/master/src/runtime) and recompile Stacker with `mise dev:build` (dev mode) or `mise release:build` (release mode).
 
 Your custom filters (or functions) should be available in Jinja templates. To be sure run `stacker info` and check the Crinja environment info.
 

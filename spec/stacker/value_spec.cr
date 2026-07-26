@@ -85,6 +85,30 @@ describe Stacker::Value do
           Stacker::Value.deep_merge!(hash1, hash2)
           YAML.dump(hash1).should eq(generated_yaml)
         end
+
+        # The `__` marker is only ever the first element of an *array* when it carries
+        # a strategy. A leading hash without `__` is regular data and must survive.
+        it "should keep every element of an overwritten array of hashes" do
+          hash1 = load_yaml("spec/fixtures/merge_strategies/input/merge_strategy_hash/overwrite_array_1.yml")
+          hash2 = load_yaml("spec/fixtures/merge_strategies/input/merge_strategy_hash/overwrite_array_2.yml")
+          generated_yaml = File.read("spec/fixtures/merge_strategies/output/merge_strategy_hash/overwrite_array.yml")
+
+          Stacker::Value.deep_merge!(hash1, hash2)
+          YAML.dump(hash1).should eq(generated_yaml)
+        end
+      end
+    end
+
+    describe "root merging strategies" do
+      context "when strategy is overwrite at the root of a file" do
+        it "should replace the whole stack in place" do
+          hash1 = load_yaml("spec/fixtures/merge_strategies/input/merge_strategy_root/overwrite_1.yml")
+          hash2 = load_yaml("spec/fixtures/merge_strategies/input/merge_strategy_root/overwrite_2.yml")
+          generated_yaml = File.read("spec/fixtures/merge_strategies/output/merge_strategy_root/overwrite.yml")
+
+          Stacker::Value.deep_merge!(hash1, hash2)
+          YAML.dump(hash1).should eq(generated_yaml)
+        end
       end
     end
 

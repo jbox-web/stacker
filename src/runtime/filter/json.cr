@@ -1,7 +1,13 @@
 module Stacker::Runtime::Filter
+  # Dump an object to JSON, without character escaping.
+  #
   # ```
-  # {% set json = {"foo": "bar"} | json %} # => {"foo": "bar"}
+  # {% set json = {"foo": "bar"} | json %}
   # ```
+  #
+  # The output is pretty printed, indented with 2 spaces unless another **indent**
+  # width is given: `{"foo": "bar"} | json` renders as `{`, `  "foo": "bar"`, `}`
+  # on three lines.
   class Json
     Crinja.filter({indent: nil}, :json) do
       raw = target.raw

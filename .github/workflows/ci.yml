@@ -20,6 +20,20 @@ on:
   workflow_dispatch:
 
 jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Setup mise
+        uses: jdx/mise-action@v3
+
+      - name: Check code formatting
+        run: mise dev:format-check
+
   ameba:
     runs-on: ubuntu-latest
     steps:
@@ -37,8 +51,25 @@ jobs:
       - name: Run static code analysis
         run: mise dev:ameba
 
-  test_linux:
+  test_linux_amd64:
     runs-on: ubuntu-latest
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Setup mise
+        uses: jdx/mise-action@v3
+
+      - name: Install dependencies
+        run: mise dev:deps
+
+      - name: Run tests
+        run: mise dev:spec
+
+  test_linux_arm64:
+    runs-on: ubuntu-24.04-arm
     steps:
       - name: Git checkout
         uses: actions/checkout@v6

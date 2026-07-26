@@ -9,20 +9,18 @@ module Stacker
       "fatal" => ::Log::Severity::Fatal,
     }
 
-    def self.with_log_level(level, &)
-      new_level = SEVERITY_MAP[level]? || SEVERITY_MAP["info"]
-      old_level = Stacker::Processor::Log.level
+    # Translate a log level name into a `::Log::Severity`, defaulting to `Info`.
+    def self.severity(level : String) : ::Log::Severity
+      SEVERITY_MAP[level.downcase]? || SEVERITY_MAP["info"]
+    end
 
-      begin
-        Stacker::Processor::Log.level = new_level
-        Stacker::Renderer::Log.level = new_level
-        result = yield
-      ensure
-        Stacker::Processor::Log.level = old_level
-        Stacker::Renderer::Log.level = old_level
-      end
-
-      result
+    # Build a `::Log` instance dedicated to a single stack build.
+    #
+    # The severity lives on the instance, never on a shared constant: two builds
+    # running concurrently cannot change each other's verbosity, which used to leak
+    # one request's pillars into the log at the verbosity asked by another one.
+    def self.for(source : String, level : String, backend : ::Log::Backend? = nil) : ::Log
+      ::Log.new(source, backend || Stacker.logger, severity(level))
     end
   end
 end

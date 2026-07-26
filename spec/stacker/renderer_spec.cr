@@ -150,6 +150,14 @@ describe Stacker::Renderer do
         output = renderer.compile("spec/fixtures/filters/unique.j2", Hash(String, String).new)
         output.should eq("['a']")
       end
+
+      # Returning an empty string silently turned the value into an empty YAML key.
+      it "should reject a target that is not an array" do
+        renderer = create_renderer
+        expect_raises(Stacker::RenderError, /unique/) do
+          renderer.compile("spec/fixtures/filters/unique_not_an_array.j2", Hash(String, String).new)
+        end
+      end
     end
 
     describe "dictsort" do

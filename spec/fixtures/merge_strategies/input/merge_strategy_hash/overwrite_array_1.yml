@@ -1,0 +1,3 @@
+---
+firewall:
+  legacy: true

@@ -12,6 +12,7 @@ module Stacker
 
     delegate each, to: @container
     delegate delete, to: @container
+    delegate clear, to: @container
     delegate to_json, to: @container
     delegate to_yaml, to: @container
 
@@ -20,9 +21,15 @@ module Stacker
       yaml = YAML.parse(yaml)
 
       return nil if yaml.nil?
-      return nil if yaml.raw.nil?
 
-      convert_hash(yaml.as_h)
+      raw = yaml.raw
+      return nil if raw.nil?
+
+      # A pillar file must hold a mapping: casting a sequence or a scalar would raise
+      # a bare TypeCastError with no indication of what is wrong.
+      raise PillarError.new("expected a YAML mapping, got #{raw.class}") unless raw.is_a?(Hash)
+
+      convert_hash(raw)
     end
 
     # Convert a Hash object into a Stacker::Value object.
@@ -75,7 +82,10 @@ module Stacker
     def self.deep_merge!(hash, other_hash)
       strategy = other_hash.delete("__") || "merge-last"
 
-      return cleanup_hash!(other_hash) if strategy == "overwrite"
+      # **hash** must be mutated in place: `Stacker::Value` is a struct, so a caller
+      # holding a reference (`@stack.deep_merge!(data)`) would otherwise keep its old
+      # content and silently drop the whole overwriting file.
+      return replace!(hash, cleanup_hash!(other_hash)) if strategy == "overwrite"
 
       other_hash.each do |current_key, other_value|
         if strategy == "remove"
@@ -104,6 +114,18 @@ module Stacker
       hash
     end
 
+    # Replace the content of **hash** with the content of **other**, in place.
+    private def self.replace!(hash, other)
+      return other unless hash.is_a?(Stacker::Value) && other.is_a?(Stacker::Value)
+
+      hash.clear
+      other.each do |key, value|
+        hash[key] = value
+      end
+
+      hash
+    end
+
     private def self.cleanup_hash!(object)
       return object unless object.is_a?(Stacker::Value) || object.is_a?(Array)
 
@@ -113,10 +135,11 @@ module Stacker
           object[k] = cleanup_hash!(v)
         end
       elsif object.is_a?(Array)
-        hash = object[0]?
-        if hash.is_a?(Stacker::Value)
-          object.delete_at(0)
-        end
+        # A leading hash is a strategy marker only when it actually carries `__`.
+        # Any other leading hash is regular data and must be preserved.
+        first = object[0]?
+        object.delete_at(0) if first.is_a?(Stacker::Value) && first["__"]?
+        object.map! { |value| cleanup_hash!(value).as(Type) }
       end
 
       object
