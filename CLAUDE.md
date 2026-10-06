@@ -14,7 +14,7 @@ Everything goes through [mise](https://mise.jdx.dev) (`mise.toml`); there is no 
 mise dev:deps          # shards install
 mise dev:build         # dev binary -> bin/stacker
 mise dev:spec          # crystal spec
-mise dev:ameba         # bin/ameba, wrapped in `timeout 180` (ameba can spin forever)
+mise dev:ameba         # bin/ameba, bounded by the task timeout (180s) (ameba can spin forever)
 mise dev:format        # crystal tool format src/   (note: src/ only, not spec/)
 mise dev:docs          # rm -rf docs && crystal doc
 mise dev:clean         # rm -rf bin/* lib/

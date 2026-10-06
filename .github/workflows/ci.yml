@@ -1,6 +1,12 @@
 ---
 name: CI
 
+# Binary-project variant of crystal-ci.yml: identical, plus the
+# build_static_binaries job. Use this one when the project ships binaries
+# (docker-bake.hcl + Dockerfile + Makefile.release + a release:static task);
+# use crystal-ci.yml for a library shard, which has no static build.
+# Any change common to both must be made in crystal-ci.yml first.
+
 permissions: {}
 
 # crystalline is the Crystal LSP server, only needed in an editor.
@@ -38,7 +44,7 @@ jobs:
           persist-credentials: false
 
       - name: Setup mise
-        uses: jdx/mise-action@v4
+        uses: jdx/mise-action@v5
 
       - name: Check formatting
         run: mise dev:format-check
@@ -52,7 +58,7 @@ jobs:
           persist-credentials: false
 
       - name: Setup mise
-        uses: jdx/mise-action@v4
+        uses: jdx/mise-action@v5
 
       - name: Install dependencies
         run: mise dev:deps
@@ -69,13 +75,37 @@ jobs:
           persist-credentials: false
 
       - name: Setup mise
-        uses: jdx/mise-action@v4
+        uses: jdx/mise-action@v5
 
       - name: Install dependencies
         run: mise dev:deps
 
       - name: Build API docs
         run: mise dev:docs
+
+  # The release path (Dockerfile + Makefile.release + docker-bake.hcl) is
+  # otherwise only exercised on a tag push, i.e. during the release itself: a
+  # break there ships a release short of a platform. Building it here moves the
+  # failure back to the pull request.
+  build_static_binaries:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Setup mise
+        uses: jdx/mise-action@v5
+
+      - name: Build static binaries
+        run: mise release:static
 
   test_linux_amd64:
     runs-on: ubuntu-24.04
@@ -86,7 +116,7 @@ jobs:
           persist-credentials: false
 
       - name: Setup mise
-        uses: jdx/mise-action@v4
+        uses: jdx/mise-action@v5
 
       - name: Install dependencies
         run: mise dev:deps
@@ -106,7 +136,7 @@ jobs:
           persist-credentials: false
 
       - name: Setup mise
-        uses: jdx/mise-action@v4
+        uses: jdx/mise-action@v5
 
       - name: Install dependencies
         run: mise dev:deps
@@ -150,7 +180,7 @@ jobs:
           persist-credentials: false
 
       - name: Setup mise
-        uses: jdx/mise-action@v4
+        uses: jdx/mise-action@v5
 
       # TODO: remove me when https://github.com/crystal-lang/crystal/issues/16746 is fixed
       - name: Fix Crystal shards
@@ -174,7 +204,7 @@ jobs:
           persist-credentials: false
 
       - name: Setup mise
-        uses: jdx/mise-action@v4
+        uses: jdx/mise-action@v5
 
       # TODO: remove me when https://github.com/crystal-lang/crystal/issues/16746 is fixed
       - name: Fix Crystal shards

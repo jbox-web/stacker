@@ -1,3 +1,7 @@
+# Per-task `timeout` keys are only enforced reliably from mise 2026.10.2 on:
+# an older mise must refuse to run instead of leaving those tasks unbounded.
+min_version = "2026.10.2"
+
 [settings]
 aqua.registries = ["https://github.com/jbox-web/aqua-registry"]
 
@@ -36,11 +40,13 @@ run = "rm -rf bin/* lib/"
 
 [tasks."dev:spec"]
 description = "Run Crystal spec"
+timeout = "600s"
 run = "crystal spec {{vars.SPEC_OPTS}}"
 
 [tasks."dev:spec-mt"]
 description = "Run Crystal spec (multi-threaded)"
 env = { CRYSTAL_WORKERS = "4" }
+timeout = "600s"
 run = "crystal spec {{vars.SPEC_OPTS}} --error-trace -Dpreview_mt"
 
 [tasks."dev:docs"]
@@ -49,7 +55,8 @@ run = "rm -rf docs && crystal doc"
 
 [tasks."dev:ameba"]
 description = "Run static code analysis"
-run = "timeout 180 bin/ameba"
+timeout = "180s"
+run = "bin/ameba"
 
 [tasks."dev:format"]
 description = "Format code"

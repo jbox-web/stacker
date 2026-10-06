@@ -32,7 +32,7 @@ jobs:
         uses: docker/setup-buildx-action@v4
 
       - name: Setup mise
-        uses: jdx/mise-action@v4
+        uses: jdx/mise-action@v5
 
       - name: Build static binaries
         run: mise release:static
@@ -56,7 +56,7 @@ jobs:
         run: brew install bdw-gc
 
       - name: Setup mise
-        uses: jdx/mise-action@v4
+        uses: jdx/mise-action@v5
 
       # TODO: remove me when https://github.com/crystal-lang/crystal/issues/16746 is fixed
       - name: Fix Crystal shards
@@ -89,7 +89,7 @@ jobs:
         run: brew install bdw-gc
 
       - name: Setup mise
-        uses: jdx/mise-action@v4
+        uses: jdx/mise-action@v5
 
       # TODO: remove me when https://github.com/crystal-lang/crystal/issues/16746 is fixed
       - name: Fix Crystal shards
