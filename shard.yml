@@ -1,6 +1,6 @@
 name: stacker
 
-version: 1.2.0
+version: 1.2.1
 
 crystal: ">= 1.20.0"
 
