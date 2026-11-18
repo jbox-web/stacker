@@ -1,11 +1,11 @@
 ---
 name: CI
 
-# Binary-project variant of crystal-ci.yml: identical, plus the
+# Binary-project variant of ci.yml: identical, plus the
 # build_static_binaries job. Use this one when the project ships binaries
-# (docker-bake.hcl + Dockerfile + Makefile.release + a release:static task);
-# use crystal-ci.yml for a library shard, which has no static build.
-# Any change common to both must be made in crystal-ci.yml first.
+# (.crystalreleaser.yml + release.yml + the release:static task of the
+# templates); use ci.yml for a library shard, which has no static build.
+# Any change common to both must be made in ci.yml first.
 
 permissions: {}
 
@@ -34,9 +34,20 @@ on:
     - cron: "0 6 * * 1"
   workflow_dispatch:
 
+# A newer push to the same ref makes the run in progress pointless: cancel it
+# rather than hold two sets of runners.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# Every job is bounded. Without `timeout-minutes`, a step that hangs holds its
+# runner for the 6 hours GitHub allows by default. The mise tasks carry their
+# own `timeout`; these bound what surrounds them (checkout, tool installation,
+# a runner that stalls).
 jobs:
   format:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
     steps:
       - name: Git checkout
         uses: actions/checkout@v7
@@ -50,7 +61,8 @@ jobs:
         run: mise dev:format-check
 
   ameba:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
     steps:
       - name: Git checkout
         uses: actions/checkout@v7
@@ -67,7 +79,8 @@ jobs:
         run: mise dev:ameba
 
   docs:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
     steps:
       - name: Git checkout
         uses: actions/checkout@v7
@@ -83,32 +96,86 @@ jobs:
       - name: Build API docs
         run: mise dev:docs
 
-  # The release path (Dockerfile + Makefile.release + docker-bake.hcl) is
-  # otherwise only exercised on a tag push, i.e. during the release itself: a
-  # break there ships a release short of a platform. Building it here moves the
-  # failure back to the pull request.
+  # The release path (crystalreleaser, .crystalreleaser.yml) is otherwise only
+  # exercised on a tag push, i.e. during the release itself: a break there
+  # ships a release short of a platform. Building it here moves the failure
+  # back to the pull request. `mise release:static` runs the two steps of
+  # release.yml on one runner: `build --split --snapshot --clean`, then `release
+  # --merge --snapshot --allow-missing --skip=publish`, which packages what was
+  # built (mise.toml holds the exact commands).
+  #
+  # One leg per runner of release.yml, because each builds a different share.
+  # The linux leg builds the static linux binaries in docker (arm64 through
+  # QEMU). A macOS runner has no docker: crystalreleaser leaves the linux
+  # platforms "to another runner" and builds the native darwin binary of its
+  # own architecture, with the dynamic-library check (otool -L) of the real
+  # release. Without the macOS legs, that half of the release is run for the
+  # first time by the tag push.
   build_static_binaries:
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [ubuntu-24.04, macos-26, macos-26-intel]
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 90
     steps:
       - name: Git checkout
         uses: actions/checkout@v7
         with:
           persist-credentials: false
+          # crystalreleaser refuses a shallow clone for a release, and a
+          # snapshot without a tag in reach starts its version from 0.0.0.
+          fetch-depth: 0
 
       - name: Set up QEMU
+        if: runner.os == 'Linux'
         uses: docker/setup-qemu-action@v4
 
+      # crystalreleaser's emulation check reads `docker buildx ls`.
       - name: Set up Docker Buildx
+        if: runner.os == 'Linux'
         uses: docker/setup-buildx-action@v4
 
       - name: Setup mise
         uses: jdx/mise-action@v5
 
+      # TODO: remove me when https://github.com/crystal-lang/crystal/issues/16746 is fixed
+      - name: Fix Crystal shards
+        if: runner.os == 'macOS'
+        run: mise dev:fix-shards-command
+
+      # The OpenSSL static_libs links (see .crystalreleaser.yml), as in the
+      # macOS jobs of release.yml. Remove with static_libs when the project
+      # does not link OpenSSL.
+      - name: Install OpenSSL 4
+        if: runner.os == 'macOS'
+        run: brew install openssl@4
+
       - name: Build static binaries
         run: mise release:static
 
+      # An exit code of 0 says the binaries were linked, not that they start.
+      # On linux the arm64 one runs through the QEMU handlers installed above;
+      # a macOS leg only has its own architecture. The glob stands for the
+      # project's binary: dist/<os>_<arch>/ holds only it and its checksum.
+      - name: Run the binaries just built
+        run: |
+          os="$(uname -s | tr '[:upper:]' '[:lower:]')"
+          expected=1
+          if [ "$os" = linux ]; then expected=2; fi
+          count=0
+          for dir in dist/"$os"_*/; do
+            [ -d "$dir" ] || continue
+            bin="$(find "$dir" -type f -perm -100 ! -name '*.sha256' | head -n 1)"
+            test -n "$bin" || { echo "no binary under $dir" >&2; exit 1; }
+            "$bin" --version
+            count=$((count + 1))
+          done
+          test "$count" -eq "$expected" || { echo "$count binaries under dist/${os}_*, expected $expected" >&2; exit 1; }
+
   test_linux_amd64:
     runs-on: ubuntu-24.04
+    timeout-minutes: 30
     steps:
       - name: Git checkout
         uses: actions/checkout@v7
@@ -129,6 +196,7 @@ jobs:
 
   test_linux_arm64:
     runs-on: ubuntu-24.04-arm
+    timeout-minutes: 30
     steps:
       - name: Git checkout
         uses: actions/checkout@v7
@@ -147,32 +215,54 @@ jobs:
       - name: Run tests (multi-threaded)
         run: mise dev:spec-mt
 
-  # Best-effort early warning against the Crystal nightly compiler. mise has no
-  # nightly build, so this job uses the nightly container directly and is allowed
-  # to fail.
+  # Best-effort early warning against the Crystal nightly compiler, allowed to
+  # fail. mise ships no nightly build, so the container provides the compiler
+  # and mise is used for its tasks alone: MISE_DISABLE_TOOLS deactivates the
+  # pinned crystal, and the tasks then resolve `crystal` from PATH — the
+  # container's. Job-level env REPLACES the workflow-level one, so crystalline
+  # has to be repeated here or mise would try to install it.
+  #
+  # Going through the tasks is what makes this job mean anything: they carry the
+  # `depends` that generate whatever the compilation needs (headers, baked
+  # folders). Called raw, `crystal spec` can die at require time, and the canary
+  # then reports nothing but its own misconfiguration.
   test_nightly_linux:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
     continue-on-error: true
     container: crystallang/crystal:nightly
+    env:
+      MISE_DISABLE_TOOLS: crystal,aqua:elbywan/crystalline
     steps:
       - name: Git checkout
         uses: actions/checkout@v7
         with:
           persist-credentials: false
 
+      # The nightly image is a bare Ubuntu: no curl and no ca-certificates, so
+      # mise-action has nothing to fetch mise with. Add here whatever else the
+      # project's own tasks shell out to.
+      - name: Provision the container
+        run: apt-get update && apt-get install -y --no-install-recommends ca-certificates curl
+
+      - name: Setup mise
+        uses: jdx/mise-action@v5
+
+      # Kept raw rather than `mise dev:deps`: the flags skip building the
+      # development executables, which a nightly compiler routinely fails to
+      # build — and that failure would mask the regression this job watches.
       - name: Install dependencies
         run: shards install --skip-postinstall --skip-executables
 
       - name: Run tests
-        run: crystal spec --error-trace
+        run: mise dev:spec
 
       - name: Run tests (multi-threaded)
-        run: crystal spec --error-trace -Dpreview_mt
-        env:
-          CRYSTAL_WORKERS: "4"
+        run: mise dev:spec-mt
 
   test_macos_arm64:
     runs-on: macos-26
+    timeout-minutes: 30
     steps:
       - name: Git checkout
         uses: actions/checkout@v7
@@ -197,6 +287,7 @@ jobs:
 
   test_macos_amd64:
     runs-on: macos-26-intel
+    timeout-minutes: 30
     steps:
       - name: Git checkout
         uses: actions/checkout@v7

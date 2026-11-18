@@ -29,12 +29,12 @@ describe Stacker do
 
       begin
         Stacker.config = Stacker::Config.from_yaml(<<-YAML)
-        ---
-        doc_root: .
-        entrypoint: sp
-        log_file: #{log_file}
-        stacks: {}
-        YAML
+          ---
+          doc_root: .
+          entrypoint: sp
+          log_file: #{log_file}
+          stacks: {}
+          YAML
         Stacker.logger = nil
         Stacker.setup_log
 

@@ -4,7 +4,7 @@ module Stacker
   # It wraps a Crystal value in #raw and defines methods to access properties of the wrapped value while being agnostic about the actual type of the wrapped raw value.
   struct Value
     # Raw type wrapped by `Value`.
-    alias Type = Bool | Float64 | Float32 | Int64 | Int32 | String | Time | Nil | Value | Array(Type)
+    alias Type = Bool | Float64 | Float32 | Int64 | Int32 | String | Time | Value | Array(Type)?
 
     def initialize
       @container = {} of String => Type
@@ -20,10 +20,10 @@ module Stacker
     def self.from_yaml(yaml : String)
       yaml = YAML.parse(yaml)
 
-      return nil if yaml.nil?
+      return if yaml.nil?
 
       raw = yaml.raw
-      return nil if raw.nil?
+      return if raw.nil?
 
       # A pillar file must hold a mapping: casting a sequence or a scalar would raise
       # a bare TypeCastError with no indication of what is wrong.

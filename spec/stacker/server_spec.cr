@@ -2,14 +2,14 @@ require "../spec_helper.cr"
 
 private def config_for(root)
   <<-YAML
-  ---
-  doc_root: #{root}
-  entrypoint: sp
-  log_file: stdout
-  stacks:
-    default:
-      - #{root}/sp/stack.cfg
-  YAML
+    ---
+    doc_root: #{root}
+    entrypoint: sp
+    log_file: stdout
+    stacks:
+      default:
+        - #{root}/sp/stack.cfg
+    YAML
 end
 
 private FILES = {

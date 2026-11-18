@@ -8,26 +8,33 @@ Stacker is a Crystal reimplementation of [Salt PillarStack](https://docs.saltsta
 
 ## Toolchain and tasks
 
-Everything goes through [mise](https://mise.jdx.dev) (`mise.toml`); there is no Makefile for development (`Makefile.release` only drives releases).
+Everything goes through [mise](https://mise.jdx.dev) (`mise.toml`, the canonical template with `APP_NAME = "stacker"`); there is no Makefile.
 
 ```sh
 mise dev:deps          # shards install
 mise dev:build         # dev binary -> bin/stacker
 mise dev:spec          # crystal spec
-mise dev:ameba         # bin/ameba, bounded by the task timeout (180s) (ameba can spin forever)
-mise dev:format        # crystal tool format src/   (note: src/ only, not spec/)
+mise dev:ameba         # ameba (a mise tool), bounded by the task timeout (180s) (ameba can spin forever)
+mise dev:format        # crystal tool format src/ spec/
 mise dev:docs          # rm -rf docs && crystal doc
+mise dev:coverage      # spec line coverage with kcov -> coverage/index.html
+mise dev:licenses      # assemble licenses/ from licenses.manifest (every compiling task depends on it)
 mise dev:clean         # rm -rf bin/* lib/
+mise dev:docker-image  # local multi-arch image (docker-bake.hcl, target docker-image)
 mise release:build     # --release binary + .sha256
-mise release:static    # static linux amd64/arm64 binaries via docker buildx bake
+mise release:static    # release snapshot by crystalreleaser into dist/, nothing published
 ```
 
 Run a single spec file or example:
 
 ```sh
-crystal spec spec/stacker/value_spec.cr
-crystal spec spec/stacker/value_spec.cr:45
+mise dev:spec spec/stacker/value_spec.cr
+mise dev:spec spec/stacker/value_spec.cr:45
 ```
+
+Releases: crystalreleaser (`.crystalreleaser.yml`, the canonical template plus the apk packages of libxml2 and xz) builds the binaries, `mise release:static` locally and `.github/workflows/release.yml` on a `v*` tag, which publishes `stacker-<os>-<arch>` and its `.sha256`. The darwin binaries link Homebrew's `openssl@4` statically. The `Dockerfile` builds only the Docker Hub image (`release_dockerhub.yml`).
+
+Licenses: `licenses.manifest` follows the link line of the static binary (recorded in its header) and lists every runtime shard, kemal's dependencies included; `scripts/harvest-licenses.sh` assembles the gitignored `licenses/`, which `src/stacker/licenses.cr` embeds and `stacker licenses` prints. Compiling without it fails on purpose.
 
 On macOS, `mise dev:fix-shards-command` must be run once before `dev:deps` (workaround for crystal-lang/crystal#16746 — the `shards` binary is missing from the mise install path).
 
@@ -78,4 +85,4 @@ Specs are fixture-driven rather than assertion-heavy: a template or input YAML u
 Two things a reader may expect to find, and the reason they are absent:
 
 - **No cache of the `Dir[]` glob results in `Processor`.** Invalidating it would need a directory mtime, which is not a sound key for the nested globs the stack config files use (`{{ minion_id }}/*.yml`). A stale file list after a deploy means a silently truncated pillar — the exact failure mode the error handling above exists to prevent. The template cache in `Context` already captures the measured cost.
-- **The Dockerfile copies the whole `.git/`.** Trimming it to the refs breaks `Stacker::VERSION` and `Stacker::GIT_REF`, which shell out to `shards version` and `git log` at compile time and need the objects. Shrinking the build context is not worth breaking the release build.
+- **The Dockerfile copies the whole `.git/`.** Trimming it to the refs breaks `Stacker::VERSION` and `Stacker::GIT_REF`, which shell out to `shards version` and `git log` at compile time and need the objects. Shrinking the build context is not worth breaking the image build (the release builds of crystalreleaser mount the whole checkout).

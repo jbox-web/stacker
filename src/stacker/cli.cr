@@ -4,7 +4,6 @@ module Stacker
     class Server < Admiral::Command
       define_help description: "Run Stacker webserver"
 
-      # ameba:disable Lint/UselessAssign
       define_flag config : String,
         description: "Path to config file",
         long: "config",
@@ -30,19 +29,16 @@ module Stacker
     class Fetch < Admiral::Command
       define_help description: "Fetch host pillars"
 
-      # ameba:disable Lint/UselessAssign
       define_argument host_name : String,
         description: "Fetch data for HOSTNAME",
         required: true
 
-      # ameba:disable Lint/UselessAssign
       define_flag config : String,
         description: "Path to config file",
         long: "config",
         short: "c",
         default: "stacker.yml"
 
-      # ameba:disable Lint/UselessAssign
       define_flag namespace : String,
         description: "Stack namespace to use",
         long: "namespace",
@@ -61,14 +57,12 @@ module Stacker
         short: "p",
         default: ""
 
-      # ameba:disable Lint/UselessAssign
       define_flag log_level : String,
         description: "Log level",
         long: "log-level",
         short: "l",
         default: "info"
 
-      # ameba:disable Lint/UselessAssign
       define_flag path : String,
         description: "Path to YAML file to debug",
         long: "path",
@@ -81,7 +75,6 @@ module Stacker
         short: "s",
         default: [] of String
 
-      # ameba:disable Lint/UselessAssign
       define_flag output_format : String,
         description: "Output format",
         long: "output-format",
@@ -136,10 +129,20 @@ module Stacker
       end
     end
 
+    # Prints the third-party notices embedded in the binary (`Stacker::Licenses`).
+    class Licenses < Admiral::Command
+      define_help description: "Print the third-party notices embedded in this binary"
+
+      def run
+        print Stacker::Licenses.text
+      end
+    end
+
     define_version Stacker.version
     define_help description: "Stacker is Salt PillarStack in Crystal"
 
     register_sub_command info, Info, description: "Show Stacker information"
+    register_sub_command licenses, Licenses, description: "Print the embedded third-party notices"
     register_sub_command server, Server, description: "Run Stacker webserver"
     register_sub_command fetch, Fetch, description: "Fetch host pillars"
 

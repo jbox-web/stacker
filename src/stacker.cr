@@ -79,6 +79,9 @@ module Stacker
       reopen_log_file!
     end
 
+    # SIGTERM only, on purpose: Process.on_terminate would also stop the server
+    # on SIGINT and SIGHUP, which it has never done.
+    # ameba:disable Lint/SignalTrap
     Signal::TERM.trap do
       stop_server
       close_log_file!

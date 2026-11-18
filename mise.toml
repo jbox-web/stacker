@@ -1,5 +1,8 @@
-# Per-task `timeout` keys are only enforced reliably from mise 2026.10.2 on:
-# an older mise must refuse to run instead of leaving those tasks unbounded.
+# The per-task `timeout` below (dev:spec, dev:spec-mt, dev:ameba) is only
+# trustworthy from 2026.10.2 on: before 2026.10.1 a timed-out task's processes
+# could keep running, and before 2026.10.2 a task that caught SIGTERM and
+# exited 0 was reported as a success. An older mise must refuse to run rather
+# than silently leave those tasks unbounded.
 min_version = "2026.10.2"
 
 [settings]
@@ -8,8 +11,18 @@ aqua.registries = ["https://github.com/jbox-web/aqua-registry"]
 [tools]
 crystal = "1.20.3"
 "aqua:elbywan/crystalline" = "0.18.0"
+# ameba ships prebuilt binaries since 1.7.0, which also dropped the shard's
+# `postinstall` (crystal-ameba/ameba#741): installed as a shard, it no longer
+# produces bin/ameba. It is therefore a mise tool, not a development_dependency.
+"github:crystal-ameba/ameba" = "1.7.0"
+# The release tool of every binary project: release:static and release.yml run
+# it from .crystalreleaser.yml. Served by the jbox-web aqua registry above.
+# Always an exact version: mise hides a release younger than its
+# minimum_release_age from `latest` and from ranges, never from an exact pin.
+"aqua:jbox-web/crystalreleaser" = "0.2.1"
 
 [vars]
+# Change APP_NAME per project — everything else derives from it.
 APP_NAME    = "stacker"
 SOURCE_FILE = "src/{{vars.APP_NAME}}.cr"
 OUTPUT_FILE = "{% if get_env(name='OUTPUT_FILE', default='false') == 'false' %}bin/{{vars.APP_NAME}}{% else %}{{ get_env(name='OUTPUT_FILE') }}{% endif %}"
@@ -26,8 +39,18 @@ COMPILE_OPTS_RELEASE = "{% if exec(command='(tty -s && echo true) || echo false'
 # Development tasks #
 #####################
 
+# THE RULE BEHIND EVERY `depends` BELOW, and it cost three red CI runs to learn:
+# a task the CI launches ON ITS OWN must declare what it needs generated. Locally
+# the generated inputs are always lying around from an earlier build, so the
+# omission is invisible; on a bare checkout the compilation is the first thing to
+# touch them. It applies to `crystal doc` exactly as much as to `crystal build`,
+# because doc runs the macros — that is how the docs job died on a licenses/
+# folder nobody had assembled yet. Add to these lists whatever else the project
+# generates (a C header, vendored objects, a baked folder).
+
 [tasks."dev:build"]
 description = "Compile to development binary"
+depends = ["dev:licenses"]
 run = "crystal build {{vars.COMPILE_OPTS_DEV}} -o {{vars.OUTPUT_FILE}} {{vars.SOURCE_FILE}}"
 
 [tasks."dev:deps"]
@@ -38,32 +61,117 @@ run = "shards install"
 description = "Cleanup environment"
 run = "rm -rf bin/* lib/"
 
+# Add "dev:build" to the depends when the specs drive the compiled binary rather
+# than the library: without it they fail with "no such file or directory" in any
+# context that runs dev:spec on its own, which locally never happens because
+# dev:check builds first.
+# Bounded like dev:ameba, and for the same reason the ameba comment already
+# names: a spec run can spin forever. Observed on a real project — the
+# multi-threaded binary ran 11 minutes at 100% CPU on a tree whose only change
+# was documentation, then passed in 176ms on the next attempt. A livelock of
+# that kind fails nowhere: with no bound the CI job holds a runner until the
+# platform's own job timeout (6h by default on GitHub) instead of failing in
+# minutes with "timed out after 600s". 600s leaves room for a cold compile on a
+# slow runner.
 [tasks."dev:spec"]
 description = "Run Crystal spec"
+depends = ["dev:licenses"]
 timeout = "600s"
 run = "crystal spec {{vars.SPEC_OPTS}}"
 
 [tasks."dev:spec-mt"]
 description = "Run Crystal spec (multi-threaded)"
+depends = ["dev:licenses"]
 env = { CRYSTAL_WORKERS = "4" }
 timeout = "600s"
-run = "crystal spec {{vars.SPEC_OPTS}} --error-trace -Dpreview_mt"
+run = "crystal spec {{vars.SPEC_OPTS}} -Dpreview_mt"
+
+# Line coverage of the specs, the method of the Crystal reference guide
+# (guides/testing/code_coverage): kcov reads the DWARF of a binary that runs
+# every spec, restricted to src/. Report: coverage/index.html, plus cobertura.xml
+# and codecov.json under coverage/all_specs.*/ — /coverage/ goes in .gitignore.
+# The report is styled by scripts/kcov.css (copied from the template, like
+# harvest-licenses.sh), which kcov writes over every bcov.css it generates.
+# --path-strip-level=1 shows file names relative to src/; kcov still prefixes them
+# with "[...]/", which kcov.css hides.
+#
+# Read the percentage as an upper bound, never as a gate. The compiler emits no
+# line entry for a branch whose body is only a value (`"pos"` in an if/else):
+# such lines are absent from the report instead of missed, so a branch no spec
+# reaches can still read 100% (checked on 1.22.2, macOS and Linux alike; see
+# crystal-lang/crystal#17702). Methods no spec calls are not compiled at all, so
+# kcov cannot see them either: `crystal tool unreachable` lists them.
+#
+# The entry point and the spec binary live in coverage/build/: `require` takes
+# neither an absolute path nor a glob outside the requiring file's tree, and the
+# binary must not sit directly in kcov's output folder, where kcov creates a
+# directory named after it ("Is a directory").
+#
+# kcov exits 0 even when a spec fails (kcov 43, macOS: the spec binary alone
+# exits 1). The entry point therefore records the specs' status itself: an
+# at_exit registered before `require` runs after Spec's own handler, whose
+# `exit 1` it receives. The task fails on that status, or on kcov's, only once
+# the report and the unreachable list are written; a missing status file (spec
+# binary crashed) counts as a failure.
+#
+# Bounded like dev:spec, with room for the slowdown of running under kcov.
+# kcov comes from the Brewfile on macOS, from apt on Linux; under Docker it also
+# needs `--security-opt seccomp=unconfined` (personality() is denied otherwise).
+[tasks."dev:coverage"]
+description = "Measure spec line coverage with kcov"
+depends = ["dev:licenses"]
+timeout = "900s"
+run = '''
+rm -rf coverage
+mkdir -p coverage/build
+printf '%s\n' \
+  'at_exit { |status| File.write("coverage/build/spec_status", status.to_s) }' \
+  'require "../../spec/**"' > coverage/build/all_specs.cr
+crystal build coverage/build/all_specs.cr -o coverage/build/all_specs
+kcov_status=0
+kcov --configure=css-file=scripts/kcov.css,command-name={{vars.APP_NAME}} \
+  --path-strip-level=1 --include-path="$PWD/src" \
+  coverage ./coverage/build/all_specs || kcov_status=$?
+spec_status=$(cat coverage/build/spec_status 2>/dev/null || echo missing)
+crystal tool unreachable -i src --format=codecov coverage/build/all_specs.cr > coverage/unreachable.codecov.json
+crystal tool unreachable -i src coverage/build/all_specs.cr
+echo "Report: coverage/index.html"
+if [ "$kcov_status" != 0 ]; then echo "kcov failed (exit status $kcov_status)" >&2; exit "$kcov_status"; fi
+if [ "$spec_status" != 0 ]; then echo "specs failed (exit status: $spec_status)" >&2; exit 1; fi
+'''
 
 [tasks."dev:docs"]
 description = "Generate project documentation"
+depends = ["dev:licenses"]
 run = "rm -rf docs && crystal doc"
 
+# Assembles the notices a statically linked binary has to carry, from
+# licenses.manifest and licenses-spdx/. The script is
+# ~/.claude/templates/crystal/harvest-licenses.sh, and its header documents
+# both inputs; it skips cleanly when there is no manifest, so a project that
+# bakes no licenses can drop the task, the script and the depends above without
+# anything breaking in the meantime.
+[tasks."dev:licenses"]
+description = "Assemble the licenses/ folder baked into the binary"
+run = "bash scripts/harvest-licenses.sh"
+
+# ameba can spin at 100% CPU indefinitely on some inputs, so the task carries its
+# own bound: the analysis is killed after 180s and the task fails with "timed
+# out after 180s" instead of running for hours unnoticed. Never call `ameba`
+# directly. The bound is mise's own task `timeout`, not the coreutils command:
+# it works the same on Linux and macOS (which ships no `timeout`), and mise
+# kills the whole process tree — SIGTERM, then SIGKILL 5s later.
 [tasks."dev:ameba"]
 description = "Run static code analysis"
 timeout = "180s"
-run = "bin/ameba"
+run = "ameba"
 
 [tasks."dev:format"]
 description = "Format code"
 run = "crystal tool format src/ spec/"
 
 [tasks."dev:format-check"]
-description = "Check code formatting"
+description = "Check code formatting without modifying files"
 run = "crystal tool format --check src/ spec/"
 
 [tasks."dev:docker-image"]
@@ -82,22 +190,44 @@ run = "cp $HOME/.local/share/mise/installs/crystal/{{tools.crystal.version}}/emb
 
 [tasks."release:build"]
 description = "Compile to production binary"
+# A local production build, outside the release path: the released binaries
+# are built by crystalreleaser (release:static, release.yml), whose `before`
+# hooks assemble licenses/ themselves. Same rule as the dev tasks all the same:
+# run standalone on a bare checkout, nothing has assembled licenses/ yet and
+# the compile dies at macro time. Drop this line along with the rest of the
+# licenses machinery in a project that bakes nothing.
+depends = ["dev:licenses"]
 run = '''
 crystal build {{vars.COMPILE_OPTS_RELEASE}} -o {{vars.OUTPUT_FILE}} {{vars.SOURCE_FILE}}
-cd bin; for f in *; do shasum --algorithm 256 $f > $f.sha256; done
+# Checksum only the binary that was just built. `cd bin; for f in *` also hashed
+# the .sha256 files produced by the previous run (myapp.sha256.sha256, one more
+# level each time) and any other binary sitting in bin/ — ameba, or the CLI
+# build the specs produce. OUTPUT_FILE is overridable by the environment, so the
+# path is not assumed to be under bin/.
+cd "$(dirname {{vars.OUTPUT_FILE}})"
+binary="$(basename {{vars.OUTPUT_FILE}})"
+rm -f "$binary.sha256"
+shasum --algorithm 256 "$binary" > "$binary.sha256"
 '''
 
 [tasks."release:deps"]
 description = "Install production dependencies"
 run = "shards install --production"
 
+# The release path, rehearsed: what .github/workflows/release.yml does on a
+# tag, on one machine and without publishing. In two steps, the way release.yml
+# does it: `build --split` builds the share of .crystalreleaser.yml this host
+# can build (the docker linux platforms everywhere, plus the native darwin one
+# on a Mac), then `release --merge` packages it. A one-step `release
+# --snapshot` would leave the split and the merge to be run for the first time
+# by the release itself. --allow-missing: one machine never builds every
+# platform. Outputs land in dist/ (gitignored), which --clean empties first.
+# Bounded like the dev tasks: an emulated compilation that hangs would
+# otherwise hold the runner until the timeout of the job.
 [tasks."release:static"]
-description = "Build static binary with Docker"
-run = '''
-docker buildx bake binary
-mv packages/linux_arm64/{{vars.APP_NAME}}-linux-arm64 packages/
-mv packages/linux_amd64/{{vars.APP_NAME}}-linux-amd64 packages/
-rmdir packages/linux_arm64/ packages/linux_amd64/
-rm -f packages/*.sha256
-cd packages; for f in *; do shasum --algorithm 256 $f > $f.sha256; done
-'''
+description = "Build the release binaries with crystalreleaser (snapshot, no publish)"
+timeout = "4800s"
+run = [
+  "crystalreleaser build --split --snapshot --clean",
+  "crystalreleaser release --merge --snapshot --allow-missing --skip=publish",
+]

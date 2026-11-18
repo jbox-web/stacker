@@ -90,6 +90,7 @@ Flags:
 Subcommands:
   fetch      # Fetch host pillars
   info       # Show Stacker information
+  licenses   # Print the embedded third-party notices
   server     # Run Stacker webserver
 ```
 
@@ -591,8 +592,12 @@ mise dev:ameba          # Run static code analysis
 mise dev:format         # Format code
 mise dev:docs           # Generate project documentation
 mise dev:clean          # Cleanup environment
-mise release:static     # Build static binaries with Docker
+mise release:static     # Rehearse the release with crystalreleaser into dist/ (nothing published)
 ```
+
+Releases are built and published by [crystalreleaser](https://github.com/jbox-web/crystalreleaser) (`.crystalreleaser.yml`, `.github/workflows/release.yml`): `stacker-<os>-<arch>` for linux and darwin, amd64 and arm64, each with its `.sha256`. The Docker Hub image (`nicoladmin/stacker`) is built from the `Dockerfile` by `.github/workflows/release_dockerhub.yml`.
+
+The binaries embed the notices of the code they carry (`stacker licenses`), assembled from `licenses.manifest` by `scripts/harvest-licenses.sh` (`mise dev:licenses`).
 
 **Note :** on macOS, run `mise dev:fix-shards-command` once before `mise dev:deps` (workaround for [crystal-lang/crystal#16746](https://github.com/crystal-lang/crystal/issues/16746)).
 

@@ -10,7 +10,7 @@ module Stacker::Runtime::Filter
       result =
         begin
           Crinja::Resolver.resolve_dig(attribute, target)
-        rescue e : Crinja::UndefinedError
+        rescue Crinja::UndefinedError
           Stacker::Renderer::Log.debug { "Attribute '#{attribute}' not found in traversal path" }
           Crinja::Value.new(nil)
         end

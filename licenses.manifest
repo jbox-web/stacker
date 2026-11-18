@@ -1,0 +1,51 @@
+# kind | name | source (on-disk LICENSE path for shards; for clib/runtime, an
+# SPDX id of licenses-spdx/, or the path of the library's own license file)
+#
+# Only what the released binary actually embeds: the runtime shards of
+# shard.yml and the shards they pull in (backtracer, exception_page and radix
+# come with kemal; see shard.lock), and the C libraries the stdlib modules
+# stacker requires link. Add a line for every runtime shard added.
+#
+# CONFIRMED on 2026-11-18 against the link line of this very binary, in
+# alpine:3.24 with Alpine's crystal 1.20.3 (the base of the Dockerfile and of
+# the image crystalreleaser generates for the linux builds):
+#   -lz -lssl -lcrypto -lxml2 -lm -llzma -lyaml -lpcre2-8 -pthread -lgc -ldl
+#   (+ musl, libgcc)
+# libxml2 and liblzma come from crinja's XML support, libyaml from the YAML
+# pillars, openssl from kemal. Versions and licenses as apk records them in
+# that image: openssl 3.5.9 Apache-2.0, libxml2 2.13.9 MIT, xz-libs 5.8.4
+# (liblzma alone is 0BSD; the GPL parts of xz are the command-line tools),
+# yaml 0.2.5 MIT, pcre2 10.49 BSD-3-Clause, zlib 1.4 Zlib, musl 1.2.6 MIT, gc
+# 8.2.12 Boehm-GC. The darwin binaries link Homebrew's openssl@4 (Apache-2.0)
+# statically; the other libraries come from macOS or from the compiler mise
+# installs. Check the link line again when a stdlib module is added or the
+# image moves.
+#
+# MIT, BSD-3-Clause, zlib and 0BSD texts are templates whose copyright line is
+# a blank: those libraries embed their own license file, taken from their
+# sources at the versions above:
+#   libxml2  Copyright      gitlab.gnome.org/GNOME/libxml2  tag v2.13.9
+#   liblzma  COPYING.0BSD   github.com/tukaani-project/xz   tag v5.8.4
+#   libyaml  License        github.com/yaml/libyaml         tag 0.2.5
+#   pcre2    LICENCE.md     github.com/PCRE2Project/pcre2   tag pcre2-10.49
+#   zlib     LICENSE        github.com/madler/zlib          tag v1.4
+#   musl     COPYRIGHT      git.musl-libc.org/cgit/musl     tag v1.2.6
+shard   | admiral        | lib/admiral/LICENSE
+shard   | backtracer     | lib/backtracer/LICENSE
+shard   | crinja         | lib/crinja/LICENSE
+shard   | crystal-env    | lib/crystal-env/LICENSE
+shard   | exception_page | lib/exception_page/LICENSE
+shard   | kemal          | lib/kemal/LICENSE
+shard   | radix          | lib/radix/LICENSE
+shard   | systemd_notify | lib/systemd_notify/LICENSE
+clib    | openssl        | Apache-2.0
+clib    | libxml2        | licenses-upstream/libxml2.txt
+clib    | liblzma        | licenses-upstream/liblzma.txt
+clib    | libyaml        | licenses-upstream/libyaml.txt
+clib    | pcre2          | licenses-upstream/pcre2.txt
+clib    | zlib           | licenses-upstream/zlib.txt
+clib    | boehm-gc       | Boehm-GC
+clib    | musl           | licenses-upstream/musl.txt
+clib    | libgcc         | GCC-runtime-exception
+runtime | crystal        | Apache-2.0
+project | stacker        | LICENSE

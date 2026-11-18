@@ -3,9 +3,9 @@ require "../spec_helper.cr"
 describe Stacker::Value do
   describe ".from_yaml" do
     it "convert YAML to internal structure" do
-      inspect = <<-'TPL'
-      Stacker::Value(@container={"foo" => Stacker::Value(@container={"bar" => [1, "127.0.0.1", true], "is_true" => true, "is_false" => false, "is_array" => [], "is_hash" => Stacker::Value(@container={}), "nested" => Stacker::Value(@container={"foo" => Stacker::Value(@container={"bar" => [1, "127.0.0.1", false], "is_true" => true, "is_false" => false, "is_array" => [], "is_hash" => Stacker::Value(@container={})})})})})
-      TPL
+      inspect = <<-TPL
+        Stacker::Value(@container={"foo" => Stacker::Value(@container={"bar" => [1, "127.0.0.1", true], "is_true" => true, "is_false" => false, "is_array" => [], "is_hash" => Stacker::Value(@container={}), "nested" => Stacker::Value(@container={"foo" => Stacker::Value(@container={"bar" => [1, "127.0.0.1", false], "is_true" => true, "is_false" => false, "is_array" => [], "is_hash" => Stacker::Value(@container={})})})})})
+        TPL
 
       file = "spec/fixtures/merge_strategies/input/test.yml"
       yaml = File.read(file)
@@ -19,9 +19,9 @@ describe Stacker::Value do
 
   describe ".convert_hash" do
     it "convert YAML to internal structure" do
-      inspect = <<-'TPL'
-      Stacker::Value(@container={"foo" => Stacker::Value(@container={"bar" => [1, "127.0.0.1", true], "is_true" => true, "is_false" => false, "is_array" => [], "is_hash" => Stacker::Value(@container={}), "nested" => Stacker::Value(@container={"foo" => Stacker::Value(@container={"bar" => [1, "127.0.0.1", false], "is_true" => true, "is_false" => false, "is_array" => [], "is_hash" => Stacker::Value(@container={})})})})})
-      TPL
+      inspect = <<-TPL
+        Stacker::Value(@container={"foo" => Stacker::Value(@container={"bar" => [1, "127.0.0.1", true], "is_true" => true, "is_false" => false, "is_array" => [], "is_hash" => Stacker::Value(@container={}), "nested" => Stacker::Value(@container={"foo" => Stacker::Value(@container={"bar" => [1, "127.0.0.1", false], "is_true" => true, "is_false" => false, "is_array" => [], "is_hash" => Stacker::Value(@container={})})})})})
+        TPL
 
       yaml = YAML.parse(File.read("spec/fixtures/merge_strategies/input/test.yml"))
       hash = Stacker::Value.convert_hash(yaml.as_h)

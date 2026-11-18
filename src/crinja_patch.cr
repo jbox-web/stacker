@@ -58,8 +58,6 @@ class Crinja
         object.to_yaml(yaml)
       when .nil?
         object.to_yaml(yaml)
-      else
-        nil
       end
     end
   end

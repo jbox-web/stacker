@@ -5,9 +5,9 @@
 FROM alpine:3.24 AS crystal
 
 RUN apk add --update --no-cache \
-  make \
   crystal=~1.20 \
   shards \
+  bash \
   gc-dev \
   gc-static \
   git \
@@ -24,46 +24,31 @@ RUN apk add --update --no-cache \
   yaml-dev \
   yaml-static \
   zlib-dev \
-  zlib-static \
-  upx
+  zlib-static
 
 #########
 # BUILD #
 #########
 
+# The static binary of the docker image only. The released binaries are built
+# by crystalreleaser (.crystalreleaser.yml), in an image of its own.
 FROM crystal AS build-binary-file
 
-# Fetch platforms variables from ARGS
-ARG TARGETPLATFORM
-ARG TARGETOS
-ARG TARGETARCH
-ARG TARGETVARIANT
-
-# Export them to build binary files with the right name: stacker-linux-amd64
-ENV \
-  TARGETPLATFORM=${TARGETPLATFORM} \
-  TARGETOS=${TARGETOS} \
-  TARGETARCH=${TARGETARCH} \
-  TARGETVARIANT=${TARGETVARIANT}
-
-# Set build environment
 WORKDIR /build
 # The whole history is needed here: `Stacker::VERSION` and `Stacker::GIT_REF` are
-# stamped at compile time by `shards version` and `git log`.
+# stamped at compile time by `shards version` and `git log`. LICENSE,
+# licenses.manifest and the licenses-* folders feed the harvest of the
+# third-party notices the binary embeds.
 COPY .git/ /build/.git/
-COPY shard.yml shard.lock /build/
-COPY Makefile.release /build/Makefile
+COPY shard.yml shard.lock LICENSE licenses.manifest /build/
+COPY licenses-spdx/ /build/licenses-spdx/
+COPY licenses-upstream/ /build/licenses-upstream/
+COPY scripts/harvest-licenses.sh /build/scripts/
 COPY src/ /build/src/
-RUN mkdir /build/bin
-
-# Build the binary
-RUN make release
-
-# Extract binary from Docker image
-FROM scratch AS binary-file
-ARG TARGETOS
-ARG TARGETARCH
-COPY --from=build-binary-file /build/bin/stacker-${TARGETOS}-${TARGETARCH} /
+RUN mkdir -p bin \
+ && shards install --production \
+ && bash scripts/harvest-licenses.sh \
+ && crystal build --threads 4 --release --error-trace --static -o bin/stacker src/stacker.cr
 
 ###########
 # RUNTIME #
@@ -72,12 +57,8 @@ COPY --from=build-binary-file /build/bin/stacker-${TARGETOS}-${TARGETARCH} /
 # Build distroless images \o/
 FROM gcr.io/distroless/static-debian12 AS docker-image
 
-# Fetch platforms variables from ARGS
-ARG TARGETOS
-ARG TARGETARCH
-
 # Grab stacker binary from **build-binary-file** step and inject it in the final image
-COPY --from=build-binary-file /build/bin/stacker-${TARGETOS}-${TARGETARCH} /usr/bin/stacker
+COPY --from=build-binary-file /build/bin/stacker /usr/bin/stacker
 
 # Set runtime environment
 USER nonroot

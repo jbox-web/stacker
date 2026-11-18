@@ -77,7 +77,7 @@ module Stacker
     # Read a JSON object from the request body, refusing any other JSON type.
     private def self.extract_object(body, key)
       value = body[key]?
-      return nil if value.nil?
+      return if value.nil?
       raise InvalidRequest.new("#{key} must be an object") unless value.is_a?(Hash)
 
       value

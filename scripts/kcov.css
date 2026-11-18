@@ -1,0 +1,429 @@
+/*
+ * kcov report stylesheet — replaces kcov's bcov.css through
+ * `kcov --configure=css-file=<this file>`; kcov writes it over every bcov.css
+ * of the report.
+ *
+ * Source: https://github.com/jbox-web/kcov-template (MIT License)
+ *
+ * kcov's HTML is compiled into the binary and cannot be changed: this file only
+ * restyles it. Three consequences shape what follows:
+ * - the layout is table-based; the summary header is turned into stat tiles by
+ *   making its table a grid and its rows `display: contents`, and its pairs are
+ *   reordered with `order` and `:has(+ #id)` (the label cell has no id);
+ * - the index page also loads data/tablesorter-theme.css: the table selectors are
+ *   scoped to #index-table so they win over the "blue" theme without !important;
+ * - kcov prefixes file names with "[...]/" whatever --path-strip-level is; the
+ *   names are monospace, so the 6 characters are pushed out of view (6ch).
+ *
+ * Coverage colors are status colors (good / warning / critical), used for
+ * nothing else and never alone: the percentage and the hit counts stay as text
+ * next to every colored mark, and text is set in ink colors, never in a status
+ * color. Light and dark share the three status steps; the dark surfaces and
+ * inks are their own, not an inverted light theme.
+ */
+
+:root {
+  color-scheme: light;
+  --surface-0: #f4f4f2;
+  --surface-1: #fcfcfb;
+  --surface-2: #f0efec;
+  --border: #e2e1dc;
+  --text-primary: #0b0b0b;
+  --text-secondary: #52514e;
+  --text-muted: #7a7974;
+  --link: #1f5fb4;
+  --good: #0ca30c;
+  --warning: #fab219;
+  --critical: #d03b3b;
+  --good-tint: rgb(12 163 12 / 0.10);
+  --warning-tint: rgb(250 178 25 / 0.16);
+  --critical-tint: rgb(208 59 59 / 0.11);
+  --track: #e6e5e0;
+  --radius: 12px;
+  --font-ui: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-code: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --surface-0: #121211;
+    --surface-1: #1a1a19;
+    --surface-2: #222221;
+    --border: #2f2f2d;
+    --text-primary: #f0efec;
+    --text-secondary: #c3c2b7;
+    --text-muted: #8f8e86;
+    --link: #79aef2;
+    --good-tint: rgb(12 163 12 / 0.16);
+    --warning-tint: rgb(250 178 25 / 0.13);
+    --critical-tint: rgb(208 59 59 / 0.20);
+    --track: #2f2f2d;
+  }
+}
+
+/* ---- Page ---------------------------------------------------------------- */
+
+body {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 32px 24px;
+  background: var(--surface-0);
+  color: var(--text-primary);
+  font: 14px/1.5 var(--font-ui);
+}
+
+a:link,
+a:visited { color: var(--link); text-decoration: none; }
+a:hover { text-decoration: underline; }
+a:active { color: var(--link); }
+
+/* The 3px spacer images kcov uses as horizontal rules. */
+td.ruler { display: none; }
+
+td.title {
+  padding: 0 0 16px;
+  text-align: left;
+  font-size: 20px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+td.versionInfo {
+  padding-top: 24px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+/* ---- Summary header: stat tiles ------------------------------------------- */
+
+/*
+ * The header table holds label/value pairs over three rows. As a grid flowing
+ * in columns over two rows, each label lands on top of its value: one column
+ * per stat. `order` puts the headline (code covered) first.
+ */
+body > table:first-of-type td[width="100%"] > table {
+  display: grid;
+  grid-template-rows: auto auto;
+  grid-auto-flow: column;
+  grid-auto-columns: max-content;
+  column-gap: 0;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 18px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface-1);
+  /* Safety net on a narrow window: scroll inside the card, never past it. */
+  overflow-x: auto;
+}
+
+body > table:first-of-type td[width="100%"] > table > tbody,
+body > table:first-of-type td[width="100%"] > table > tbody > tr {
+  display: contents;
+}
+
+/* Spacer cells, and the legend chips of the source pages (Line number / Hits /
+   Order): the gutter and the hit counts are self-explanatory. */
+body > table:first-of-type td[width="100%"] > table td:empty,
+body > table:first-of-type td:has(> .lineNumLegend, > .coverHitsLegend, > .orderNumLegend) {
+  display: none;
+}
+
+td.headerItem,
+th.headerItem {
+  padding: 0 28px;
+  text-align: left;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+td.headerValue,
+th.headerValue,
+td#header-percent-covered {
+  padding: 2px 28px 0;
+  text-align: left;
+  color: var(--text-primary);
+  font-size: 20px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* A hairline between tiles: on every label and value except the first stat. */
+body > table:first-of-type td[width="100%"] > table td:not(td:has(+ #header-percent-covered), #header-percent-covered) {
+  border-left: 1px solid var(--border);
+}
+
+td:has(+ #header-percent-covered),
+td#header-percent-covered { order: 1; }
+td:has(+ #header-covered),
+td#header-covered { order: 2; }
+td:has(+ #header-instrumented),
+td#header-instrumented { order: 3; }
+td:has(+ #header-command),
+td#header-command { order: 4; }
+td:has(+ #header-date),
+td#header-date { order: 5; }
+
+td#header-command,
+td#header-date {
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 30px;
+}
+
+/* Without command-name, kcov shows the binary's path here: let it wrap. */
+td#header-command {
+  max-width: 32ch;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+/* The headline: kcov gives this cell a coverPerLeft* class. */
+td#header-percent-covered {
+  position: relative;
+  padding-left: 46px;
+  background: none;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+td#header-percent-covered::before {
+  content: "";
+  position: absolute;
+  left: 28px;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  margin-top: -3px;
+  border-radius: 50%;
+  background: var(--text-muted);
+}
+
+td#header-percent-covered.coverPerLeftHi::before { background: var(--good); }
+td#header-percent-covered.coverPerLeftMed::before { background: var(--warning); }
+td#header-percent-covered.coverPerLeftLo::before { background: var(--critical); }
+
+/* ---- Index: the file table ------------------------------------------------ */
+
+/* kcov sets width="80%" on the table and wraps it in <center>: full width,
+   aligned with the header, and text-align reset from center's inherited one. */
+#index-table {
+  width: 100%;
+  text-align: left;
+  margin: 20px 0 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  border-collapse: separate;
+  border-spacing: 0;
+  /* clip, not hidden: hidden makes the table a scroll container, which would
+     pin the sticky header to the table instead of the page. */
+  overflow: clip;
+  background: var(--surface-1);
+  font: inherit;
+}
+
+#index-table thead th,
+#index-table .tablesorter-header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 10px 16px;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-2);
+  background-image: none;
+  color: var(--text-muted);
+  text-shadow: none;
+  font: 600 11px/1.4 var(--font-ui);
+  letter-spacing: 0.04em;
+  text-align: right;
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+}
+
+#index-table thead th:first-child,
+#index-table thead th:nth-child(2) { text-align: left; }
+
+#index-table .tablesorter-header-inner { display: inline; }
+#index-table .tablesorter-headerAsc .tablesorter-header-inner::after { content: " \2191"; }
+#index-table .tablesorter-headerDesc .tablesorter-header-inner::after { content: " \2193"; }
+
+#index-table td {
+  padding: 7px 16px;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  background-color: transparent;
+  color: var(--text-primary);
+  font: inherit;
+  vertical-align: middle;
+}
+
+#index-table tbody tr:last-child td { border-bottom: 0; }
+/* background-color only: the shorthand would also reset the coverage cell's
+   track, drawn as a background-image. */
+#index-table tbody tr:hover td { background-color: var(--surface-2); }
+
+#index-table td.coverFile {
+  width: 100%;
+  font-family: var(--font-code);
+  font-size: 13px;
+}
+
+/* Source-file links only: the top index links binaries (…/index.html), which
+   carry no "[...]/" prefix. This assumes every source-file name starts with
+   exactly "[...]/", which kcov 43 writes with --path-strip-level >= 1; at level
+   0 (full paths) the first 6 characters of each name would be cut. */
+#index-table td.coverFile a:not([href$="index.html"]) {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  text-indent: -6ch;
+}
+
+#index-table td.coverNum {
+  min-width: 64px;
+  text-align: right;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* Merged row (all binaries together), kept apart from the sortable body. */
+#index-table #merged-data td {
+  border-top: 1px solid var(--border);
+  background-color: var(--surface-2);
+  font-weight: 600;
+}
+
+/*
+ * Coverage cell: kcov renders `<span style="width:N%" class="line*Cov">N%`, so
+ * the span's width is the bar. The label sits above a 6px bar drawn by ::after,
+ * and the cell paints the full-width track behind it.
+ */
+#index-table td.coverPer {
+  min-width: 200px;
+  padding: 6px 16px 9px;
+  background-image: linear-gradient(var(--track), var(--track));
+  background-repeat: no-repeat;
+  background-position: 16px calc(100% - 9px);
+  background-size: calc(100% - 32px) 6px;
+}
+
+#index-table td.coverPer > span {
+  position: relative;
+  padding-bottom: 9px;
+  overflow: visible;
+  white-space: nowrap;
+  background: none;
+  color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+#index-table td.coverPer > span::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 6px;
+  min-width: 3px;
+  border-radius: 3px;
+  background: var(--text-muted);
+}
+
+#index-table td.coverPer > span.lineCov::after { background: var(--good); }
+#index-table td.coverPer > span.linePartCov::after { background: var(--warning); }
+#index-table td.coverPer > span.lineNoCov::after { background: var(--critical); }
+
+/* ---- Source pages --------------------------------------------------------- */
+
+pre.source {
+  margin: 20px 0 0;
+  padding: 0;
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface-1);
+  color: var(--text-primary);
+  font: 13px/1.65 var(--font-code);
+  /* The newlines between <source-line> elements must not render as blank rows:
+     whitespace collapses at the <pre> level and is kept inside each line. */
+  white-space: normal;
+}
+
+/* One flex row per line, so the code cell (third child) and its coverage tint
+   span the full width instead of stopping at the end of the text. */
+pre.source source-line {
+  display: flex;
+  white-space: pre;
+}
+
+pre.source source-line:first-child > span { padding-top: 8px; }
+pre.source source-line:last-child > span { padding-bottom: 8px; }
+
+pre.source source-line > span:nth-child(3) {
+  flex: 1;
+  padding-left: 16px;
+}
+
+/* Gutter: line number and hit count, on their own tinted band. */
+span.lineNum,
+span.coverHits {
+  flex: none;
+  display: inline-block;
+  background: var(--surface-2);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  user-select: none;
+}
+
+span.lineNum {
+  width: 3.5em;
+  padding: 0 10px 0 12px;
+  color: var(--text-muted);
+}
+
+span.coverHits {
+  /* "1234 / 5678": the widest count kcov writes in practice, 11 characters. */
+  width: 11ch;
+  padding: 0 12px 0 0;
+  border-right: 1px solid var(--border);
+  color: var(--text-secondary);
+}
+
+/* Order of first execution: rarely useful, and it pushed the tint short. */
+span.orderNum { display: none; }
+
+/*
+ * Covered / partial / uncovered lines: a tinted row and a 3px bar on its left
+ * edge, so the state survives a monochrome print through the bar's presence
+ * and the hit count beside it.
+ */
+pre.source span.lineCov,
+pre.source span.linePartCov,
+pre.source span.lineNoCov {
+  box-shadow: inset 3px 0 0 var(--bar);
+  background: var(--tint);
+}
+
+pre.source span.lineCov { --bar: var(--good); --tint: var(--good-tint); }
+pre.source span.linePartCov { --bar: var(--warning); --tint: var(--warning-tint); }
+pre.source span.lineNoCov { --bar: var(--critical); --tint: var(--critical-tint); }
+
+/* Hit count of an uncovered line, in ink but heavier, so it reads without color. */
+pre.source source-line:has(> span.lineNoCov) > span.coverHits {
+  color: var(--text-primary);
+  font-weight: 700;
+}

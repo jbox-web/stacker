@@ -1,0 +1,212 @@
+---
+name: Release
+
+# Release workflow of a Crystal project that ships binaries, driven by
+# crystalreleaser from .crystalreleaser.yml (crystalreleaser.yml of the
+# templates). No machine builds every platform, so the release is split:
+# each runner builds its share with `build --split`, then one job gathers the
+# dist/ folders and runs `release --merge`, which checks that every platform
+# is there and from the same commit, then checksums and publishes without
+# compiling. `mise release:static` rehearses the same two steps on every push
+# (job build_static_binaries of ci.yml).
+#
+# crystalreleaser is a mise tool (mise.toml pins it), so every job gets it
+# from jdx/mise-action like the compiler.
+
+# Every job starts with no permission; only the publishing job opts in.
+permissions: {}
+
+# crystalline is the Crystal LSP server, only needed in an editor — see the
+# same block in ci.yml for why it must be disabled on the runners.
+env:
+  MISE_DISABLE_TOOLS: aqua:elbywan/crystalline
+
+on:
+  push:
+    tags:
+      - "v*"
+
+# A tag pushed again while its release is still running must wait: two runs
+# would delete and upload the assets of the same release at the same time.
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  # A tag can be put on any commit, including one whose CI is red: nothing is
+  # built, let alone published, before the suite passes on the tagged sources.
+  test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Setup mise
+        uses: jdx/mise-action@v5
+
+      - name: Install dependencies
+        run: mise dev:deps
+
+      # crystalreleaser only warns when the tag and shard.yml disagree: the
+      # released binaries would then report the version of the tag, and a
+      # build of the same commit from source the one of shard.yml. The ref is
+      # passed through the environment, never written into the script.
+      - name: Check the tag against shard.yml
+        env:
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          version="$(shards version)"
+          if [ "${REF_NAME#v}" != "$version" ]; then
+            echo "tag $REF_NAME does not match the version of shard.yml ($version)" >&2
+            exit 1
+          fi
+
+      - name: Run tests
+        run: mise dev:spec
+
+      - name: Run tests (multi-threaded)
+        run: mise dev:spec-mt
+
+  linux:
+    needs: test
+    runs-on: ubuntu-24.04
+    # linux/arm64 compiles under QEMU emulation, which is slow but not endless.
+    timeout-minutes: 90
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+          # Tags and history: the version and the changelog come from git, and
+          # crystalreleaser refuses a shallow clone.
+          fetch-depth: 0
+
+      # linux/arm64 is built in docker under QEMU emulation.
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v4
+
+      # crystalreleaser's emulation check reads `docker buildx ls`.
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Setup mise
+        uses: jdx/mise-action@v5
+
+      - name: Build the linux binaries
+        run: crystalreleaser build --split --clean
+
+      - name: Upload
+        uses: actions/upload-artifact@v7
+        with:
+          name: dist-linux
+          path: dist/
+          if-no-files-found: error
+
+  darwin_arm64:
+    needs: test
+    runs-on: macos-26
+    timeout-minutes: 45
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Setup mise
+        uses: jdx/mise-action@v5
+
+      # TODO: remove me when https://github.com/crystal-lang/crystal/issues/16746 is fixed
+      - name: Fix Crystal shards
+        run: mise dev:fix-shards-command
+
+      # The OpenSSL static_libs links (see .crystalreleaser.yml): the same
+      # formula on both architectures, whatever the runner has by default.
+      - name: Install OpenSSL 4
+        run: brew install openssl@4
+
+      # Fails when the binary depends on a library macOS does not ship
+      # (otool -L): the check runs in the build itself.
+      - name: Build the darwin/arm64 binary
+        run: crystalreleaser build --split --clean
+
+      - name: Upload
+        uses: actions/upload-artifact@v7
+        with:
+          name: dist-darwin-arm64
+          path: dist/
+          if-no-files-found: error
+
+  darwin_amd64:
+    needs: test
+    runs-on: macos-26-intel
+    timeout-minutes: 45
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Setup mise
+        uses: jdx/mise-action@v5
+
+      # TODO: remove me when https://github.com/crystal-lang/crystal/issues/16746 is fixed
+      - name: Fix Crystal shards
+        run: mise dev:fix-shards-command
+
+      # The OpenSSL static_libs links (see .crystalreleaser.yml): the same
+      # formula on both architectures, whatever the runner has by default.
+      - name: Install OpenSSL 4
+        run: brew install openssl@4
+
+      # Fails when the binary depends on a library macOS does not ship
+      # (otool -L): the check runs in the build itself.
+      - name: Build the darwin/amd64 binary
+        run: crystalreleaser build --split --clean
+
+      - name: Upload
+        uses: actions/upload-artifact@v7
+        with:
+          name: dist-darwin-amd64
+          path: dist/
+          if-no-files-found: error
+
+  # One job creates the release, once every platform has built: a platform
+  # that fails to build fails the release instead of leaving it short of that
+  # platform. crystalreleaser creates the release as a draft and publishes it
+  # once every asset is uploaded; running the job again resumes that draft.
+  release:
+    needs: [linux, darwin_arm64, darwin_amd64]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    permissions:
+      # Create the release and upload its assets.
+      contents: write
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Setup mise
+        uses: jdx/mise-action@v5
+
+      # Each runner's dist/<os>_<arch>/ lands side by side in dist/.
+      # upload-artifact drops the Unix permissions; the merge restores the
+      # executable bit of every binary it reads back.
+      - name: Download the split builds
+        uses: actions/download-artifact@v8
+        with:
+          pattern: dist-*
+          path: dist/
+          merge-multiple: true
+
+      - name: Merge and publish
+        run: crystalreleaser release --merge
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
