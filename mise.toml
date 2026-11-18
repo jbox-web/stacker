@@ -19,7 +19,7 @@ crystal = "1.20.3"
 # it from .crystalreleaser.yml. Served by the jbox-web aqua registry above.
 # Always an exact version: mise hides a release younger than its
 # minimum_release_age from `latest` and from ranges, never from an exact pin.
-"aqua:jbox-web/crystalreleaser" = "0.2.1"
+"aqua:jbox-web/crystalreleaser" = "0.3.0"
 
 [vars]
 # Change APP_NAME per project — everything else derives from it.

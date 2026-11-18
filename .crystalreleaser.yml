@@ -46,11 +46,13 @@ builds:
     # crystalreleaser then checks with otool -L that the binary only loads
     # what macOS ships (/usr/lib, /System/Library), and fails the build
     # otherwise. The darwin runners install the formula first (release.yml).
-    # A project that links no OpenSSL drops the block; one that links another
-    # Homebrew library adds its formula's libraries the same way.
+    # static_libs is a list, one entry per formula (crystalreleaser 0.3.0):
+    # a project that links no OpenSSL drops the entry; one that links another
+    # Homebrew library adds an entry for its formula, and for each Homebrew
+    # library that formula itself loads.
     static_libs:
-      formula: openssl@4
-      libs: [ssl, crypto]
+      - formula: openssl@4
+        libs: [ssl, crypto]
     platforms:
       - os: linux
         arch: amd64
