@@ -117,6 +117,11 @@
       
     </li>
   
+  <li class=" " data-id="stacker/Stacker/Licenses" data-name="stacker::licenses">
+      <a href="Stacker/Licenses.html">Licenses</a>
+      
+    </li>
+  
   <li class=" " data-id="stacker/Stacker/Logger" data-name="stacker::logger">
       <a href="Stacker/Logger.html">Logger</a>
       
@@ -343,6 +348,7 @@ Flags:
 Subcommands:
   fetch      # Fetch host pillars
   info       # Show Stacker information
+  licenses   # Print the embedded third-party notices
   server     # Run Stacker webserver</code></pre>
 <h2><a id="configuration" class="anchor" href="#configuration">
   <svg class="octicon-link" aria-hidden="true">
@@ -795,7 +801,9 @@ mise dev:ameba          # Run static code analysis
 mise dev:format         # Format code
 mise dev:docs           # Generate project documentation
 mise dev:clean          # Cleanup environment
-mise release:static     # Build static binaries with Docker</code></pre>
+mise release:static     # Rehearse the release with crystalreleaser into dist/ (nothing published)</code></pre>
+<p>Releases are built and published by <a href="https://github.com/jbox-web/crystalreleaser">crystalreleaser</a> (<code>.crystalreleaser.yml</code>, <code>.github/workflows/release.yml</code>): <code>stacker-&lt;os&gt;-&lt;arch&gt;</code> for linux and darwin, amd64 and arm64, each with its <code>.sha256</code>. The Docker Hub image (<code>nicoladmin/stacker</code>) is built from the <code>Dockerfile</code> by <code>.github/workflows/release_dockerhub.yml</code>.</p>
+<p>The binaries embed the notices of the code they carry (<code>stacker licenses</code>), assembled from <code>licenses.manifest</code> by <code>scripts/harvest-licenses.sh</code> (<code>mise dev:licenses</code>).</p>
 <p><strong>Note :</strong> on macOS, run <code>mise dev:fix-shards-command</code> once before <code>mise dev:deps</code> (workaround for <a href="https://github.com/crystal-lang/crystal/issues/16746">crystal-lang/crystal#16746</a>).</p>
 <h2><a id="extend-stacker" class="anchor" href="#extend-stacker">
   <svg class="octicon-link" aria-hidden="true">
